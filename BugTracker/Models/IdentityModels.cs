@@ -49,5 +49,7 @@ namespace BugTracker.Models
         {
             return new ApplicationDbContext();
         }
+
+        //public System.Data.Entity.DbSet<BugTracker.Models.ApplicationUser> ApplicationUsers { get; set; }
     }
 }

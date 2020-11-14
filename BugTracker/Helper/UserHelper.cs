@@ -71,6 +71,27 @@ namespace BugTracker.Helper
             }
             return user;
         }
+        //Get a user role from userManager for a specific user
+        public string GetUserRole(string userId)
+        {
+            string userRole = userManager.GetRoles(userId).ToList().First();
+            return userRole;
+        }
+        //Gives a list of user who have specified role.
+        //To get all user in particular role
+        public List<ApplicationUser>GetUsersFromRole(string roleName)
+        {
+            var users = db.Users.ToList();
+            var listOfUser = new List<ApplicationUser>();
+            foreach (var user in users)
+            {
+                if (userManager.IsInRole(user.Id, roleName))
+                {
+                    listOfUser.Add(user);
+                }
+            }
+            return listOfUser;
 
+        }
     }
 }

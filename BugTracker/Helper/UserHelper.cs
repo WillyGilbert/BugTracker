@@ -58,7 +58,7 @@ namespace BugTracker.Helper
         //Assign user to the specified role
         public void AssignRole(string userId, string roleName)
         {
-            if(!string.IsNullOrEmpty(userId) && !string.IsNullOrEmpty(roleName))
+            if (!string.IsNullOrEmpty(userId) && !string.IsNullOrEmpty(roleName))
             {
                 userManager.AddToRole(userId, roleName);
             }
@@ -70,10 +70,10 @@ namespace BugTracker.Helper
 
         //Gives a list of user from the array of string containing userId.
         // returns list of users
-        public List<ApplicationUser>GetAllUsersFromIds(string[] userIds)
+        public List<ApplicationUser> GetAllUsersFromIds(string[] userIds)
         {
             var users = new List<ApplicationUser>();
-            if(userIds.Length != 0)
+            if (userIds.Length != 0)
             {
                 foreach (var id in userIds)
                 {
@@ -103,7 +103,7 @@ namespace BugTracker.Helper
 
         //Gives a list of user who have specified role.
         //To get all user in particular role
-        public List<ApplicationUser>GetUsersFromRole(string roleName)
+        public List<ApplicationUser> GetUsersFromRole(string roleName)
         {
             var users = db.Users.ToList();
             var listOfUser = new List<ApplicationUser>();
@@ -116,6 +116,38 @@ namespace BugTracker.Helper
             }
             return listOfUser;
 
+        }
+
+        //Administrator and Project Manager must be able to Assign user to project
+        public bool AssignUserInRole(string userId, string role)
+        {
+            var user = userManager.FindById(userId);
+            if (user == null)
+            {
+                return false;
+            }
+            if (userManager.IsInRole(userId, role))
+            {
+                return true;
+            }
+            var result = userManager.AddToRole(userId, role).Succeeded;
+            return result;
+        }
+
+        //Administrator and projectManager must be able to unAssign user to project
+        public bool unAssignUserToRole(string userId, string role)
+        {
+            var user = userManager.FindById(userId);
+            if (user == null)
+            {
+                return false;
+            }
+            if (!userManager.IsInRole(userId, role))
+            {
+                return true;
+            }
+            var result = userManager.RemoveFromRole(userId, role).Succeeded;
+            return result;
         }
     }
 }

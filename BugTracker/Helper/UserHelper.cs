@@ -21,13 +21,13 @@ namespace BugTracker.Helper
 
         }
 
-        public void SeedRolesInDatabase()
-        {
-            roleManager.Create(new IdentityRole("Admin"));
-            roleManager.Create(new IdentityRole("ProjectManager"));
-            roleManager.Create(new IdentityRole("Developer"));
-            roleManager.Create(new IdentityRole("Submitter"));
-        }
+        //public void SeedRolesInDatabase()
+        //{
+        //    roleManager.Create(new IdentityRole("Admin"));
+        //    roleManager.Create(new IdentityRole("ProjectManager"));
+        //    roleManager.Create(new IdentityRole("Developer"));
+        //    roleManager.Create(new IdentityRole("Submitter"));
+        //}
 
 
         //Create a new role in the database
@@ -35,16 +35,26 @@ namespace BugTracker.Helper
         {
             roleManager.Create(new IdentityRole(roleName));
         }
+
         // Get a role name from a role Id.
         public string GetRole(string roleId)
         {
             return roleManager.FindById(roleId).Name;
         }
+
+        // Get a list of allrole
+        public List<string> GetAllRoles()
+        {
+            var allRoles = roleManager.Roles.Select(r => r.Name).ToList();
+            return allRoles;
+        }
+
         //Check if specified roleName exist or not
         public bool CheckRole(string roleName)
         {
             return roleManager.RoleExists(roleName);
         }
+
         //Assign user to the specified role
         public void AssignRole(string userId, string roleName)
         {
@@ -57,6 +67,7 @@ namespace BugTracker.Helper
                 throw new NullReferenceException("userId and roleName can not be null");
             }
         }
+
         //Gives a list of user from the array of string containing userId.
         // returns list of users
         public List<ApplicationUser>GetAllUsersFromIds(string[] userIds)
@@ -71,6 +82,7 @@ namespace BugTracker.Helper
             }
             return users;
         }
+
         //Gives a user object who have the same specified userId
         public ApplicationUser GetUserFromId(string userId)
         {
@@ -81,12 +93,14 @@ namespace BugTracker.Helper
             }
             return user;
         }
+
         //Get a user role from userManager for a specific user
         public string GetUserRole(string userId)
         {
             string userRole = userManager.GetRoles(userId).ToList().First();
             return userRole;
         }
+
         //Gives a list of user who have specified role.
         //To get all user in particular role
         public List<ApplicationUser>GetUsersFromRole(string roleName)

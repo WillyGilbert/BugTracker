@@ -20,6 +20,16 @@ namespace BugTracker.Helper
             db = new ApplicationDbContext();
 
         }
+
+        public void SeedRolesInDatabase()
+        {
+            roleManager.Create(new IdentityRole("Admin"));
+            roleManager.Create(new IdentityRole("ProjectManager"));
+            roleManager.Create(new IdentityRole("Developer"));
+            roleManager.Create(new IdentityRole("Submitter"));
+        }
+
+
         //Create a new role in the database
         public void DefineNewRole(string roleName)
         {

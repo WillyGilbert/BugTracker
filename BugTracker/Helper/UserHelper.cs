@@ -48,5 +48,29 @@ namespace BugTracker.Helper
             }
         }
         //Gives a list of user from the array of string containing userId.
+        // returns list of users
+        public List<ApplicationUser>GetAllUsersFromIds(string[] userIds)
+        {
+            var users = new List<ApplicationUser>();
+            if(userIds.Length != 0)
+            {
+                foreach (var id in userIds)
+                {
+                    users.Add(db.Users.Find(id));
+                }
+            }
+            return users;
+        }
+        //Gives a user object who have the same specified userId
+        public ApplicationUser GetUserFromId(string userId)
+        {
+            ApplicationUser user = new ApplicationUser();
+            if (!string.IsNullOrEmpty(userId))
+            {
+                user = db.Users.Find(userId);
+            }
+            return user;
+        }
+
     }
 }

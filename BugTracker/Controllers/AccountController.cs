@@ -9,7 +9,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using BugTracker.Models;
-using BugTracker.Helper;
+using BugTracker.DAL;
 
 namespace BugTracker.Controllers
 {

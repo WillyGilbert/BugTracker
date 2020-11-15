@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace BugTracker.Helper
+namespace BugTracker.DAL
 {
     public class UserHelper
     {
@@ -46,6 +46,12 @@ namespace BugTracker.Helper
         {
             var allRoles = roleManager.Roles.Select(r => r.Name).ToList();
             return allRoles;
+        }
+        // Get all the user 
+        public List<ApplicationUser> GetAllUser()
+        {
+            var getAllUsers = db.Users.ToList();
+            return getAllUsers;
         }
 
         //Check if specified roleName exist or not

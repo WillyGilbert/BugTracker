@@ -15,10 +15,9 @@ namespace BugTracker.Helper
         private UserManager<ApplicationUser> userManager;
         public UserHelper()
         {
+            db = new ApplicationDbContext();
             roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(db));
             userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
-            db = new ApplicationDbContext();
-
         }
 
         //public void SeedRolesInDatabase()

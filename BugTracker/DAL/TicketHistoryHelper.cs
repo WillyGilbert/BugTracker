@@ -12,7 +12,7 @@ namespace BugTracker.DAL
         public static List<TicketHistory> GetTicketHistorys()
         {
             ApplicationDbContext db = new ApplicationDbContext();
-            var TicketHistory = db.TicketHistories;
+            var TicketHistory = db.TicketHistories.Include(t => t.Ticket).Include(t => t.User);
             return TicketHistory.ToList();
         }
 

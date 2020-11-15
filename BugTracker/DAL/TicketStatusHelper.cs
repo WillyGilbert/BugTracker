@@ -9,7 +9,7 @@ namespace BugTracker.DAL
 {
     public class TicketStatusHelper
     {
-        public static List<TicketStatus> GetTicketStatuss()
+        public static List<TicketStatus> GetTicketStatuses()
         {
             ApplicationDbContext db = new ApplicationDbContext();
             var TicketStatus = db.TicketStatuses;

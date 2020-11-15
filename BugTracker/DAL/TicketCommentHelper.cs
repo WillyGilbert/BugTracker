@@ -12,7 +12,7 @@ namespace BugTracker.DAL
         public static List<TicketComment> GetTicketComments()
         {
             ApplicationDbContext db = new ApplicationDbContext();
-            var TicketComment = db.TicketComments;
+            var TicketComment = db.TicketComments.Include(t => t.Ticket).Include(t => t.User);
             return TicketComment.ToList();
         }
 

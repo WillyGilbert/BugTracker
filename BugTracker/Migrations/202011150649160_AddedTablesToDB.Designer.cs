@@ -7,13 +7,13 @@ namespace BugTracker.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.4.4")]
-    public sealed partial class CorrectedTableName : IMigrationMetadata
+    public sealed partial class AddedTablesToDB : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(CorrectedTableName));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(AddedTablesToDB));
         
         string IMigrationMetadata.Id
         {
-            get { return "202011150242215_CorrectedTableName"; }
+            get { return "202011150649160_AddedTablesToDB"; }
         }
         
         string IMigrationMetadata.Source

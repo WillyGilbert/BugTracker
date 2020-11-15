@@ -179,21 +179,13 @@
     <Compile Include="Migrations\202011131846403_AddInitialModel.Designer.cs">
       <DependentUpon>202011131846403_AddInitialModel.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202011131915414_AddBugTrakerDB.cs" />
-    <Compile Include="Migrations\202011131915414_AddBugTrakerDB.Designer.cs">
-      <DependentUpon>202011131915414_AddBugTrakerDB.cs</DependentUpon>
+    <Compile Include="Migrations\202011150649160_AddedTablesToDB.cs" />
+    <Compile Include="Migrations\202011150649160_AddedTablesToDB.designer.cs">
+      <DependentUpon>202011150649160_AddedTablesToDB.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202011150135379_seedUserRole.cs" />
-    <Compile Include="Migrations\202011150135379_seedUserRole.designer.cs">
-      <DependentUpon>202011150135379_seedUserRole.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202011150242215_CorrectedTableName.cs" />
-    <Compile Include="Migrations\202011150242215_CorrectedTableName.designer.cs">
-      <DependentUpon>202011150242215_CorrectedTableName.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202011150319099_CorrectedRelationShip.cs" />
-    <Compile Include="Migrations\202011150319099_CorrectedRelationShip.designer.cs">
-      <DependentUpon>202011150319099_CorrectedRelationShip.cs</DependentUpon>
+    <Compile Include="Migrations\202011150718137_SeededUser.cs" />
+    <Compile Include="Migrations\202011150718137_SeededUser.designer.cs">
+      <DependentUpon>202011150718137_SeededUser.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -289,17 +281,11 @@
     <EmbeddedResource Include="Migrations\202011131846403_AddInitialModel.resx">
       <DependentUpon>202011131846403_AddInitialModel.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202011131915414_AddBugTrakerDB.resx">
-      <DependentUpon>202011131915414_AddBugTrakerDB.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202011150649160_AddedTablesToDB.resx">
+      <DependentUpon>202011150649160_AddedTablesToDB.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202011150135379_seedUserRole.resx">
-      <DependentUpon>202011150135379_seedUserRole.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202011150242215_CorrectedTableName.resx">
-      <DependentUpon>202011150242215_CorrectedTableName.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202011150319099_CorrectedRelationShip.resx">
-      <DependentUpon>202011150319099_CorrectedRelationShip.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202011150718137_SeededUser.resx">
+      <DependentUpon>202011150718137_SeededUser.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -20,10 +20,7 @@ namespace BugTracker.Models
         public virtual ICollection<TicketAttachment> TicketAttachments { get; set; }
         public virtual ICollection<TicketComment> TicketComments { get; set; }
         public virtual ICollection<TicketHistory> TicketHistories { get; set; }
-        public virtual ICollection<TicketNotification> TicketNotifications { get; set; }
-        public virtual ICollection<TicketStatus> TicketStatuses { get; set; }
-        public virtual ICollection<TicketType> TicketTypes { get; set; }
-        public virtual ICollection<Project> Projects { get; set; }
+        public virtual ICollection<TicketNotification> TicketNotifications { get; set; }        
         public virtual ICollection<ProjectUser> ProjectUsers { get; set; }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
@@ -42,6 +39,7 @@ namespace BugTracker.Models
         public DbSet<TicketComment> TicketComments { get; set; }
         public DbSet<TicketHistory> TicketHistories { get; set; }
         public DbSet<TicketNotification> TicketNotifications { get; set; }
+        public DbSet<TicketPriority> TicketPriorities { get; set; }
         public DbSet<TicketStatus> TicketStatuses { get; set; }
         public DbSet<TicketType> TicketTypes { get; set; }
         public DbSet<Project> Projects { get; set; }

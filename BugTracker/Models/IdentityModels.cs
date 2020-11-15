@@ -4,21 +4,27 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BugTracker.Models
 {
     // You can add profile data for the user by adding more properties to your ApplicationUser class, please visit https://go.microsoft.com/fwlink/?LinkID=317594 to learn more.
     public class ApplicationUser : IdentityUser
     {
-        public virtual ICollection<Tickets> Tickets { get; set; }
-        public virtual ICollection<TicketAttachments> TicketAttachments { get; set; }
-        public virtual ICollection<TicketComments> TicketComments { get; set; }
-        public virtual ICollection<TicketHistories> TicketHistories { get; set; }
-        public virtual ICollection<TicketNotifications> TicketNotifications { get; set; }
-        public virtual ICollection<TicketStatuses> TicketStatuses { get; set; }
-        public virtual ICollection<TicketTypes> TicketTypes { get; set; }
-        public virtual ICollection<Projects> Projects { get; set; }
-        public virtual ICollection<ProjectUsers> ProjectUsers { get; set; }
+        [InverseProperty("AssignedToUser")]
+        public virtual ICollection<Ticket> AssignedTickets{ get; set; }
+        [InverseProperty("OwnerUser")]
+        public virtual ICollection<Ticket> OwnerTickets{ get; set; }
+   
+        public virtual ICollection<TicketAttachment> TicketAttachments { get; set; }
+        public virtual ICollection<TicketComment> TicketComments { get; set; }
+        public virtual ICollection<TicketHistory> TicketHistories { get; set; }
+        public virtual ICollection<TicketNotification> TicketNotifications { get; set; }
+        public virtual ICollection<TicketStatus> TicketStatuses { get; set; }
+        public virtual ICollection<TicketType> TicketTypes { get; set; }
+        public virtual ICollection<Project> Projects { get; set; }
+        public virtual ICollection<ProjectUser> ProjectUsers { get; set; }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {
@@ -31,15 +37,15 @@ namespace BugTracker.Models
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
-        public DbSet<Tickets> Tickets { get; set; }
-        public DbSet<TicketAttachments> TicketAttachments { get; set; }
-        public DbSet<TicketComments> TicketComments { get; set; }
-        public DbSet<TicketHistories> TicketHistories { get; set; }
-        public DbSet<TicketNotifications> TicketNotifications { get; set; }
-        public DbSet<TicketStatuses> TicketStatuses { get; set; }
-        public DbSet<TicketTypes> TicketTypes { get; set; }
-        public DbSet<Projects> Projects { get; set; }
-        public DbSet<ProjectUsers> ProjectUsers { get; set; }
+        public DbSet<Ticket> Tickets { get; set; }
+        public DbSet<TicketAttachment> TicketAttachments { get; set; }
+        public DbSet<TicketComment> TicketComments { get; set; }
+        public DbSet<TicketHistory> TicketHistories { get; set; }
+        public DbSet<TicketNotification> TicketNotifications { get; set; }
+        public DbSet<TicketStatus> TicketStatuses { get; set; }
+        public DbSet<TicketType> TicketTypes { get; set; }
+        public DbSet<Project> Projects { get; set; }
+        public DbSet<ProjectUser> ProjectUsers { get; set; }
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {

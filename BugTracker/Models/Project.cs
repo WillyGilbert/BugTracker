@@ -5,10 +5,10 @@ using System.Web;
 
 namespace BugTracker.Models
 {
-    public class Projects
+    public class Project
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public virtual ICollection<ProjectUsers> ProjectUsers { get; set; }
+        public virtual ICollection<ProjectUser> ProjectUsers { get; set; }
     }
 }

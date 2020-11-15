@@ -5,9 +5,9 @@ using System.Web;
 
 namespace BugTracker.Models
 {
-    public class TicketStatuses
+    public class TicketType
     {
         public int Id { get; set; }
-        public string Name{ get; set; }
-}
+        public string Name { get; set; }
+    }
 }

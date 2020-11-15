@@ -56,6 +56,6 @@ namespace BugTracker.Models
             return new ApplicationDbContext();
         }
 
-        public System.Data.Entity.DbSet<BugTracker.Models.TicketPriorities> TicketPriorities { get; set; }
+       
     }
 }

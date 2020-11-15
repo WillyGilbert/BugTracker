@@ -178,7 +178,16 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\TicketsController.cs" />
+    <Compile Include="DAL\ProjectHelper.cs" />
+    <Compile Include="DAL\ProjectUserHelper.cs" />
+    <Compile Include="DAL\TicketAttachmentHelper.cs" />
+    <Compile Include="DAL\TicketCommentHelper.cs" />
     <Compile Include="DAL\TicketHelper.cs" />
+    <Compile Include="DAL\TicketHistoryHelper.cs" />
+    <Compile Include="DAL\TicketNotificationHelper.cs" />
+    <Compile Include="DAL\TicketPriorityHelper.cs" />
+    <Compile Include="DAL\TicketStatusHelper.cs" />
+    <Compile Include="DAL\TicketTypeHelper.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

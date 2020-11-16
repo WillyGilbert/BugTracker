@@ -34,12 +34,13 @@ namespace BugTracker.DAL
         }
 
         //ticket that belong to projects of p.manager
-        //public static List<Ticket> GetTicketsByManager(string userId)
-        //{
-        //    ApplicationDbContext db = new ApplicationDbContext();            
-        //    var tickets = db.Tickets.Include("Project").Include("TicketPriority").Include("TicketStatus").Include("TicketType").Where(t => t.ProjectId == db.ProjectUsers.Where(p => p.UserId == userId).Select(p => p.ProjectId));
-        //    return tickets.ToList();
-        //}
+        public static List<Ticket> GetTicketsByManager(string userId)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            var projectsByManager = db.ProjectUsers.Where(pu => pu.UserId == userId);
+            var ticketsByManager = db.Tickets.Include("Project").Include("TicketPriority").Include("TicketStatus").Include("TicketType").Where(t => projectsByManager.Any(up => up.ProjectId == t.ProjectId));
+            return ticketsByManager.ToList();
+        }
 
         public static Ticket GetTicket(int? Id)
         {
@@ -62,6 +63,7 @@ namespace BugTracker.DAL
                 Description = description,
                 ProjectId = projectId,
                 Created = DateTime.Now,
+                Updated = DateTime.Now,
                 TicketType = ticketType,
                 TicketPriority = ticketPriority,
                 TicketStatus = ticketStatus,

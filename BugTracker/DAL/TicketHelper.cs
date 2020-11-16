@@ -90,6 +90,37 @@ namespace BugTracker.DAL
             db.Dispose();
         }
 
+        public static void EditBySubmitter(int id, string title, string description, int projectId, TicketType ticketType, TicketPriority ticketPriority)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            Ticket ticket = GetTicket(id);
+            ticket.Title = title;
+            ticket.Description = description;
+            ticket.ProjectId = projectId;
+            ticket.TicketType = ticketType;
+            ticket.TicketPriority = ticketPriority;            
+            ticket.Updated = DateTime.Now;
+            db.Entry(ticket).State = EntityState.Modified;
+            db.SaveChanges();
+            db.Dispose();
+        }
+
+        public static void EditByManager(int id, string title, string description, string userId, TicketType ticketType, TicketPriority ticketPriority, TicketStatus ticketStatus)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            Ticket ticket = GetTicket(id);
+            ticket.Title = title;
+            ticket.Description = description;
+            ticket.AssignedToUserId = userId;
+            ticket.TicketType = ticketType;
+            ticket.TicketPriority = ticketPriority;
+            ticket.TicketStatus = ticketStatus;
+            ticket.Updated = DateTime.Now;
+            db.Entry(ticket).State = EntityState.Modified;
+            db.SaveChanges();
+            db.Dispose();
+        }
+
         public static void Delete(int id)
         {
             ApplicationDbContext db = new ApplicationDbContext();

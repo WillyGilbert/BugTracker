@@ -108,7 +108,7 @@ namespace BugTracker.Controllers
             {
                 //db.Entry(ticket).State = EntityState.Modified;
                 //db.SaveChanges();
-                TicketHelper.Edit(ticket.Id, ticket.Title, ticket.Description, ticket.ProjectId, ticket.TicketType, ticket.TicketPriority, ticket.TicketStatus);
+                TicketHelper.Edit(ticket.Id, ticket.Title, ticket.Description, ticket.ProjectId, ticket.TicketType, ticket.TicketPriority, ticket.TicketStatus, ticket.AssignedToUserId);
                 return RedirectToAction("Index");
             }
             ViewBag.AssignedToUserId = new SelectList(db.Users, "Id", "Email", ticket.AssignedToUserId);   

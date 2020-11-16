@@ -17,6 +17,14 @@ namespace BugTracker.DAL
             return tickets.ToList();
         }
 
+        //sort tickets by title
+        public static List<Ticket> SortTicketsByTitle()
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            var tickets = db.Tickets.Include("Project").Include("TicketPriority").Include("TicketStatus").Include("TicketType").OrderBy(t => t.Title);
+            return tickets.ToList();
+        }
+
         //ticket created by submitter
         public static List<Ticket> GetTicketsBySubmitter(string userId)
         {
@@ -74,7 +82,7 @@ namespace BugTracker.DAL
             db.Dispose();
         }
 
-        public static void Edit(int id, string title, string description, int projectId, TicketType ticketType, TicketPriority ticketPriority, TicketStatus ticketStatus)
+        public static void Edit(int id, string title, string description, int projectId, TicketType ticketType, TicketPriority ticketPriority, TicketStatus ticketStatus, string assignedUserId)
         {
             ApplicationDbContext db = new ApplicationDbContext();
             Ticket ticket = GetTicket(id);
@@ -85,6 +93,7 @@ namespace BugTracker.DAL
             ticket.TicketPriority = ticketPriority;
             ticket.TicketStatus = ticketStatus;
             ticket.Updated = DateTime.Now;
+            ticket.AssignedToUserId = assignedUserId;
             db.Entry(ticket).State = EntityState.Modified;
             db.SaveChanges();
             db.Dispose();

@@ -42,7 +42,7 @@
 
 
 <div>
-    @Html.ActionLink("Back to List", "ShowAllUsers")
+    @Html.ActionLink("Back to List", "ShowAllUsers", new { projectId = @ViewBag.ProjectId })
 </div>
 
 @section Scripts {

@@ -24,7 +24,7 @@ namespace BugTracker.Controllers
 
         public ActionResult ShowAllUsers()
         {
-            var users = UserHelper.ShowAllUsers();
+            var users = UserHelper.GetAllUsers();
             return View(users);
         }
         public ActionResult ShowAllRoles()

@@ -7,20 +7,37 @@ using System.Web;
 
 namespace BugTracker.DAL
 {
-    public class ProjectHelper
+    public static class ProjectHelper
     {
+        static ApplicationDbContext db = new ApplicationDbContext();
         public static List<Project> GetProjects()
         {
-            ApplicationDbContext db = new ApplicationDbContext();
+
             var Project = db.Projects;
             return Project.ToList();
+        }
+
+        public static List<ApplicationUser> UsersOfTheProject(int projectId)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            // var projects = db.Users.Find(projectId).ProjectUsers();
+            var project = db.Projects.Find(projectId);
+            var users = db.Users.Where(u => u.ProjectUsers.Any(pu => pu.ProjectId == projectId)).ToList();
+            return users;
+        }
+
+        public static List<ApplicationUser> UsersOutOfTheProject(int projectId)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            var users = db.Users.Where(u => !u.ProjectUsers.Any(pu => pu.ProjectId == projectId)).ToList();
+            return users;
         }
 
         public static Project GetProject(int? Id)
         {
             ApplicationDbContext db = new ApplicationDbContext();
             Project Project = db.Projects.Find(Id);
-            db.Dispose();
+            
             if (Project == null)
             {
                 return null;
@@ -28,6 +45,59 @@ namespace BugTracker.DAL
             db.Dispose();
             return Project;
         }
+        public static bool AssignUserToProject(string userId, int projectId)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            var user = UserHelper.GetUserFromId(userId);
+            if (user == null)
+            {
+                return false;
+            }
+
+            var project = GetProject(projectId);
+            if (project == null)
+            {
+                return false;
+            }
+
+            if (db.ProjectUsers.Any(p => p.UserId == userId && p.ProjectId == projectId))
+            {
+                return false;
+            }
+
+            ProjectUser projectUser = new ProjectUser { UserId = userId, ProjectId = projectId };
+            db.ProjectUsers.Add(projectUser);
+            db.SaveChanges();
+            db.Dispose();
+
+            return true;
+        }
+        public static bool RemoveUserFromProject(string userId, int projectId)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            var user = UserHelper.GetUserFromId(userId);
+            if (user == null)
+            {
+                return false;
+            }
+            var project = GetProject(projectId);
+            if (project == null)
+            {
+                return false;
+            }
+            ProjectUser projectUser = db.ProjectUsers.FirstOrDefault(p => p.UserId == userId && p.ProjectId == projectId);
+            if(projectUser == null)
+            {
+                return false;
+            }
+            db.ProjectUsers.Remove(projectUser);
+            db.SaveChanges();
+            db.Dispose();
+            return true;
+        }
+
+
+
 
         public static void Create(string name)
         {

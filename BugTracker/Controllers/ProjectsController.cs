@@ -11,13 +11,22 @@ using BugTracker.Models;
 
 namespace BugTracker.Controllers
 {
+    [Authorize(Roles ="Admin,ProjectManager")]
     public class ProjectsController : Controller
     {
 
         // GET: Projects
+        [Authorize(Roles = "Admin,ProjectManager,Developer,Submitter")]
         public ActionResult Index()
         {
             return View(ProjectHelper.GetProjects());
+        }
+
+        public ActionResult ShowAllUsers(int projectId)
+        {
+            ViewBag.ProjectId = projectId;
+            var users = ProjectHelper.UsersOfTheProject(projectId);
+            return View(users);
         }
 
         // GET: Projects/Details/5
@@ -109,6 +118,50 @@ namespace BugTracker.Controllers
         {
             ProjectHelper.Delete(id);
             return RedirectToAction("Index");
+        }
+        public ActionResult RemoveUserFromProject(string userId, int projectId)
+        {
+            if(ProjectHelper.RemoveUserFromProject(userId, projectId))
+            {
+                return RedirectToAction("ShowAllUsers",new { projectId});
+            }
+            return RedirectToAction("ShowAllUsers", new { projectId });
+        }
+        public ActionResult AssignUserToProject(int projectId)
+        {
+            var project = ProjectHelper.GetProject(projectId);
+            if(project == null)
+            {
+                return HttpNotFound();
+            }
+            var users = ProjectHelper.UsersOutOfTheProject(projectId);
+            ViewBag.ProjectName = project.Name;
+            ViewBag.UserId = new SelectList(users, "Id", "UserName");
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AssignUserToProject(string Id, int projectId)
+        {
+
+            var project = ProjectHelper.GetProject(projectId);
+            if (project == null)
+            {
+                return HttpNotFound();
+            }
+
+            if (ProjectHelper.AssignUserToProject(Id, projectId))
+            {
+                return RedirectToAction("ShowAllUsers", new { projectId });
+            }
+           
+            var users = ProjectHelper.UsersOutOfTheProject(projectId);
+
+            ViewBag.ProjectName = project.Name;
+            ViewBag.UserId = new SelectList(users, "Id", "UserName");
+
+            return RedirectToAction("ShowAllUsers", new { projectId });
         }
     }
 }

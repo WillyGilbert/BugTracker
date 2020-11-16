@@ -9,7 +9,7 @@ using System.Web.Security;
 
 namespace BugTracker.DAL
 {
-    public class UserHelper
+    public static class UserHelper
     {
         static ApplicationDbContext db = new ApplicationDbContext();
         static RoleManager<IdentityRole> roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(db));
@@ -34,7 +34,7 @@ namespace BugTracker.DAL
         //    return allRoles;
         //}
         // Get all the user 
-        public static List<ApplicationUser> GetAllUser()
+        public static List<ApplicationUser> GetAllUsers()
         {
             var getAllUsers = db.Users.ToList();
             return getAllUsers;
@@ -142,10 +142,10 @@ namespace BugTracker.DAL
         //}
 
         //taskM
-        public static List<ApplicationUser> ShowAllUsers()
-        {
-            return db.Users.ToList();
-        }
+        //public static List<ApplicationUser> ShowAllUsers()
+        //{
+        //    return db.Users.ToList();
+        //}
         public static List<string> ShowAllRoles()
         {
             return db.Roles.Select(r => r.Name).ToList();

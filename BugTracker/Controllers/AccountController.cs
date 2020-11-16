@@ -18,13 +18,10 @@ namespace BugTracker.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
-        // private ApplicationDbContext db;
-        private UserHelper userHelper;
 
         public AccountController()
         {
             //db = new ApplicationDbContext();
-            userHelper = new UserHelper();
         }
 
         public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )

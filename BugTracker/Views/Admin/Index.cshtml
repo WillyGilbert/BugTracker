@@ -1,0 +1,23 @@
+﻿@model IEnumerable<BugTracker.Models.ApplicationUser>
+@{
+    ViewBag.Title = "Index";
+}
+
+<h3>Management</h3>
+<br />
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.ActionLink("Manage Users", "ShowAllUsers")
+        </th>
+        <th>
+            @Html.ActionLink("Manage Roles", "ShowAllRoles")
+        </th>
+        
+    </tr>
+    <tr>
+
+    </tr>
+
+</table>

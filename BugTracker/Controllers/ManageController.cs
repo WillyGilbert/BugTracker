@@ -7,6 +7,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using BugTracker.Models;
+using BugTracker.DAL;
 
 namespace BugTracker.Controllers
 {
@@ -32,9 +33,9 @@ namespace BugTracker.Controllers
             {
                 return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
             }
-            private set 
-            { 
-                _signInManager = value; 
+            private set
+            {
+                _signInManager = value;
             }
         }
 
@@ -212,6 +213,61 @@ namespace BugTracker.Controllers
             }
             return RedirectToAction("Index", new { Message = ManageMessageId.RemovePhoneSuccess });
         }
+        public ActionResult ChangeUserName()
+        {
+            return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ChangeUserName(ChangeUserNameViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            var user = UserManager.FindById(User.Identity.GetUserId());
+            user.Email = model.NewUserName;
+            user.UserName = model.NewUserName;
+
+            var updateResult = await UserManager.UpdateAsync(user);
+            if (updateResult.Succeeded)
+            {
+               // var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+                if (user != null)
+                {
+                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                }
+                return RedirectToAction("Index", new { Message = ManageMessageId.ChangeUserNameSuccess });
+            }
+            AddErrors(updateResult);
+            return View(model);
+
+            //if (user != null)
+            //{
+            //    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+            //} else
+
+            //    return RedirectToAction("Index", new { Message = ManageMessageId.ChangeUserNameSuccess });
+
+
+            //if (updateResult.Succeeded)
+            //{ return RedirectToAction("Index", new { Message = ManageMessageId.ChangeUserNameSuccess }); }
+            //else
+
+
+
+            //if (UserManager.Users.Where(x => x.UserName == value).FirstOrDefault() == null) //chk for dupes
+            //{
+            //    var user = UserManager.FindById(User.Identity.GetUserId());
+            //    user.UserName = value;
+            //    var updateResult = await UserManager.UpdateAsync(user);
+            //    db.SaveChanges();
+
+            //    await SignInAsync(user, true);//user is cached until logout so do this to clear cache                
+            //    return Content("true");
+            //}
+            //throw new HttpException(500, "Please select a different username");
+        }
 
         //
         // GET: /Manage/ChangePassword
@@ -333,7 +389,7 @@ namespace BugTracker.Controllers
             base.Dispose(disposing);
         }
 
-#region Helpers
+        #region Helpers
         // Used for XSRF protection when adding external logins
         private const string XsrfKey = "XsrfId";
 
@@ -381,9 +437,10 @@ namespace BugTracker.Controllers
             SetPasswordSuccess,
             RemoveLoginSuccess,
             RemovePhoneSuccess,
+            ChangeUserNameSuccess,
             Error
         }
 
-#endregion
+        #endregion
     }
 }

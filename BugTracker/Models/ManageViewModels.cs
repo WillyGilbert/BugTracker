@@ -57,6 +57,17 @@ namespace BugTracker.Models
         [Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
     }
+    public class ChangeUserNameViewModel
+    {
+        //[Required]
+        //[Display(Name = "Current UserName")]
+        //public string CurrentUserName { get; set; }
+
+        [Required]
+        [Display(Name = "New UserName")]
+        [EmailAddress]
+        public string NewUserName { get; set; }
+    }
 
     public class AddPhoneNumberViewModel
     {

@@ -1,0 +1,30 @@
+﻿
+@{
+    ViewBag.Title = "RemoveRole";
+}
+
+<h2>Remove</h2>
+
+<h3>Are you sure you want to remove:</h3>
+
+<div>
+    @ViewBag.RoleName
+</div>
+        
+<h3>from user:</h3>
+<div>
+    @ViewBag.UserName
+</div>
+<div>
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Remove" class="btn btn-default" /> 
+        </div>
+    }
+</div>
+<div>
+    @Html.ActionLink("Back to show all his/her roles", "ShowAllRolesOfTheUser",new { userId = ViewBag.UserId})
+</div>

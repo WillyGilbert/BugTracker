@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using BugTracker.DAL;
 using BugTracker.Models;
+using Microsoft.AspNet.Identity;
 
 namespace BugTracker.Controllers
 {
@@ -37,10 +38,11 @@ namespace BugTracker.Controllers
         }
 
         // GET: TicketComments/Create
-        public ActionResult Create()
+        public ActionResult Create(Ticket ticket)
         {
-            ViewBag.TicketId = new SelectList(TicketHelper.GetTickets(), "Id", "Title");
-            ViewBag.UserId = new SelectList(UserHelper.GetAllUsers(), "Id", "Email");
+            ViewBag.TicketId = ticket.Id;
+            //ViewBag.TicketId = new SelectList(TicketHelper.GetTickets(), "Id", "Title");
+            //ViewBag.UserId = new SelectList(UserHelper.GetAllUsers(), "Id", "Email");
             return View();
         }
 
@@ -52,13 +54,13 @@ namespace BugTracker.Controllers
         public ActionResult Create([Bind(Include = "Id,Comment,Created,TicketId,UserId")] TicketComment ticketComment)
         {
             if (ModelState.IsValid)
-            {
-                TicketCommentHelper.Create(ticketComment.Comment, ticketComment.Created, ticketComment.TicketId, ticketComment.UserId);
+            {                
+                TicketCommentHelper.Create(ticketComment.Comment, ticketComment.TicketId, User.Identity.GetUserId());
                 return RedirectToAction("Index");
             }
 
-            ViewBag.TicketId = new SelectList(TicketHelper.GetTickets(), "Id", "Title", ticketComment.TicketId);
-            ViewBag.UserId = new SelectList(UserHelper.GetAllUsers(), "Id", "Email", ticketComment.UserId);
+            //ViewBag.TicketId = new SelectList(TicketHelper.GetTickets(), "Id", "Title", ticketComment.TicketId);
+            //ViewBag.UserId = new SelectList(UserHelper.GetAllUsers(), "Id", "Email", ticketComment.UserId);
             return View(ticketComment);
         }
 

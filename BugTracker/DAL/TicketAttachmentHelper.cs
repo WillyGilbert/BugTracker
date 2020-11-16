@@ -12,7 +12,7 @@ namespace BugTracker.DAL
         public static List<TicketAttachment> GetTicketAttachments()
         {
             ApplicationDbContext db = new ApplicationDbContext();
-            var TicketAttachment = db.TicketAttachments;
+            var TicketAttachment = db.TicketAttachments.Include(t => t.Ticket).Include(t => t.User);
             return TicketAttachment.ToList();
         }
 

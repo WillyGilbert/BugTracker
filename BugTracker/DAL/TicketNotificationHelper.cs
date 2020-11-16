@@ -12,7 +12,7 @@ namespace BugTracker.DAL
         public static List<TicketNotification> GetTicketNotifications()
         {
             ApplicationDbContext db = new ApplicationDbContext();
-            var TicketNotification = db.TicketNotifications;
+            var TicketNotification = db.TicketNotifications.Include(t => t.Ticket).Include(t => t.User);
             return TicketNotification.ToList();
         }
 

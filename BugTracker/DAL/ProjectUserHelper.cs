@@ -10,7 +10,7 @@ namespace BugTracker.DAL
         public static List<ProjectUser> GetProjectUsers()
         {
             ApplicationDbContext db = new ApplicationDbContext();
-            var ProjectUser = db.ProjectUsers;
+            var ProjectUser = db.ProjectUsers.Include(p => p.Project).Include(p => p.User);
             return ProjectUser.ToList();
         }
 

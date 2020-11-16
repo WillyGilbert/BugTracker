@@ -20,7 +20,7 @@ namespace BugTracker.DAL
         public static List<ApplicationUser> UsersOfTheProject(int projectId)
         {
             ApplicationDbContext db = new ApplicationDbContext();
-            // var projects = db.Users.Find(projectId).ProjectUsers();
+            // zvar projects = db.Users.Find(projectId).ProjectUsers();
             var project = db.Projects.Find(projectId);
             var users = db.Users.Where(u => u.ProjectUsers.Any(pu => pu.ProjectId == projectId)).ToList();
             return users;

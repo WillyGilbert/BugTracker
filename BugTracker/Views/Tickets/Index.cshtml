@@ -80,7 +80,8 @@
         @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
         @Html.ActionLink("Details", "Details", new { id = item.Id }) |
         @Html.ActionLink("Delete", "Delete", new { id = item.Id }) |
-        @Html.ActionLink("AddComment", "Create", "TicketComments", new { id = item.Id }, null )
+        @Html.ActionLink("AddComment", "Create", "TicketComments", new { id = item.Id }, null) |
+        @Html.ActionLink("AddAttachment", "Index", "TicketAttachments", new { ticketId = item.Id }, null)
     </td>
 </tr>
 }

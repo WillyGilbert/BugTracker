@@ -117,6 +117,15 @@ namespace BugTracker.DAL
             };
             db.Tickets.Add(ticket);
             db.SaveChanges();
+
+            var dbEntityEntry = db.Entry(ticket);
+            foreach (var property in dbEntityEntry.OriginalValues.PropertyNames)
+            {
+                string newValue = (string)dbEntityEntry.CurrentValues.GetValue<object>(property);
+                TicketHistoryHelper.SetTicketHistory(ticket.Id, property, "NULL", newValue, userId);
+            }
+
+
             db.Dispose();
         }
 
@@ -136,7 +145,21 @@ namespace BugTracker.DAL
                 ticket.TicketStatusId = ticketStatusId;
                 ticket.Updated = DateTime.Now;
                 ticket.AssignedToUserId = assignedUserId;
-                db.Entry(ticket).State = EntityState.Modified;
+
+
+                Ticket Newticket = db.Tickets.Find(id);
+                var dbEntityEntry = db.Entry(Newticket);
+                foreach (var property in dbEntityEntry.OriginalValues.PropertyNames)
+                {
+                    string oldVAlue = (string)dbEntityEntry.OriginalValues.GetValue<object>(property);
+                    string newValue = (string)dbEntityEntry.CurrentValues.GetValue<object>(property);
+                    if (newValue != null && !oldVAlue.Equals(newValue))
+                    {
+                        dbEntityEntry.Property(property).IsModified = true;
+                        TicketHistoryHelper.SetTicketHistory(id, property, oldVAlue, newValue, userId);
+                    }
+                }
+
                 db.SaveChanges();
                 db.Dispose();
             }

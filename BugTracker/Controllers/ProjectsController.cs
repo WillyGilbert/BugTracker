@@ -8,18 +8,26 @@ using System.Web;
 using System.Web.Mvc;
 using BugTracker.DAL;
 using BugTracker.Models;
+using Microsoft.AspNet.Identity;
+using System.Security.Claims;
 
 namespace BugTracker.Controllers
 {
-    [Authorize(Roles ="Admin,ProjectManager")]
+    //[Authorize(Roles ="Admin,ProjectManager")]
     public class ProjectsController : Controller
     {
 
         // GET: Projects
-        [Authorize(Roles = "Admin,ProjectManager,Developer,Submitter")]
+        //[Authorize(Roles = "Admin,ProjectManager,Developer,Submitter")]
         public ActionResult Index()
         {
             return View(ProjectHelper.GetProjects());
+        }
+
+        //[Authorize(Roles = "Admin,ProjectManager,Developer,Submitter")]
+        public ActionResult ShowMyProjects()
+        {
+            return View(ProjectHelper.GetMyProjects(User.Identity.GetUserId()));
         }
 
         public ActionResult ShowAllUsers(int projectId)
@@ -30,19 +38,19 @@ namespace BugTracker.Controllers
         }
 
         // GET: Projects/Details/5
-        public ActionResult Details(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Project project = ProjectHelper.GetProject(id);
-            if (project == null)
-            {
-                return HttpNotFound();
-            }
-            return View(project);
-        }
+        //public ActionResult Details(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //    }
+        //    Project project = ProjectHelper.GetProject(id);
+        //    if (project == null)
+        //    {
+        //        return HttpNotFound();
+        //    }
+        //    return View(project);
+        //}
 
         // GET: Projects/Create
         public ActionResult Create()
@@ -135,6 +143,7 @@ namespace BugTracker.Controllers
                 return HttpNotFound();
             }
             var users = ProjectHelper.UsersOutOfTheProject(projectId);
+            ViewBag.ProjectId = projectId;
             ViewBag.ProjectName = project.Name;
             ViewBag.UserId = new SelectList(users, "Id", "UserName");
             return View();
@@ -157,7 +166,7 @@ namespace BugTracker.Controllers
             }
            
             var users = ProjectHelper.UsersOutOfTheProject(projectId);
-
+            ViewBag.ProjectId = projectId;
             ViewBag.ProjectName = project.Name;
             ViewBag.UserId = new SelectList(users, "Id", "UserName");
 

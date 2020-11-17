@@ -17,6 +17,14 @@ namespace BugTracker.DAL
             return tickets.ToList();
         }
 
+        //sort tickets by title
+        public static List<Ticket> SortTicketsByTitle()
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            var tickets = db.Tickets.Include("Project").Include("TicketPriority").Include("TicketStatus").Include("TicketType").OrderBy(t => t.Title);
+            return tickets.ToList();
+        }
+
         //ticket created by submitter
         public static List<Ticket> GetTicketsBySubmitter(string userId)
         {
@@ -34,12 +42,13 @@ namespace BugTracker.DAL
         }
 
         //ticket that belong to projects of p.manager
-        //public static List<Ticket> GetTicketsByManager(string userId)
-        //{
-        //    ApplicationDbContext db = new ApplicationDbContext();            
-        //    var tickets = db.Tickets.Include("Project").Include("TicketPriority").Include("TicketStatus").Include("TicketType").Where(t => t.ProjectId == db.ProjectUsers.Where(p => p.UserId == userId).Select(p => p.ProjectId));
-        //    return tickets.ToList();
-        //}
+        public static List<Ticket> GetTicketsByManager(string userId)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            var projectsByManager = db.ProjectUsers.Where(pu => pu.UserId == userId);
+            var ticketsByManager = db.Tickets.Include("Project").Include("TicketPriority").Include("TicketStatus").Include("TicketType").Where(t => projectsByManager.Any(up => up.ProjectId == t.ProjectId));
+            return ticketsByManager.ToList();
+        }
 
         public static Ticket GetTicket(int? Id)
         {
@@ -62,6 +71,7 @@ namespace BugTracker.DAL
                 Description = description,
                 ProjectId = projectId,
                 Created = DateTime.Now,
+                Updated = DateTime.Now,
                 TicketType = ticketType,
                 TicketPriority = ticketPriority,
                 TicketStatus = ticketStatus,
@@ -72,13 +82,45 @@ namespace BugTracker.DAL
             db.Dispose();
         }
 
-        public static void Edit(int id, string title, string description, int projectId, TicketType ticketType, TicketPriority ticketPriority, TicketStatus ticketStatus)
+        public static void Edit(int id, string title, string description, int projectId, TicketType ticketType, TicketPriority ticketPriority, TicketStatus ticketStatus, string assignedUserId)
         {
             ApplicationDbContext db = new ApplicationDbContext();
             Ticket ticket = GetTicket(id);
             ticket.Title = title;
             ticket.Description = description;
             ticket.ProjectId = projectId;
+            ticket.TicketType = ticketType;
+            ticket.TicketPriority = ticketPriority;
+            ticket.TicketStatus = ticketStatus;
+            ticket.Updated = DateTime.Now;
+            ticket.AssignedToUserId = assignedUserId;
+            db.Entry(ticket).State = EntityState.Modified;
+            db.SaveChanges();
+            db.Dispose();
+        }
+
+        public static void EditBySubmitter(int id, string title, string description, int projectId, TicketType ticketType, TicketPriority ticketPriority)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            Ticket ticket = GetTicket(id);
+            ticket.Title = title;
+            ticket.Description = description;
+            ticket.ProjectId = projectId;
+            ticket.TicketType = ticketType;
+            ticket.TicketPriority = ticketPriority;            
+            ticket.Updated = DateTime.Now;
+            db.Entry(ticket).State = EntityState.Modified;
+            db.SaveChanges();
+            db.Dispose();
+        }
+
+        public static void EditByManager(int id, string title, string description, string userId, TicketType ticketType, TicketPriority ticketPriority, TicketStatus ticketStatus)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            Ticket ticket = GetTicket(id);
+            ticket.Title = title;
+            ticket.Description = description;
+            ticket.AssignedToUserId = userId;
             ticket.TicketType = ticketType;
             ticket.TicketPriority = ticketPriority;
             ticket.TicketStatus = ticketStatus;

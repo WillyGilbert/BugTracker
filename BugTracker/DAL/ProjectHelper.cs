@@ -12,15 +12,22 @@ namespace BugTracker.DAL
         static ApplicationDbContext db = new ApplicationDbContext();
         public static List<Project> GetProjects()
         {
-
+            ApplicationDbContext db = new ApplicationDbContext();
             var Project = db.Projects;
+            return Project.ToList();
+        }
+
+        public static List<Project> GetMyProjects(string userId)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            var Project = db.Projects.Where(p => p.ProjectUsers.Any(pu => pu.UserId == userId));
             return Project.ToList();
         }
 
         public static List<ApplicationUser> UsersOfTheProject(int projectId)
         {
             ApplicationDbContext db = new ApplicationDbContext();
-            // var projects = db.Users.Find(projectId).ProjectUsers();
+            // zvar projects = db.Users.Find(projectId).ProjectUsers();
             var project = db.Projects.Find(projectId);
             var users = db.Users.Where(u => u.ProjectUsers.Any(pu => pu.ProjectId == projectId)).ToList();
             return users;
@@ -32,18 +39,29 @@ namespace BugTracker.DAL
             var users = db.Users.Where(u => !u.ProjectUsers.Any(pu => pu.ProjectId == projectId)).ToList();
             return users;
         }
-
         public static Project GetProject(int? Id)
         {
             ApplicationDbContext db = new ApplicationDbContext();
-            Project Project = db.Projects.Find(Id);
-            
-            if (Project == null)
+            Project project = db.Projects.Find(Id);
+
+            if (project == null)
             {
                 return null;
             }
             db.Dispose();
-            return Project;
+            return project;
+        }
+        public static ProjectUser GetProjectUser(int? Id)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            ProjectUser projectUser = db.ProjectUsers.FirstOrDefault(pu=> pu.ProjectId == Id);
+            
+            if (projectUser == null)
+            {
+                return null;
+            }
+            db.Dispose();
+            return projectUser;
         }
         public static bool AssignUserToProject(string userId, int projectId)
         {
@@ -124,10 +142,13 @@ namespace BugTracker.DAL
         public static void Delete(int id)
         {
             ApplicationDbContext db = new ApplicationDbContext();
-            Project Project = GetProject(id);
-            db.Projects.Remove(Project);
-            db.SaveChanges();
-            db.Dispose();
+            var projectToDelete = db.Projects.Find(id);
+            if(projectToDelete != null)
+            {
+                db.Projects.Remove(projectToDelete);
+                db.SaveChanges();
+                db.Dispose();
+            }
         }
     }
 }

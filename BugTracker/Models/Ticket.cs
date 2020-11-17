@@ -12,7 +12,9 @@ namespace BugTracker.Models
         public int Id { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
+        [DisplayFormat(DataFormatString = "{0:dd MMM yyyy}")]
         public DateTime Created { get; set; }
+        [DisplayFormat(DataFormatString = "{0:dd MMM yyyy}")]
         public DateTime Updated { get; set; }
         public int ProjectId { get; set; }
         public virtual Project Project { get; set; }

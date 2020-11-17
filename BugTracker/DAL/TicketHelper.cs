@@ -62,7 +62,7 @@ namespace BugTracker.DAL
             return ticket;
         }
 
-        public static void Create(string userId, string title, string description, int projectId, TicketType ticketType, TicketPriority ticketPriority, TicketStatus ticketStatus)        
+        public static void Create(string userId, string title, string description, int projectId, int ticketTypeId, int ticketPriorityId, int ticketStatusId)        
         {
             ApplicationDbContext db = new ApplicationDbContext();            
             Ticket ticket = new Ticket
@@ -72,9 +72,9 @@ namespace BugTracker.DAL
                 ProjectId = projectId,
                 Created = DateTime.Now,
                 Updated = DateTime.Now,
-                TicketType = ticketType,
-                TicketPriority = ticketPriority,
-                TicketStatus = ticketStatus,
+                TicketTypeId = ticketTypeId,
+                TicketPriorityId = ticketPriorityId,
+                TicketStatusId = ticketStatusId,
                 OwnerUserId = userId
             };
             db.Tickets.Add(ticket);

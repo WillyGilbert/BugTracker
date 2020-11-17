@@ -19,8 +19,8 @@ namespace BugTracker.Controllers
         // GET: Tickets
         public ActionResult Index()
         {
-            //var tickets = db.Tickets.Include(t => t.Project).Include(t => t.TicketPriority).Include(t => t.TicketStatus).Include(t => t.TicketType);
-            var tickets = TicketHelper.GetTickets();
+            var tickets = db.Tickets.Include(t => t.Project).Include(t => t.TicketPriority).Include(t => t.TicketStatus).Include(t => t.TicketType);
+            //var tickets = TicketHelper.GetTickets();
             return View(tickets.ToList());
         }
 
@@ -57,7 +57,7 @@ namespace BugTracker.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         //public ActionResult Create([Bind(Include = "Id,Title,Description,Created,Updated,ProjectId,TicketTypeId,TicketPriorityId,TicketStatusId,OwnerUserId,AssignedToUserId")] Ticket ticket)
-        public ActionResult Create(string title, string description, int projectId, TicketType ticketType, TicketPriority ticketPriority, TicketStatus ticketStatus)
+        public ActionResult Create(string title, string description, int projectId, int TicketTypeId, int TicketPriorityId, int TicketStatusId)
         {
             //ViewBag.AssignedToUserId = new SelectList(db.Users, "Id", "Email", ticket.AssignedToUserId);
             //ViewBag.OwnerUserId = new SelectList(db.Users, "Id", "Email", ticket.OwnerUserId);
@@ -68,7 +68,7 @@ namespace BugTracker.Controllers
 
             if (ModelState.IsValid)
             {               
-                TicketHelper.Create(User.Identity.GetUserId(), title, description, projectId, ticketType, ticketPriority, ticketStatus);
+                TicketHelper.Create(User.Identity.GetUserId(), title, description, projectId, TicketTypeId, TicketPriorityId, TicketStatusId);
                 return RedirectToAction("Index");
             }
 

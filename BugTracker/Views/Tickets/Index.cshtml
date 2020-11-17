@@ -6,14 +6,23 @@
 
 <h2>Index</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
+@if (User.IsInRole("Submitter"))
+{
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+}
 <table class="table">
     <tr>
         <th>
             @Html.Label("ProjectName")
         </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Title)
+        </th>
+        @*<th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>*@
         <th>
             @Html.Label("AssignedUser")
         </th>
@@ -21,19 +30,13 @@
             @Html.Label("OwnerUser")
         </th>
         <th>
-            @Html.Label("TicketPriority")
+            @Html.Label("Type")
         </th>
         <th>
-            @Html.Label("TicketStatus")
+            @Html.Label("Priority")
         </th>
         <th>
-            @Html.Label("TicketType")
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Title)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Description)
+            @Html.Label("Status")
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Created)
@@ -44,46 +47,49 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-<tr>
-    <td>
-        @Html.DisplayFor(modelItem => item.Project.Name)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.AssignedToUser.Email)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.OwnerUser.Email)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.TicketPriority.Name)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.TicketStatus.Name)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.TicketType.Name)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.Title)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.Description)
-    </td>
-    <td>       
-        @Html.DisplayFor(modelItem => item.Created)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.Updated)
-    </td>
-    <td>
-        @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-        @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-        @Html.ActionLink("Delete", "Delete", new { id = item.Id }) |
-        @Html.ActionLink("AddComment", "Create", "TicketComments", new { id = item.Id }, null) |
-        @Html.ActionLink("AddAttachment", "Index", "TicketAttachments", new { ticketId = item.Id }, null)
-    </td>
-</tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Project.Name)
+            </td>
+            <td>
+                @Html.ActionLink(item.Title, "Details", new { id = item.Id })
+            </td>
+            @*<td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>*@
+            @*<td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>*@
+            <td>
+                @Html.DisplayFor(modelItem => item.AssignedToUser.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.OwnerUser.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TicketType.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TicketPriority.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TicketStatus.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Created)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Updated)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.Id }) |
+                @Html.ActionLink("AddComment", "Create", "TicketComments", new { id = item.Id }, null) |
+                @Html.ActionLink("AddAttachment", "Index", "TicketAttachments", new { ticketId = item.Id }, null)
+            </td>
+        </tr>
+    }
 
 </table>

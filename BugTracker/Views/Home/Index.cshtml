@@ -15,7 +15,23 @@
         <p>
             Check the tickets
         </p>
-        <p><a class="btn btn-success" href="@Url.Action("Index", "Tickets", new { userId = User.Identity.GetUserId() })">Go to tasks &raquo;</a></p>
+        <p><a class="btn btn-success" href="@Url.Action("Index", "Tickets", new { userId = User.Identity.GetUserId() })">Go to tickets &raquo;</a></p>
+        @*@if (User.IsInRole("Admin"))
+        {
+            <p><a class="btn btn-success" href="@Url.Action("Index", "Tickets", new { userId = User.Identity.GetUserId() })">Go to tickets &raquo;</a></p>
+        }
+        else if (User.IsInRole("ProjectManager"))
+        {
+            <p><a class="btn btn-success" href="@Url.Action("Index", "Tickets", new { userId = User.Identity.GetUserId() })">Go to tickets &raquo;</a></p>
+        }
+        else if (User.IsInRole("Developer"))
+        {
+            <p><a class="btn btn-success" href="@Url.Action("Index", "Tickets", new { userId = User.Identity.GetUserId() })">Go to tickets &raquo;</a></p>
+        }
+        else if (User.IsInRole("Submitter"))
+        {
+            <p><a class="btn btn-success" href="@Url.Action("Index", "Tickets", new { userId = User.Identity.GetUserId() })">Go to tickets &raquo;</a></p>
+        }*@
     </div>
     <div class="col-md-4">
         <h2>NOTIFICATIONS</h2>

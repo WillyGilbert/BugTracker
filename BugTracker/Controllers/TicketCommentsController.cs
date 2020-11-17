@@ -59,7 +59,7 @@ namespace BugTracker.Controllers
                 return RedirectToAction("Index");
             }
 
-            //ViewBag.TicketId = new SelectList(TicketHelper.GetTickets(), "Id", "Title", ticketComment.TicketId);
+            ViewBag.TicketId = new SelectList(TicketHelper.GetTickets(), "Id", "Title", ticketComment.TicketId);
             //ViewBag.UserId = new SelectList(UserHelper.GetAllUsers(), "Id", "Email", ticketComment.UserId);
             return View(ticketComment);
         }
@@ -93,7 +93,7 @@ namespace BugTracker.Controllers
                 TicketCommentHelper.Edit(ticketComment.Id, ticketComment.Comment, ticketComment.Created, ticketComment.TicketId, ticketComment.UserId);
                 return RedirectToAction("Index");
             }
-            ViewBag.TicketId = new SelectList(TicketHelper.GetTickets(), "Id", "Title", ticketComment.TicketId);
+            //ViewBag.TicketId = new SelectList(TicketHelper.GetTickets(), "Id", "Title", ticketComment.TicketId);
             ViewBag.UserId = new SelectList(UserHelper.GetAllUsers(), "Id", "Email", ticketComment.UserId);
             return View(ticketComment);
         }

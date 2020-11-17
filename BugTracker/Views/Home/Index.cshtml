@@ -3,11 +3,18 @@
 }
 @using Microsoft.AspNet.Identity;
 
-<div class="jumbotron">
-    <h1>PROJECTS</h1>
-    <p class="lead">Check the projects</p>
-    <p><a href="@Url.Action("Index", "Projects")" class="btn btn-primary btn-lg">Go to projects &raquo;</a></p>
-</div>
+    <div class="jumbotron">
+        <h1>PROJECTS</h1>
+        <p class="lead">Check the projects</p>
+        @if (User.IsInRole("Admin") || User.IsInRole("ProjectManager"))
+        {            
+            <p><a href="@Url.Action("Index", "Projects")" class="btn btn-primary btn-lg">Go to projects &raquo;</a></p>
+        }
+        else
+        {           
+            <p><a href="@Url.Action("ShowMyProjects", "Projects")" class="btn btn-primary btn-lg">Go to projects &raquo;</a></p>
+        }        
+    </div>
 
 <div class="row">
     <div class="col-md-4">
@@ -16,6 +23,7 @@
             Check the tickets
         </p>
         <p><a class="btn btn-success" href="@Url.Action("Index", "Tickets", new { userId = User.Identity.GetUserId() })">Go to tickets &raquo;</a></p>
+        <p><a class="btn btn-success" href="@Url.Action(ViewBag.Page, "Tickets", new { userId = User.Identity.GetUserId() })">Go to tickets &raquo;</a></p>
         @*@if (User.IsInRole("Admin"))
         {
             <p><a class="btn btn-success" href="@Url.Action("Index", "Tickets", new { userId = User.Identity.GetUserId() })">Go to tickets &raquo;</a></p>

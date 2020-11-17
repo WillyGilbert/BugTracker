@@ -19,31 +19,39 @@ namespace BugTracker.DAL
             return tickets.ToList();
         }
 
+        //public static List<Ticket> GetTickets(string userId)
+        //{
+        //    ApplicationDbContext db = new ApplicationDbContext();
+        //    List<Ticket> tickets = new List<Ticket>();
+        //    List<Ticket> allTickets = db.Tickets.Include("Project").Include("TicketPriority").Include("TicketStatus").Include("TicketType").ToList();      
+
+        //    if (UserHelper.UserInRole(userId, "Admin"))            
+        //    {
+        //        tickets = allTickets;
+        //    }
+        //    else if(UserHelper.UserInRole(userId, "ProjectManager"))
+        //    {
+        //        var projectsByManager = db.ProjectUsers.Where(pu => pu.UserId == userId);
+        //        tickets = allTickets.Where(t => projectsByManager.Any(up => up.ProjectId == t.ProjectId)).ToList();
+        //    }
+        //    else if (UserHelper.UserInRole(userId, "Developer"))
+        //    {
+        //        tickets = allTickets.Where(t => t.AssignedToUserId == userId).ToList();
+        //    }
+        //    else if (UserHelper.UserInRole(userId, "Submitter"))
+        //    {
+        //        tickets = allTickets.Where(t => t.OwnerUserId == userId).ToList();
+        //    }
+
+        //    return tickets;
+        //}
+
         public static List<Ticket> GetTickets(string userId)
         {
             ApplicationDbContext db = new ApplicationDbContext();
-            List<Ticket> tickets = new List<Ticket>();
-            List<Ticket> allTickets = db.Tickets.Include("Project").Include("TicketPriority").Include("TicketStatus").Include("TicketType").ToList();      
-            
-            if (UserHelper.UserInRole(userId, "Admin"))            
-            {
-                tickets = allTickets;
-            }
-            else if(UserHelper.UserInRole(userId, "ProjectManager"))
-            {
-                var projectsByManager = db.ProjectUsers.Where(pu => pu.UserId == userId);
-                tickets = allTickets.Where(t => projectsByManager.Any(up => up.ProjectId == t.ProjectId)).ToList();
-            }
-            else if (UserHelper.UserInRole(userId, "Developer"))
-            {
-                tickets = allTickets.Where(t => t.AssignedToUserId == userId).ToList();
-            }
-            else if (UserHelper.UserInRole(userId, "Submitter"))
-            {
-                tickets = allTickets.Where(t => t.OwnerUserId == userId).ToList();
-            }
-                
-            return tickets;
+            //List<Ticket> tickets = new List<Ticket>();
+            List<Ticket> allTickets = db.Tickets.Include("Project").Include("TicketPriority").Include("TicketStatus").Include("TicketType").ToList();
+            return allTickets;           
         }
 
         //sort tickets by title

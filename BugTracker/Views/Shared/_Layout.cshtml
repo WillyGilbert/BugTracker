@@ -17,14 +17,15 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @if (User.IsInRole("Admin") || User.IsInRole("ProjectManager"))
+                @*@if (User.IsInRole("Admin") || User.IsInRole("ProjectManager"))
                 {
                     @Html.ActionLink("Projects", "Index", "Projects", new { area = "" }, new { @class = "navbar-brand" })
                 }
                 else
                 {
                     @Html.ActionLink("Projects", "ShowMyProjects", "Projects", new { area = "" }, new { @class = "navbar-brand" })
-                }
+                }*@
+                @Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
 
             </div>
             <div class="navbar-collapse collapse">

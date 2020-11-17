@@ -1,5 +1,7 @@
 ﻿@model IEnumerable<BugTracker.Models.Ticket>
 @using Microsoft.AspNet.Identity;
+@using PagedList.Mvc;
+@using PagedList;
 
 @{
     ViewBag.Title = "Index";
@@ -16,11 +18,11 @@
 
 @using (Html.BeginForm())
 {
-<p>
-    @Html.Raw("Sort Tickets By: ")
-    @Html.DropDownList("SelectFilter", (SelectList)ViewBag.Values, new { onchange = "this.form.submit();" })
-    @Html.Hidden("UserId", (object)ViewBag.UserId)
-</p>
+    <p>
+        @Html.Raw("Sort Tickets By: ")
+        @Html.DropDownList("SelectFilter", (SelectList)ViewBag.Values, new { onchange = "this.form.submit();" })
+        @Html.Hidden("UserId", (object)ViewBag.UserId)
+    </p>
 }
 <table class="table">
     <tr>
@@ -29,7 +31,7 @@
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Title)
-        </th>        
+        </th>
         <th>
             @Html.Label("AssignedUser")
         </th>
@@ -65,7 +67,7 @@
             </td>
             <td>
                 @Html.ActionLink(item.Title, "Details", new { id = item.Id })
-            </td>           
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.AssignedToUser.Email)
             </td>
@@ -102,3 +104,8 @@
 <div>
     @Html.ActionLink("Back to Home", "Index", "Home")
 </div>
+
+<br />
+@*Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+@Html.PagedListPager(Model, page => Url.Action("Index", "Tickets", new { userId = User.Identity.GetUserId(), page }))*@

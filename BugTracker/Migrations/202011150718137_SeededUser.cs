@@ -22,22 +22,22 @@
                 INSERT[dbo].[AspNetRoles]([Id],[Name])VALUES(N'33945cfb-84dd-4873-b641-fd98be6841fb',N'Submitter')
                 INSERT[dbo].[AspNetUserRoles]([UserId],[RoleId])VALUES(N'02561e7e-ba49-46c1-adb3-b9a6b6130af9',N'2aa9bd8e-496b-4141-87fc-4b800bbbbdf1')
 
-                INSERT[dbo].[TicketPriorities]([Id],[Name])VALUES(1,N'Critical')
-                INSERT[dbo].[TicketPriorities]([Id],[Name])VALUES(2,N'High')
-                INSERT[dbo].[TicketPriorities]([Id],[Name])VALUES(3,N'Average')
-                INSERT[dbo].[TicketPriorities]([Id],[Name])VALUES(4,N'Low')
+                INSERT[dbo].[TicketPriorities]([Name])VALUES(N'Critical')
+                INSERT[dbo].[TicketPriorities]([Name])VALUES(N'High')
+                INSERT[dbo].[TicketPriorities]([Name])VALUES(N'Average')
+                INSERT[dbo].[TicketPriorities]([Name])VALUES(N'Low')
 
-                INSERT[dbo].[TicketStatus]([Id],[Name])VALUES(1,N'Created')
-                INSERT[dbo].[TicketStatus]([Id],[Name])VALUES(2,N'Assigned')
-                INSERT[dbo].[TicketStatus]([Id],[Name])VALUES(3,N'Reassigned')
-                INSERT[dbo].[TicketStatus]([Id],[Name])VALUES(4,N'Completed')
-                INSERT[dbo].[TicketStatus]([Id],[Name])VALUES(5,N'Closed')
-                INSERT[dbo].[TicketStatus]([Id],[Name])VALUES(6,N'Cancelled')
+                INSERT[dbo].[TicketStatus]([Name])VALUES(N'Created')
+                INSERT[dbo].[TicketStatus]([Name])VALUES(N'Assigned')
+                INSERT[dbo].[TicketStatus]([Name])VALUES(N'Reassigned')
+                INSERT[dbo].[TicketStatus]([Name])VALUES(N'Completed')
+                INSERT[dbo].[TicketStatus]([Name])VALUES(N'Closed')
+                INSERT[dbo].[TicketStatus]([Name])VALUES(N'Cancelled')
 
-                INSERT[dbo].[TicketTypes]([Id],[Name])VALUES(1,N'Issue')
-                INSERT[dbo].[TicketTypes]([Id],[Name])VALUES(2,N'Bug')
-                INSERT[dbo].[TicketTypes]([Id],[Name])VALUES(3,N'Feature')
-                INSERT[dbo].[TicketTypes]([Id],[Name])VALUES(4,N'Task')
+                INSERT[dbo].[TicketTypes]([Name])VALUES(N'Issue')
+                INSERT[dbo].[TicketTypes]([Name])VALUES(N'Bug')
+                INSERT[dbo].[TicketTypes]([Name])VALUES(N'Feature')
+                INSERT[dbo].[TicketTypes]([Name])VALUES(N'Task')
                 ");
         }
 

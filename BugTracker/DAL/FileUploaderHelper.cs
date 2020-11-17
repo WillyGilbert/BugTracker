@@ -3,8 +3,9 @@ using System.Web;
 using System.IO;
 using System.Web.Mvc;
 using System.Collections.Generic;
+using BugTracker.Models;
 
-namespace BugTracker.Models
+namespace BugTracker.DAL
 {
     public static class FileUploaderHelper
     {
@@ -41,6 +42,12 @@ namespace BugTracker.Models
                 }
             else
             {
+                if(!(file.ContentLength > 0))
+                {
+                    message.Description = "The file you have selected is empty";
+                    message.Code = MessageType.EmptyFile;
+                    return message;
+                }
                 message.Description = "You have not specified a file.";
                 message.Code = MessageType.NoFileSelected;
                 return message;

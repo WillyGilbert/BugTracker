@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<BugTracker.Models.Ticket>
+@using Microsoft.AspNet.Identity;
 
 @{
     ViewBag.Title = "Index";
@@ -11,6 +12,15 @@
     <p>
         @Html.ActionLink("Create New", "Create")
     </p>
+}
+
+@using (Html.BeginForm())
+{
+<p>
+    @Html.Raw("Sort Tickets By: ")
+    @Html.DropDownList("SelectFilter", (SelectList)ViewBag.Values, new { onchange = "this.form.submit();" })
+    @Html.Hidden("UserId", (object)ViewBag.UserId)
+</p>
 }
 <table class="table">
     <tr>
@@ -85,7 +95,6 @@
             </td>
             <td>
                 @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.Id }) |
                 @Html.ActionLink("AddComment", "Create", "TicketComments", new { id = item.Id }, null) |
                 @Html.ActionLink("AddAttachment", "Index", "TicketAttachments", new { ticketId = item.Id }, null)
             </td>
@@ -93,3 +102,6 @@
     }
 
 </table>
+<div>
+    @Html.ActionLink("Back to Home", "Index", "Home")
+</div>

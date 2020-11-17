@@ -47,10 +47,11 @@ namespace BugTracker.DAL
         }
 
         //sort tickets by title
-        public static List<Ticket> SortTicketsByTitle()
+        public static List<Ticket> SortTicketsByTitle(List<Ticket> tickets)
         {
-            ApplicationDbContext db = new ApplicationDbContext();
-            var tickets = db.Tickets.Include("Project").Include("TicketPriority").Include("TicketStatus").Include("TicketType").OrderBy(t => t.Title);
+            //ApplicationDbContext db = new ApplicationDbContext();
+            //var tickets = db.Tickets.Include("Project").Include("TicketPriority").Include("TicketStatus").Include("TicketType").OrderBy(t => t.Title);
+            var sortedTickets = tickets.OrderBy(t => t.Title);
             return tickets.ToList();
         }
 
@@ -163,14 +164,6 @@ namespace BugTracker.DAL
             db.Entry(ticket).State = EntityState.Modified;
             db.SaveChanges();
             db.Dispose();
-        }
-
-        public static void Delete(int id)
-        {
-            ApplicationDbContext db = new ApplicationDbContext();
-            Ticket ticket = GetTicket(id);
-            db.Tickets.Remove(ticket);
-            db.SaveChanges();
-        }
+        }       
     }
 }

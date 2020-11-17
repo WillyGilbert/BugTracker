@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using BugTracker.DAL;
 using BugTracker.Models;
+using BugTracker.ViewModels;
 using Microsoft.AspNet.Identity;
 
 namespace BugTracker.Controllers
@@ -33,11 +34,35 @@ namespace BugTracker.Controllers
         //    return View(tickets);
         //}      
 
+        [Authorize]
         public ActionResult Index(string userId)
-        {            
+        {
+            FilterViewModel filterModel = new FilterViewModel();
+            ViewBag.SelectFilter = new SelectList(filterModel.FilterOptions);
+            ViewBag.UserId = userId;
             var tickets = TicketHelper.GetTickets(userId).ToList();
             return View(tickets);
         }
+
+        [HttpPost]
+        public ActionResult Index(string SelectFilter, string UserId)
+        {
+            FilterViewModel filterModel = new FilterViewModel();
+            ViewBag.SelectFilter = new SelectList(filterModel.FilterOptions);
+            var tickets = TicketHelper.GetTickets(UserId).ToList();
+
+            if (SelectFilter == "Creation Date")
+            {
+                tickets = TicketHelper.GetTickets(UserId).ToList();
+            }
+            else if (SelectFilter == "Title")
+            {
+                tickets = TicketHelper.SortTicketsByTitle(TicketHelper.GetTickets(UserId)).ToList();
+            }          
+
+            return View(tickets);
+        }
+
 
         // GET: Tickets/Details/5
         public ActionResult Details(int? id)
@@ -132,34 +157,7 @@ namespace BugTracker.Controllers
             ViewBag.TicketStatusId = new SelectList(db.TicketStatuses, "Id", "Name", ticket.TicketStatusId);
             ViewBag.TicketTypeId = new SelectList(db.TicketTypes, "Id", "Name", ticket.TicketTypeId);
             return View(ticket);
-        }
-
-        // GET: Tickets/Delete/5
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Ticket ticket = TicketHelper.GetTicket(id);
-            if (ticket == null)
-            {
-                return HttpNotFound();
-            }
-            return View(ticket);
-        }
-
-        // POST: Tickets/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            //Ticket ticket = TicketHelper.GetTicket(id);            
-            //db.Tickets.Remove(ticket);
-            //db.SaveChanges();
-            TicketHelper.Delete(id);
-            return RedirectToAction("Index");
-        }
+        }        
 
         protected override void Dispose(bool disposing)
         {

@@ -16,9 +16,9 @@ namespace BugTracker.Controllers
     {
 
         // GET: TicketComments
-        public ActionResult Index()
+        public ActionResult Index(int ticketId)
         {
-            var ticketComments = TicketCommentHelper.GetTicketComments();
+            var ticketComments = TicketCommentHelper.GetTicketCommentsByTicket(ticketId);
             return View(ticketComments.ToList());
         }
 
@@ -56,10 +56,10 @@ namespace BugTracker.Controllers
             if (ModelState.IsValid)
             {                
                 TicketCommentHelper.Create(ticketComment.Comment, ticketComment.TicketId, User.Identity.GetUserId());
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "Tickets", new { userId = User.Identity.GetUserId() });
             }
 
-            //ViewBag.TicketId = new SelectList(TicketHelper.GetTickets(), "Id", "Title", ticketComment.TicketId);
+            ViewBag.TicketId = new SelectList(TicketHelper.GetTickets(), "Id", "Title", ticketComment.TicketId);
             //ViewBag.UserId = new SelectList(UserHelper.GetAllUsers(), "Id", "Email", ticketComment.UserId);
             return View(ticketComment);
         }
@@ -93,7 +93,7 @@ namespace BugTracker.Controllers
                 TicketCommentHelper.Edit(ticketComment.Id, ticketComment.Comment, ticketComment.Created, ticketComment.TicketId, ticketComment.UserId);
                 return RedirectToAction("Index");
             }
-            ViewBag.TicketId = new SelectList(TicketHelper.GetTickets(), "Id", "Title", ticketComment.TicketId);
+            //ViewBag.TicketId = new SelectList(TicketHelper.GetTickets(), "Id", "Title", ticketComment.TicketId);
             ViewBag.UserId = new SelectList(UserHelper.GetAllUsers(), "Id", "Email", ticketComment.UserId);
             return View(ticketComment);
         }

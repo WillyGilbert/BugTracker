@@ -8,7 +8,9 @@ using System.Web;
 using System.Web.Mvc;
 using BugTracker.DAL;
 using BugTracker.Models;
+using BugTracker.ViewModels;
 using Microsoft.AspNet.Identity;
+using PagedList;
 
 namespace BugTracker.Controllers
 {
@@ -17,11 +19,103 @@ namespace BugTracker.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Tickets
-        public ActionResult Index()
+        //public ActionResult Index(string userId)
+        //{
+        //    //var tickets = db.Tickets.Include(t => t.Project).Include(t => t.TicketPriority).Include(t => t.TicketStatus).Include(t => t.TicketType);
+        //    var tickets = new List<Ticket>();
+        //    if (User.IsInRole("Admin"))
+        //        tickets = TicketHelper.GetTickets().ToList();
+        //    else if (User.IsInRole("ProjectManager"))
+        //        tickets = TicketHelper.GetTicketsByManager(userId).ToList();
+        //    else if (User.IsInRole("Developer"))
+        //        tickets = TicketHelper.GetTicketsByDeveloper(userId).ToList();
+        //    else if (User.IsInRole("Submitter"))
+        //        tickets = TicketHelper.GetTicketsBySubmitter(userId).ToList();
+
+        //    return View(tickets);
+        //} 
+
+
+        //[Authorize]
+        //public ActionResult Index(string userId, int? page)
+        //{
+        //    FilterViewModel filterModel = new FilterViewModel();
+        //    ViewBag.SelectFilter = new SelectList(filterModel.FilterOptions);
+        //    ViewBag.UserId = userId;
+        //    var tickets = TicketHelper.GetTickets(userId).ToList();
+
+        //    int pageSize = 10;
+        //    int pageNumber = (page ?? 1);
+        //    ViewBag.TicketsPage = pageNumber;
+        //    return View(tickets.ToPagedList(pageNumber, pageSize));
+        //    //return View(tickets);
+        //}
+
+        //[HttpPost]
+        //public ActionResult Index(string SelectFilter, string UserId, int? page)
+        //{
+        //    FilterViewModel filterModel = new FilterViewModel();
+        //    ViewBag.SelectFilter = new SelectList(filterModel.FilterOptions);
+        //    var tickets = TicketHelper.GetTickets(UserId).ToList();
+
+        //    if (SelectFilter == "Creation Date")
+        //    {
+        //        tickets = TicketHelper.GetTickets(UserId).ToList();
+        //    }
+        //    else if (SelectFilter == "Title")
+        //    {
+        //        tickets = TicketHelper.SortTicketsByTitle(TicketHelper.GetTickets(UserId)).ToList();
+        //    }
+
+        //    int pageSize = 10;
+        //    int pageNumber = (page ?? 1);
+        //    ViewBag.TicketsPage = pageNumber;
+        //    return View(tickets.ToPagedList(pageNumber, pageSize));
+
+        //    //return View(tickets);
+        //}
+
+
+        public ActionResult Index(string userId, int? page)
         {
-            var tickets = db.Tickets.Include(t => t.Project).Include(t => t.TicketPriority).Include(t => t.TicketStatus).Include(t => t.TicketType);
-            //var tickets = TicketHelper.GetTickets();
-            return View(tickets.ToList());
+            FilterViewModel filterModel = new FilterViewModel();
+            ViewBag.SelectFilter = new SelectList(filterModel.FilterOptions);
+            ViewBag.UserId = userId;
+            ViewBag.Page = "Index";
+
+            var allTickets = TicketHelper.GetTickets(userId).ToList();
+            List<Ticket> tickets = new List<Ticket>();
+            if (userId != null)
+            {
+                if (UserHelper.UserInRole(userId, "Admin"))
+                {
+                    tickets = allTickets;
+                }
+                else if (UserHelper.UserInRole(userId, "ProjectManager"))
+                {
+                    var projectsByManager = db.ProjectUsers.Where(pu => pu.UserId == userId);
+                    tickets = allTickets.Where(t => projectsByManager.Any(up => up.ProjectId == t.ProjectId)).ToList();
+                }
+                else if (UserHelper.UserInRole(userId, "Developer"))
+                {
+                    tickets = allTickets.Where(t => t.AssignedToUserId == userId).ToList();
+                }
+                else if (UserHelper.UserInRole(userId, "Submitter"))
+                {
+                    tickets = allTickets.Where(t => t.OwnerUserId == userId).ToList();
+                }
+                return View(tickets);
+            }
+            else
+            {
+                return View();
+            }
+
+            //int pageSize = 10;
+            //int pageNumber = (page ?? 1);
+            //ViewBag.TicketsPage = pageNumber;
+            //return View(tickets.ToPagedList(pageNumber, pageSize));
+            //return View(tickets);
         }
 
         // GET: Tickets/Details/5
@@ -69,7 +163,7 @@ namespace BugTracker.Controllers
             if (ModelState.IsValid)
             {               
                 TicketHelper.Create(User.Identity.GetUserId(), title, description, projectId, TicketTypeId, TicketPriorityId, TicketStatusId);
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", new { userId = User.Identity.GetUserId() });
             }
 
             return View();            
@@ -89,8 +183,8 @@ namespace BugTracker.Controllers
                 return HttpNotFound();
             }
             ViewBag.AssignedToUserId = new SelectList(db.Users, "Id", "Email", ticket.AssignedToUserId);
-            ViewBag.OwnerUserId = new SelectList(db.Users, "Id", "Email", ticket.OwnerUserId);
-            ViewBag.ProjectId = new SelectList(db.Projects, "Id", "Name", ticket.ProjectId);
+            //ViewBag.OwnerUserId = new SelectList(db.Users, "Id", "Email", ticket.OwnerUserId);
+            //ViewBag.ProjectId = new SelectList(db.Projects, "Id", "Name", ticket.ProjectId);
             ViewBag.TicketPriorityId = new SelectList(db.TicketPriorities, "Id", "Name", ticket.TicketPriorityId);
             ViewBag.TicketStatusId = new SelectList(db.TicketStatuses, "Id", "Name", ticket.TicketStatusId);
             ViewBag.TicketTypeId = new SelectList(db.TicketTypes, "Id", "Name", ticket.TicketTypeId);
@@ -108,43 +202,16 @@ namespace BugTracker.Controllers
             {
                 //db.Entry(ticket).State = EntityState.Modified;
                 //db.SaveChanges();
-                TicketHelper.Edit(ticket.Id, ticket.Title, ticket.Description, ticket.ProjectId, ticket.TicketType, ticket.TicketPriority, ticket.TicketStatus, ticket.AssignedToUserId);
-                return RedirectToAction("Index");
+                TicketHelper.Edit(ticket.Id, ticket.OwnerUserId, ticket.Title, ticket.Description, ticket.TicketTypeId, ticket.TicketPriorityId, ticket.TicketStatusId, ticket.AssignedToUserId);
+                return RedirectToAction("Index", new { userId = User.Identity.GetUserId() });
             }
             ViewBag.AssignedToUserId = new SelectList(db.Users, "Id", "Email", ticket.AssignedToUserId);   
-            ViewBag.ProjectId = new SelectList(db.Projects, "Id", "Name", ticket.ProjectId);
+            //ViewBag.ProjectId = new SelectList(db.Projects, "Id", "Name", ticket.ProjectId);
             ViewBag.TicketPriorityId = new SelectList(db.TicketPriorities, "Id", "Name", ticket.TicketPriorityId);
             ViewBag.TicketStatusId = new SelectList(db.TicketStatuses, "Id", "Name", ticket.TicketStatusId);
             ViewBag.TicketTypeId = new SelectList(db.TicketTypes, "Id", "Name", ticket.TicketTypeId);
             return View(ticket);
-        }
-
-        // GET: Tickets/Delete/5
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Ticket ticket = TicketHelper.GetTicket(id);
-            if (ticket == null)
-            {
-                return HttpNotFound();
-            }
-            return View(ticket);
-        }
-
-        // POST: Tickets/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            //Ticket ticket = TicketHelper.GetTicket(id);            
-            //db.Tickets.Remove(ticket);
-            //db.SaveChanges();
-            TicketHelper.Delete(id);
-            return RedirectToAction("Index");
-        }
+        }        
 
         protected override void Dispose(bool disposing)
         {

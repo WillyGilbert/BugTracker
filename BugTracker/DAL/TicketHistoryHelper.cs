@@ -69,5 +69,11 @@ namespace BugTracker.DAL
             db.SaveChanges();
             db.Dispose();
         }
+
+        public static void SetTicketHistory(int ticketId, string property, string oldValue, string newValue, string userId)
+        {
+            var today = DateTime.Now;
+            Create(ticketId, property, oldValue, newValue, today, userId);
+        }
     }
 }

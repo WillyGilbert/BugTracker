@@ -29,13 +29,13 @@ namespace BugTracker.DAL
             return TicketComment;
         }
 
-        public static void Create(string comment, DateTime created, int ticketId, string userId)
+        public static void Create(string comment, int ticketId, string userId)
         {
             ApplicationDbContext db = new ApplicationDbContext();
             TicketComment ticketComment = new TicketComment
             {
                 Comment = comment,
-                Created = created,
+                Created = DateTime.Now,
                 TicketId = ticketId,
                 UserId = userId
             };

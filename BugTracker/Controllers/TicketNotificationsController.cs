@@ -117,5 +117,18 @@ namespace BugTracker.Controllers
             TicketNotificationHelper.Delete(id);
             return RedirectToAction("Index");
         }
+        // Notification****************
+        [HttpPost]
+        public ActionResult Notify (string userId, int? ticketId)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            if(!string.IsNullOrEmpty(userId) && ticketId.HasValue)
+            {
+                Ticket ticket = db.Tickets.FirstOrDefault(n => n.Id == ticketId);
+                var user = db.Users.FirstOrDefault(u => u.Id == userId);
+              
+            }
+            return View();
+        }
     }
 }

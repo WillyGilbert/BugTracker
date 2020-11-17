@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using BugTracker.DAL;
 using BugTracker.Models;
+using Microsoft.AspNet.Identity;
 
 namespace BugTracker.Controllers
 {
@@ -15,32 +15,17 @@ namespace BugTracker.Controllers
     {
 
         // GET: TicketAttachments
-        public ActionResult Index()
+        public ActionResult Index(int ticketId)
         {
-            var ticketAttachments = TicketAttachmentHelper.GetTicketAttachments();
+            var ticketAttachments = TicketAttachmentHelper.GetTicketAttachments(ticketId);
+            ViewBag.TicketId = ticketId;
             return View(ticketAttachments.ToList());
         }
 
-        // GET: TicketAttachments/Details/5
-        public ActionResult Details(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            TicketAttachment ticketAttachment = TicketAttachmentHelper.GetTicketAttachment(id);
-            if (ticketAttachment == null)
-            {
-                return HttpNotFound();
-            }
-            return View(ticketAttachment);
-        }
-
         // GET: TicketAttachments/Create
-        public ActionResult Create()
+        public ActionResult Create(int ticketId)
         {
-            ViewBag.TicketId = new SelectList(TicketHelper.GetTickets(), "Id", "Title");
-            ViewBag.UserId = new SelectList(UserHelper.GetAllUsers(), "Id", "Email");
+            ViewBag.TicketId = ticketId;
             return View();
         }
 
@@ -49,62 +34,23 @@ namespace BugTracker.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,TicketId,FilePath,Description,Created,UserId,FileUrl")] TicketAttachment ticketAttachment)
+        public ActionResult Create(int ticketId, HttpPostedFileBase file, string description)
         {
-            if (ModelState.IsValid)
+            Message message = TicketAttachmentHelper.Create(ticketId, file, description, User.Identity.GetUserId());
+            if(message.Code == MessageType.Successful && description.Length > 0)
             {
-                TicketAttachmentHelper.Create(ticketAttachment.TicketId, 
-                    ticketAttachment.FilePath, 
-                    ticketAttachment.Description, 
-                    ticketAttachment.Created, 
-                    ticketAttachment.UserId, 
-                    ticketAttachment.FileUrl);
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", new { ticketId });
             }
-
-            ViewBag.TicketId = new SelectList(TicketHelper.GetTickets(), "Id", "Title", ticketAttachment.TicketId);
-            ViewBag.UserId = new SelectList(UserHelper.GetAllUsers(), "Id", "Email", ticketAttachment.UserId);
-            return View(ticketAttachment);
-        }
-
-        // GET: TicketAttachments/Edit/5
-        public ActionResult Edit(int? id)
-        {
-            if (id == null)
+            if(description.Length > 0)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                ViewBag.MessageDescription = "";
             }
-            TicketAttachment ticketAttachment = TicketAttachmentHelper.GetTicketAttachment(id);
-            if (ticketAttachment == null)
+            else
             {
-                return HttpNotFound();
+                ViewBag.MessageDescription = "Please add the description";
             }
-            ViewBag.TicketId = new SelectList(TicketHelper.GetTickets(), "Id", "Title", ticketAttachment.TicketId);
-            ViewBag.UserId = new SelectList(UserHelper.GetAllUsers(), "Id", "Email", ticketAttachment.UserId);
-            return View(ticketAttachment);
-        }
-
-        // POST: TicketAttachments/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,TicketId,FilePath,Description,Created,UserId,FileUrl")] TicketAttachment ticketAttachment)
-        {
-            if (ModelState.IsValid)
-            {
-                TicketAttachmentHelper.Edit(ticketAttachment.Id, 
-                    ticketAttachment.TicketId, 
-                    ticketAttachment.FilePath, 
-                    ticketAttachment.Description, 
-                    ticketAttachment.Created, 
-                    ticketAttachment.UserId, 
-                    ticketAttachment.FileUrl);
-                return RedirectToAction("Index");
-            }
-            ViewBag.TicketId = new SelectList(TicketHelper.GetTickets(), "Id", "Title", ticketAttachment.TicketId);
-            ViewBag.UserId = new SelectList(UserHelper.GetAllUsers(), "Id", "Email", ticketAttachment.UserId);
-            return View(ticketAttachment);
+            ViewBag.Message = message.Description;
+            return View();
         }
 
         // GET: TicketAttachments/Delete/5
@@ -125,10 +71,25 @@ namespace BugTracker.Controllers
         // POST: TicketAttachments/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult DeleteConfirmed(int id, string file, int ticketId)
         {
             TicketAttachmentHelper.Delete(id);
-            return RedirectToAction("Index");
+            FileUploaderHelper.Delete(file);
+            return RedirectToAction("Index", new { ticketId });
         }
+
+        //Attachament Management
+
+        public FileResult Download(string file)
+        {
+            var path = FileUploaderHelper.Download(file);
+            return File(path, "application/force- download", Path.GetFileName(path));
+        }
+
+        private List<string> GetFiles()
+        {
+            return FileUploaderHelper.GetFiles();
+        }
+
     }
 }

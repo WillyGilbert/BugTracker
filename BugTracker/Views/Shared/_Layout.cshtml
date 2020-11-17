@@ -19,11 +19,11 @@
                 </button>
                 @if (User.IsInRole("Admin") || User.IsInRole("ProjectManager"))
                 {
-                    @Html.ActionLink("Home", "Index", "Projects", new { area = "" }, new { @class = "navbar-brand" })
+                    @Html.ActionLink("Projects", "Index", "Projects", new { area = "" }, new { @class = "navbar-brand" })
                 }
                 else
                 {
-                    @Html.ActionLink("Home", "ShowMyProjects", "Projects", new { area = "" }, new { @class = "navbar-brand" })
+                    @Html.ActionLink("Projects", "ShowMyProjects", "Projects", new { area = "" }, new { @class = "navbar-brand" })
                 }
 
             </div>

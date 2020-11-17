@@ -1,4 +1,4 @@
-﻿@model IEnumerable<BugTracker.Models.Ticket>
+﻿@model IPagedList<BugTracker.Models.Ticket>
 @using Microsoft.AspNet.Identity;
 @using PagedList.Mvc;
 @using PagedList;
@@ -30,7 +30,7 @@
             @Html.Label("ProjectName")
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Title)
+            @Html.DisplayNameFor(model => model.First().Title)
         </th>
         <th>
             @Html.Label("AssignedUser")
@@ -48,10 +48,10 @@
             @Html.Label("Status")
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Created)
+            @Html.DisplayNameFor(model => model.First().Created)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Updated)
+            @Html.DisplayNameFor(model => model.First().Updated)
         </th>
         <th>
             @Html.Label("Comments")
@@ -106,6 +106,6 @@
 </div>
 
 <br />
-@*Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
 
-@Html.PagedListPager(Model, page => Url.Action("Index", "Tickets", new { userId = User.Identity.GetUserId(), page }))*@
+    @Html.PagedListPager(Model, page => Url.Action("Index", "Tickets", new { userId = User.Identity.GetUserId(), page }))

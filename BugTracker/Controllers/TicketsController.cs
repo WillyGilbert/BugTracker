@@ -33,90 +33,87 @@ namespace BugTracker.Controllers
         //        tickets = TicketHelper.GetTicketsBySubmitter(userId).ToList();
 
         //    return View(tickets);
-        //} 
-
-
-        //[Authorize]
-        //public ActionResult Index(string userId, int? page)
-        //{
-        //    FilterViewModel filterModel = new FilterViewModel();
-        //    ViewBag.SelectFilter = new SelectList(filterModel.FilterOptions);
-        //    ViewBag.UserId = userId;
-        //    var tickets = TicketHelper.GetTickets(userId).ToList();
-
-        //    int pageSize = 10;
-        //    int pageNumber = (page ?? 1);
-        //    ViewBag.TicketsPage = pageNumber;
-        //    return View(tickets.ToPagedList(pageNumber, pageSize));
-        //    //return View(tickets);
-        //}
-
-        //[HttpPost]
-        //public ActionResult Index(string SelectFilter, string UserId, int? page)
-        //{
-        //    FilterViewModel filterModel = new FilterViewModel();
-        //    ViewBag.SelectFilter = new SelectList(filterModel.FilterOptions);
-        //    var tickets = TicketHelper.GetTickets(UserId).ToList();
-
-        //    if (SelectFilter == "Creation Date")
-        //    {
-        //        tickets = TicketHelper.GetTickets(UserId).ToList();
-        //    }
-        //    else if (SelectFilter == "Title")
-        //    {
-        //        tickets = TicketHelper.SortTicketsByTitle(TicketHelper.GetTickets(UserId)).ToList();
-        //    }
-
-        //    int pageSize = 10;
-        //    int pageNumber = (page ?? 1);
-        //    ViewBag.TicketsPage = pageNumber;
-        //    return View(tickets.ToPagedList(pageNumber, pageSize));
-
-        //    //return View(tickets);
         //}
 
 
+        [Authorize]
         public ActionResult Index(string userId, int? page)
         {
             FilterViewModel filterModel = new FilterViewModel();
             ViewBag.SelectFilter = new SelectList(filterModel.FilterOptions);
             ViewBag.UserId = userId;
-            ViewBag.Page = "Index";
+            var tickets = TicketHelper.GetTickets(userId).ToList();
 
-            var allTickets = TicketHelper.GetTickets(userId).ToList();
-            List<Ticket> tickets = new List<Ticket>();
-            if (userId != null)
-            {
-                if (UserHelper.UserInRole(userId, "Admin"))
-                {
-                    tickets = allTickets;
-                }
-                else if (UserHelper.UserInRole(userId, "ProjectManager"))
-                {
-                    var projectsByManager = db.ProjectUsers.Where(pu => pu.UserId == userId);
-                    tickets = allTickets.Where(t => projectsByManager.Any(up => up.ProjectId == t.ProjectId)).ToList();
-                }
-                else if (UserHelper.UserInRole(userId, "Developer"))
-                {
-                    tickets = allTickets.Where(t => t.AssignedToUserId == userId).ToList();
-                }
-                else if (UserHelper.UserInRole(userId, "Submitter"))
-                {
-                    tickets = allTickets.Where(t => t.OwnerUserId == userId).ToList();
-                }
-                return View(tickets);
-            }
-            else
-            {
-                return View();
-            }
-
-            //int pageSize = 10;
-            //int pageNumber = (page ?? 1);
-            //ViewBag.TicketsPage = pageNumber;
-            //return View(tickets.ToPagedList(pageNumber, pageSize));
-            //return View(tickets);
+            int pageSize = 10;
+            int pageNumber = (page ?? 1);
+            ViewBag.TicketsPage = pageNumber;
+            return View(tickets.ToPagedList(pageNumber, pageSize));           
         }
+
+        [HttpPost]
+        public ActionResult Index(string SelectFilter, string UserId, int? page)
+        {
+            FilterViewModel filterModel = new FilterViewModel();
+            ViewBag.SelectFilter = new SelectList(filterModel.FilterOptions);
+            var tickets = TicketHelper.GetTickets(UserId).ToList();
+
+            if (SelectFilter == "Creation Date")
+            {
+                tickets = TicketHelper.GetTickets(UserId).ToList();
+            }
+            else if (SelectFilter == "Title")
+            {
+                tickets = TicketHelper.SortTicketsByTitle(TicketHelper.GetTickets(UserId)).ToList();
+            }
+
+            int pageSize = 10;
+            int pageNumber = (page ?? 1);
+            ViewBag.TicketsPage = pageNumber;
+            return View(tickets.ToPagedList(pageNumber, pageSize));            
+        }
+
+
+        //public ActionResult Index(string userId, int? page)
+        //{
+        //    FilterViewModel filterModel = new FilterViewModel();
+        //    ViewBag.SelectFilter = new SelectList(filterModel.FilterOptions);
+        //    ViewBag.UserId = userId;
+        //    ViewBag.Page = "Index";
+
+        //    var allTickets = TicketHelper.GetTickets(userId).ToList();
+        //    List<Ticket> tickets = new List<Ticket>();
+        //    if (userId != null)
+        //    {
+        //        if (UserHelper.UserInRole(userId, "Admin"))
+        //        {
+        //            tickets = allTickets;
+        //        }
+        //        else if (UserHelper.UserInRole(userId, "ProjectManager"))
+        //        {
+        //            var projectsByManager = db.ProjectUsers.Where(pu => pu.UserId == userId);
+        //            tickets = allTickets.Where(t => projectsByManager.Any(up => up.ProjectId == t.ProjectId)).ToList();
+        //        }
+        //        else if (UserHelper.UserInRole(userId, "Developer"))
+        //        {
+        //            tickets = allTickets.Where(t => t.AssignedToUserId == userId).ToList();
+        //        }
+        //        else if (UserHelper.UserInRole(userId, "Submitter"))
+        //        {
+        //            tickets = allTickets.Where(t => t.OwnerUserId == userId).ToList();
+        //        }
+        //        return View(tickets);
+        //    }
+        //    else
+        //    {
+        //        return View();
+        //    }
+
+        //    //int pageSize = 10;
+        //    //int pageNumber = (page ?? 1);
+        //    //ViewBag.TicketsPage = pageNumber;
+        //    //return View(tickets.ToPagedList(pageNumber, pageSize));
+        //    //return View(tickets);
+        //}
 
         // GET: Tickets/Details/5
         public ActionResult Details(int? id)

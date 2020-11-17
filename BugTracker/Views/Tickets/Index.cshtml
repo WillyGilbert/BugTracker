@@ -29,10 +29,7 @@
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Title)
-        </th>
-        @*<th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>*@
+        </th>        
         <th>
             @Html.Label("AssignedUser")
         </th>
@@ -54,6 +51,9 @@
         <th>
             @Html.DisplayNameFor(model => model.Updated)
         </th>
+        <th>
+            @Html.Label("Comments")
+        </th>
         <th></th>
     </tr>
 
@@ -65,13 +65,7 @@
             </td>
             <td>
                 @Html.ActionLink(item.Title, "Details", new { id = item.Id })
-            </td>
-            @*<td>
-                    @Html.DisplayFor(modelItem => item.Title)
-                </td>*@
-            @*<td>
-                    @Html.DisplayFor(modelItem => item.Description)
-                </td>*@
+            </td>           
             <td>
                 @Html.DisplayFor(modelItem => item.AssignedToUser.Email)
             </td>
@@ -92,6 +86,9 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Updated)
+            </td>
+            <td>
+                @Html.ActionLink(item.TicketComments.Count.ToString(), "Index", "TicketComments", new { ticketId = item.Id }, null)
             </td>
             <td>
                 @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |

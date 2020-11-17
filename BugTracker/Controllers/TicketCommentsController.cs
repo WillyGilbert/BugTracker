@@ -16,9 +16,9 @@ namespace BugTracker.Controllers
     {
 
         // GET: TicketComments
-        public ActionResult Index()
+        public ActionResult Index(int ticketId)
         {
-            var ticketComments = TicketCommentHelper.GetTicketComments();
+            var ticketComments = TicketCommentHelper.GetTicketCommentsByTicket(ticketId);
             return View(ticketComments.ToList());
         }
 
@@ -56,7 +56,7 @@ namespace BugTracker.Controllers
             if (ModelState.IsValid)
             {                
                 TicketCommentHelper.Create(ticketComment.Comment, ticketComment.TicketId, User.Identity.GetUserId());
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "Tickets", new { userId = User.Identity.GetUserId() });
             }
 
             ViewBag.TicketId = new SelectList(TicketHelper.GetTickets(), "Id", "Title", ticketComment.TicketId);

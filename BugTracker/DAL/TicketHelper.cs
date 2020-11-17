@@ -52,7 +52,7 @@ namespace BugTracker.DAL
             //ApplicationDbContext db = new ApplicationDbContext();
             //var tickets = db.Tickets.Include("Project").Include("TicketPriority").Include("TicketStatus").Include("TicketType").OrderBy(t => t.Title);
             var sortedTickets = tickets.OrderBy(t => t.Title);
-            return tickets.ToList();
+            return sortedTickets.ToList();
         }
 
         //ticket created by submitter

@@ -195,6 +195,7 @@
     <Compile Include="Controllers\TicketsController.cs" />
     <Compile Include="Controllers\TicketStatusController.cs" />
     <Compile Include="Controllers\TicketTypesController.cs" />
+    <Compile Include="DAL\EmailNotification.cs" />
     <Compile Include="DAL\ProjectHelper.cs" />
     <Compile Include="DAL\ProjectUserHelper.cs" />
     <Compile Include="DAL\TicketAttachmentHelper.cs" />

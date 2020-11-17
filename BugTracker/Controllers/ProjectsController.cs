@@ -143,6 +143,7 @@ namespace BugTracker.Controllers
                 return HttpNotFound();
             }
             var users = ProjectHelper.UsersOutOfTheProject(projectId);
+            ViewBag.ProjectId = projectId;
             ViewBag.ProjectName = project.Name;
             ViewBag.UserId = new SelectList(users, "Id", "UserName");
             return View();
@@ -165,7 +166,7 @@ namespace BugTracker.Controllers
             }
            
             var users = ProjectHelper.UsersOutOfTheProject(projectId);
-
+            ViewBag.ProjectId = projectId;
             ViewBag.ProjectName = project.Name;
             ViewBag.UserId = new SelectList(users, "Id", "UserName");
 

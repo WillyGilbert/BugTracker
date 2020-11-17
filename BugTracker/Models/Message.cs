@@ -16,6 +16,7 @@ namespace BugTracker.Models
     {
         Successful,
         NoFileSelected,
-        ERROR
+        ERROR,
+        EmptyFile
     }
 }

@@ -10,6 +10,7 @@ using BugTracker.DAL;
 using BugTracker.Models;
 using Microsoft.AspNet.Identity;
 using System.Security.Claims;
+using PagedList;
 
 namespace BugTracker.Controllers
 {
@@ -19,15 +20,23 @@ namespace BugTracker.Controllers
 
         // GET: Projects
         //[Authorize(Roles = "Admin,ProjectManager,Developer,Submitter")]
-        public ActionResult Index()
+        public ActionResult Index(int? page)
         {
-            return View(ProjectHelper.GetProjects());
+            var projects = ProjectHelper.GetProjects();
+            int pageSize = 10;
+            int pageNumber = (page ?? 1);
+            ViewBag.TicketsPage = pageNumber;
+            return View(projects.ToPagedList(pageNumber, pageSize));
         }
 
         //[Authorize(Roles = "Admin,ProjectManager,Developer,Submitter")]
-        public ActionResult ShowMyProjects()
+        public ActionResult ShowMyProjects(int? page)
         {
-            return View(ProjectHelper.GetMyProjects(User.Identity.GetUserId()));
+            var projects = ProjectHelper.GetMyProjects(User.Identity.GetUserId());
+            int pageSize = 10;
+            int pageNumber = (page ?? 1);
+            ViewBag.TicketsPage = pageNumber;
+            return View(projects.ToPagedList(pageNumber, pageSize));
         }
 
         public ActionResult ShowAllUsers(int projectId)

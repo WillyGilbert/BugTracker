@@ -1,4 +1,6 @@
-﻿@model IPagedList<BugTracker.Models.Project>
+﻿@model IEnumerable<BugTracker.Models.Project>
+@*@model IPagedList<BugTracker.Models.Project>*@
+@using Microsoft.AspNet.Identity;
 @using PagedList.Mvc;
 @using PagedList;
 
@@ -6,42 +8,120 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Projects</h2>
+<h2>Projects:</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
+@if (User.IsInRole("Admin") || User.IsInRole("ProjectManager"))
+{
+    <p class="btn btn-warning">
+        @Html.ActionLink("Create New", "Create")
+    </p>
+}
 
-<div style="text-align:end">
-    <button style="background-color:cadetblue">@Html.ActionLink("My Projects", "ShowMyProjects")</button>
-    <button style="background-color:burlywood">@Html.ActionLink("All Projects", "Index") </button>
-</div>
 <table class="table">
-    <tr>
+    <tr> 
         <th>
-            @Html.DisplayNameFor(model => model.First().Name)
+        </th>
+        <th>
+            @Html.Label("Project Name")
         </th>
         <th></th>
     </tr>
 
-    @foreach (var item in Model)
+    @foreach (var project in Model)
     {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
-            </td>
-            <td>
-                @Html.ActionLink("Show Users", "ShowAllUsers", new { projectId = item.Id })
-            </td>
-        </tr>
+<tr>
+    <td style="padding-left: 0px; padding-right: 0px; margin-left: 0px; margin-right: 0px; width: 10px">
+        <i class="fa fa-plus icon" id="Icon"></i>
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => project.Name)
+    </td>
+    <td>
+        @Html.ActionLink("Edit", "Edit", new { id = project.Id }) |
+        @Html.ActionLink("Details", "Details", new { id = project.Id }) |
+        @Html.ActionLink("Delete", "Delete", new { id = project.Id })
+    </td>
+</tr>
+        if (project.Tickets.Count > 0)
+        {
+            <tbody>
+                <tr>
+                    <th>
+                    </th>
+                    <th>
+                        @Html.Label("Title")
+                    </th>
+                    <th>
+                        @Html.Label("AssignedUser")
+                    </th>
+                    <th>
+                        @Html.Label("OwnerUser")
+                    </th>
+                    <th>
+                        @Html.Label("Type")
+                    </th>
+                    <th>
+                        @Html.Label("Priority")
+                    </th>
+                    <th>
+                        @Html.Label("Status")
+                    </th>
+                    <th>
+                        @Html.Label("Created")
+                    </th>
+                    <th>
+                        @Html.Label("Updated")
+                    </th>
+                    <th>
+                        @Html.Label("Comments")
+                    </th>
+                    <th></th>
+                </tr>
+                @foreach (var ticket in project.Tickets)
+                {
+                    <tr style="color:yellowgreen">
+                        <td>
+                        </td>
+                        <td>
+                            @Html.ActionLink(ticket.Title, "Details", "Ticket", new { id = ticket.Id }, null)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => ticket.AssignedToUser.Email)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => ticket.OwnerUser.Email)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => ticket.TicketType.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => ticket.TicketPriority.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => ticket.TicketStatus.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => ticket.Created)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => ticket.Updated)
+                        </td>
+                        <td>
+                            @Html.ActionLink(ticket.TicketComments.Count.ToString(), "Index", "TicketComments", new { ticketId = ticket.Id }, null)
+                        </td>
+                        <td>
+                            @Html.ActionLink("Edit", "Edit", new { id = ticket.Id }) |
+                            @Html.ActionLink("AddComment", "Create", "TicketComments", new { id = ticket.Id }, null) |
+                            @Html.ActionLink("AddAttachment", "Index", "TicketAttachments", new { ticketId = ticket.Id }, null)
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        }
     }
 
 </table>
-<br />
-Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
 
-@Html.PagedListPager(Model, page => Url.Action("Index"))
+@section Scripts {
+    <script src="~/Scripts/App.js"></script>
+}

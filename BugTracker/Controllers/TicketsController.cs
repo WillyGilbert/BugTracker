@@ -185,7 +185,11 @@ namespace BugTracker.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.AssignedToUserId = new SelectList(db.Users, "Id", "Email", ticket.AssignedToUserId);
+                        
+            string roleId = db.Roles.FirstOrDefault(r => r.Name == "Developer").Id;
+            var developers = db.Users.Where(u => u.Roles.Any(r => r.RoleId == roleId));
+
+            ViewBag.AssignedToUserId = new SelectList(developers, "Id", "Email", ticket.AssignedToUserId);      
             //ViewBag.OwnerUserId = new SelectList(db.Users, "Id", "Email", ticket.OwnerUserId);
             //ViewBag.ProjectId = new SelectList(db.Projects, "Id", "Name", ticket.ProjectId);
             ViewBag.TicketPriorityId = new SelectList(db.TicketPriorities, "Id", "Name", ticket.TicketPriorityId);
@@ -208,7 +212,11 @@ namespace BugTracker.Controllers
                 TicketHelper.Edit(ticket.Id, ticket.OwnerUserId, ticket.Title, ticket.Description, ticket.TicketTypeId, ticket.TicketPriorityId, ticket.TicketStatusId, ticket.AssignedToUserId);
                 return RedirectToAction("Index", new { userId = User.Identity.GetUserId() });
             }
-            ViewBag.AssignedToUserId = new SelectList(db.Users, "Id", "Email", ticket.AssignedToUserId);   
+                        
+            string roleId = db.Roles.FirstOrDefault(r => r.Name == "Developer").Id;
+            var developers = db.Users.Where(u => u.Roles.Any(r => r.RoleId == roleId));
+
+            ViewBag.AssignedToUserId = new SelectList(developers, "Id", "Email", ticket.AssignedToUserId);      
             //ViewBag.ProjectId = new SelectList(db.Projects, "Id", "Name", ticket.ProjectId);
             ViewBag.TicketPriorityId = new SelectList(db.TicketPriorities, "Id", "Name", ticket.TicketPriorityId);
             ViewBag.TicketStatusId = new SelectList(db.TicketStatuses, "Id", "Name", ticket.TicketStatusId);

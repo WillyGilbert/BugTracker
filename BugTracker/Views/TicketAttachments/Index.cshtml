@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<BugTracker.Models.TicketAttachment>
+@using Microsoft.AspNet.Identity;
 
 @{
     ViewBag.Title = "Index";
@@ -49,3 +50,6 @@
     }
 
 </table>
+<div>
+    @Html.ActionLink("Back to List", "Index", "Projects", new { userId = User.Identity.GetUserId() }, null)
+</div>

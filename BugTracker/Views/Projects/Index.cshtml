@@ -36,10 +36,20 @@
             <td>
                 @Html.ActionLink(project.Name, "Details", new { id = project.Id }, null)
             </td>
-            <td>
+            @if (User.IsInRole("Submitter"))
+            {
+                <td>
+                     @Html.ActionLink("Create Ticket", "Create", "Tickets", new { projectId = project.Id }, null)
+                </td>
+            }
+            @if (User.IsInRole("Admin") || User.IsInRole("ProjectManager"))
+            {
+                <td>               
                 @Html.ActionLink("Edit", "Edit", new { id = project.Id }) |
                 @Html.ActionLink("Delete", "Delete", new { id = project.Id })
-            </td>
+                </td>
+            }
+            
         </tr>
         if (project.Tickets.Count > 0)
         {

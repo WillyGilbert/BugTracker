@@ -123,7 +123,7 @@ namespace BugTracker.DAL
             var dbEntityEntry = db.Entry(newTicket);
             foreach (var property in dbEntityEntry.OriginalValues.PropertyNames)
             {
-                string newValue = dbEntityEntry.CurrentValues.GetValue<object>(property).ToString(); ;
+                string newValue = dbEntityEntry.CurrentValues.GetValue<object>(property).ToString();
                 TicketHistoryHelper.SetTicketHistory(ticket.Id, property, "New Record", newValue, HttpContext.Current.User.Identity.GetUserId());
             }
 

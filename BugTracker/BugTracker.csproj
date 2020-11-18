@@ -226,6 +226,10 @@
     <Compile Include="Migrations\202011150718137_SeededUser.designer.cs">
       <DependentUpon>202011150718137_SeededUser.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202011180833416_AddPropertiesOnTicketNotifications.cs" />
+    <Compile Include="Migrations\202011180833416_AddPropertiesOnTicketNotifications.Designer.cs">
+      <DependentUpon>202011180833416_AddPropertiesOnTicketNotifications.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="DAL\FileUploaderHelper.cs" />
@@ -502,6 +506,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202011150718137_SeededUser.resx">
       <DependentUpon>202011150718137_SeededUser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202011180833416_AddPropertiesOnTicketNotifications.resx">
+      <DependentUpon>202011180833416_AddPropertiesOnTicketNotifications.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

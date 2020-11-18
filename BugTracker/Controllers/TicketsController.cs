@@ -51,7 +51,7 @@ namespace BugTracker.Controllers
         }
 
         [HttpPost]
-        public ActionResult Index(string SelectFilter, string UserId, int? page)
+        public ActionResult Index(string SelectFilter, string UserId, int? page, string searchString)
         {
             FilterViewModel filterModel = new FilterViewModel();
             ViewBag.SelectFilter = new SelectList(filterModel.FilterOptions);
@@ -64,6 +64,12 @@ namespace BugTracker.Controllers
             else if (SelectFilter == "Title")
             {
                 tickets = TicketHelper.SortTicketsByTitle(TicketHelper.GetTickets(UserId)).ToList();
+            }
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                tickets = TicketHelper.GetTickets(UserId).Where(t => t.Title.Contains(searchString)
+                                       || t.Description.Contains(searchString)).ToList();
             }
 
             int pageSize = 10;

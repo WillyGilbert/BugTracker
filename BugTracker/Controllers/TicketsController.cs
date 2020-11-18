@@ -137,11 +137,12 @@ namespace BugTracker.Controllers
         }
 
         // GET: Tickets/Create
-        public ActionResult Create()
+        public ActionResult Create(int projectId)
         {
             //ViewBag.AssignedToUserId = new SelectList(db.Users, "Id", "Email");
             //ViewBag.OwnerUserId = new SelectList(db.Users, "Id", "Email");
-            ViewBag.ProjectId = new SelectList(db.Projects, "Id", "Name");
+            //ViewBag.ProjectId = new SelectList(db.Projects, "Id", "Name");
+            ViewBag.ProjectId = projectId;
             ViewBag.TicketPriorityId = new SelectList(db.TicketPriorities, "Id", "Name");
             ViewBag.TicketStatusId = new SelectList(db.TicketStatuses, "Id", "Name");
             ViewBag.TicketTypeId = new SelectList(db.TicketTypes, "Id", "Name");

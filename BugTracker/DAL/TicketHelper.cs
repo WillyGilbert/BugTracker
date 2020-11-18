@@ -134,7 +134,6 @@ namespace BugTracker.DAL
         {
             ApplicationDbContext db = new ApplicationDbContext();
             Ticket ticket = db.Tickets.Find(id);
-            //var user = db.Users.Find(userId);
             if (ticket != null)
             {
                 if (title != null) ticket.Title = title;

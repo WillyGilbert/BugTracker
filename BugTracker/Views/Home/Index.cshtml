@@ -44,6 +44,6 @@
     <div class="col-md-4">
         <h2>NOTIFICATIONS</h2>
         <p>Check the notifications</p>
-        <p><a class="btn btn-success" href="@Url.Action("Index", "TicketsNotifications", new { userId = User.Identity.GetUserId() })"> Notifications &raquo; </a></p>
+        <p><a class="btn btn-success" href="@Url.Action("Index", "TicketNotifications", new { userId = User.Identity.GetUserId() })"> @ViewBag.NotificationToManager Notifications &raquo; <br /> @ViewBag.UnreadManager Unread</a></p>
     </div>    
 </div>

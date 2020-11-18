@@ -57,6 +57,7 @@
             @Html.Label("Comments")
         </th>
         <th></th>
+        <th></th>
     </tr>
 
     @foreach (var item in Model)
@@ -91,6 +92,9 @@
             </td>
             <td>
                 @Html.ActionLink(item.TicketComments.Count.ToString(), "Index", "TicketComments", new { ticketId = item.Id }, null)
+            </td>
+            <td>
+                @Html.ActionLink("Assign", "Assign", new { id = item.Id })
             </td>
             <td>
                 @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |

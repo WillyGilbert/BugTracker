@@ -92,7 +92,7 @@ namespace BugTracker.DAL
         {
             ApplicationDbContext db = new ApplicationDbContext();
             Ticket ticket = db.Tickets.Find(Id);
-            db.Dispose();
+            //db.Dispose();
             if (ticket == null)
             {
                 return null;

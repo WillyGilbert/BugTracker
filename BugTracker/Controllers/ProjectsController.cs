@@ -6,60 +6,34 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
-using BugTracker.DAL;
 using BugTracker.Models;
-using Microsoft.AspNet.Identity;
-using System.Security.Claims;
-using PagedList;
 
 namespace BugTracker.Controllers
 {
-    //[Authorize(Roles ="Admin,ProjectManager")]
     public class ProjectsController : Controller
     {
+        private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Projects
-        //[Authorize(Roles = "Admin,ProjectManager,Developer,Submitter")]
-        public ActionResult Index(int? page)
+        public ActionResult Index()
         {
-            var projects = ProjectHelper.GetProjects();
-            int pageSize = 10;
-            int pageNumber = (page ?? 1);
-            ViewBag.TicketsPage = pageNumber;
-            return View(projects.ToPagedList(pageNumber, pageSize));
-        }
-
-        //[Authorize(Roles = "Admin,ProjectManager,Developer,Submitter")]
-        public ActionResult ShowMyProjects(int? page)
-        {
-            var projects = ProjectHelper.GetMyProjects(User.Identity.GetUserId());
-            int pageSize = 10;
-            int pageNumber = (page ?? 1);
-            ViewBag.TicketsPage = pageNumber;
-            return View(projects.ToPagedList(pageNumber, pageSize));
-        }
-
-        public ActionResult ShowAllUsers(int projectId)
-        {
-            ViewBag.ProjectId = projectId;
-            var users = ProjectHelper.UsersOfTheProject(projectId);
-            return View(users);
+            return View(db.Projects.Include(p => p.Tickets).ToList());
         }
 
         // GET: Projects/Details/5
-        //public ActionResult Details(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-        //    }
-        //    Project project = ProjectHelper.GetProject(id);
-        //    if (project == null)
-        //    {
-        //        return HttpNotFound();
-        //    }
-        //    return View(project);
-        //}
+        public ActionResult Details(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Project project = db.Projects.Find(id);
+            if (project == null)
+            {
+                return HttpNotFound();
+            }
+            return View(project);
+        }
 
         // GET: Projects/Create
         public ActionResult Create()
@@ -76,7 +50,8 @@ namespace BugTracker.Controllers
         {
             if (ModelState.IsValid)
             {
-                ProjectHelper.Create(project.Name);
+                db.Projects.Add(project);
+                db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
@@ -90,7 +65,7 @@ namespace BugTracker.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Project project = ProjectHelper.GetProject(id);
+            Project project = db.Projects.Find(id);
             if (project == null)
             {
                 return HttpNotFound();
@@ -107,7 +82,8 @@ namespace BugTracker.Controllers
         {
             if (ModelState.IsValid)
             {
-                ProjectHelper.Edit(project.Id, project.Name);
+                db.Entry(project).State = EntityState.Modified;
+                db.SaveChanges();
                 return RedirectToAction("Index");
             }
             return View(project);
@@ -120,7 +96,7 @@ namespace BugTracker.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Project project = ProjectHelper.GetProject(id);
+            Project project = db.Projects.Find(id);
             if (project == null)
             {
                 return HttpNotFound();
@@ -133,53 +109,19 @@ namespace BugTracker.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            ProjectHelper.Delete(id);
+            Project project = db.Projects.Find(id);
+            db.Projects.Remove(project);
+            db.SaveChanges();
             return RedirectToAction("Index");
         }
-        public ActionResult RemoveUserFromProject(string userId, int projectId)
+
+        protected override void Dispose(bool disposing)
         {
-            if(ProjectHelper.RemoveUserFromProject(userId, projectId))
+            if (disposing)
             {
-                return RedirectToAction("ShowAllUsers",new { projectId});
+                db.Dispose();
             }
-            return RedirectToAction("ShowAllUsers", new { projectId });
-        }
-        public ActionResult AssignUserToProject(int projectId)
-        {
-            var project = ProjectHelper.GetProject(projectId);
-            if(project == null)
-            {
-                return HttpNotFound();
-            }
-            var users = ProjectHelper.UsersOutOfTheProject(projectId);
-            ViewBag.ProjectId = projectId;
-            ViewBag.ProjectName = project.Name;
-            ViewBag.UserId = new SelectList(users, "Id", "UserName");
-            return View();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult AssignUserToProject(string Id, int projectId)
-        {
-
-            var project = ProjectHelper.GetProject(projectId);
-            if (project == null)
-            {
-                return HttpNotFound();
-            }
-
-            if (ProjectHelper.AssignUserToProject(Id, projectId))
-            {
-                return RedirectToAction("ShowAllUsers", new { projectId });
-            }
-           
-            var users = ProjectHelper.UsersOutOfTheProject(projectId);
-            ViewBag.ProjectId = projectId;
-            ViewBag.ProjectName = project.Name;
-            ViewBag.UserId = new SelectList(users, "Id", "UserName");
-
-            return RedirectToAction("ShowAllUsers", new { projectId });
+            base.Dispose(disposing);
         }
     }
 }

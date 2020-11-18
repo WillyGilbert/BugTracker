@@ -18,7 +18,7 @@
 }
 
 <table class="table">
-    <tr> 
+    <tr>
         <th>
         </th>
         <th>
@@ -29,19 +29,18 @@
 
     @foreach (var project in Model)
     {
-<tr>
-    <td style="padding-left: 0px; padding-right: 0px; margin-left: 0px; margin-right: 0px; width: 10px">
-        <i class="fa fa-plus icon" id="Icon"></i>
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => project.Name)
-    </td>
-    <td>
-        @Html.ActionLink("Edit", "Edit", new { id = project.Id }) |
-        @Html.ActionLink("Details", "Details", new { id = project.Id }) |
-        @Html.ActionLink("Delete", "Delete", new { id = project.Id })
-    </td>
-</tr>
+        <tr>
+            <td style="padding-left: 0px; padding-right: 0px; margin-left: 0px; margin-right: 0px; width: 10px">
+                <i class="fa fa-plus icon" id="Icon"></i>              
+            </td>
+            <td>
+                @Html.ActionLink(project.Name, "Details", new { id = project.Id }, null)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = project.Id }) |
+                @Html.ActionLink("Delete", "Delete", new { id = project.Id })
+            </td>
+        </tr>
         if (project.Tickets.Count > 0)
         {
             <tbody>
@@ -83,7 +82,7 @@
                         <td>
                         </td>
                         <td>
-                            @Html.ActionLink(ticket.Title, "Details", "Ticket", new { id = ticket.Id }, null)
+                            @Html.ActionLink(ticket.Title, "Details", "Tickets", new { id = ticket.Id }, null)
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => ticket.AssignedToUser.Email)
@@ -110,7 +109,7 @@
                             @Html.ActionLink(ticket.TicketComments.Count.ToString(), "Index", "TicketComments", new { ticketId = ticket.Id }, null)
                         </td>
                         <td>
-                            @Html.ActionLink("Edit", "Edit", new { id = ticket.Id }) |
+                            @Html.ActionLink("Edit", "Edit", "Tickets", new { id = ticket.Id }, null) |
                             @Html.ActionLink("AddComment", "Create", "TicketComments", new { id = ticket.Id }, null) |
                             @Html.ActionLink("AddAttachment", "Index", "TicketAttachments", new { ticketId = ticket.Id }, null)
                         </td>

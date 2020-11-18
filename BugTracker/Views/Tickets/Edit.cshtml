@@ -111,7 +111,7 @@
 }
 
 <div>
-    @Html.ActionLink("Back to List", "Index", new { userId = User.Identity.GetUserId() })
+    @Html.ActionLink("Back to List", "Index", "Projects", new { userId = User.Identity.GetUserId() }, null)
 </div>
 
 @section Scripts {

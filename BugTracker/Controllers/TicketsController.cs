@@ -166,7 +166,7 @@ namespace BugTracker.Controllers
             if (ModelState.IsValid)
             {               
                 TicketHelper.Create(User.Identity.GetUserId(), title, description, projectId, TicketTypeId, TicketPriorityId, TicketStatusId);
-                return RedirectToAction("Index", new { userId = User.Identity.GetUserId() });
+                return RedirectToAction("Index", "Projects", new { userId = User.Identity.GetUserId() });
             }
 
             return View();            
@@ -210,7 +210,7 @@ namespace BugTracker.Controllers
                 //db.Entry(ticket).State = EntityState.Modified;
                 //db.SaveChanges();
                 TicketHelper.Edit(ticket.Id, ticket.OwnerUserId, ticket.Title, ticket.Description, ticket.TicketTypeId, ticket.TicketPriorityId, ticket.TicketStatusId, ticket.AssignedToUserId);
-                return RedirectToAction("Index", new { userId = User.Identity.GetUserId() });
+                return RedirectToAction("Index", "Projects", new { userId = User.Identity.GetUserId() });
             }
                         
             string roleId = db.Roles.FirstOrDefault(r => r.Name == "Developer").Id;

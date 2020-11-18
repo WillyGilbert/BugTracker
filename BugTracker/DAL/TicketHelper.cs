@@ -114,6 +114,7 @@ namespace BugTracker.DAL
                 TicketPriorityId = ticketPriorityId,
                 TicketStatusId = ticketStatusId,
                 OwnerUserId = userId
+
             };
             db.Tickets.Add(ticket);
             db.SaveChanges();
@@ -123,8 +124,12 @@ namespace BugTracker.DAL
             var dbEntityEntry = db.Entry(newTicket);
             foreach (var property in dbEntityEntry.OriginalValues.PropertyNames)
             {
-                string newValue = dbEntityEntry.CurrentValues.GetValue<object>(property).ToString();
-                TicketHistoryHelper.SetTicketHistory(ticket.Id, property, "New Record", newValue, HttpContext.Current.User.Identity.GetUserId());
+                string newValue = "";
+                if (dbEntityEntry.CurrentValues.GetValue<object>(property) != null)
+                {
+                    dbEntityEntry.CurrentValues.GetValue<object>(property).ToString();
+                    TicketHistoryHelper.SetTicketHistory(ticket.Id, property, "New Record", newValue, HttpContext.Current.User.Identity.GetUserId());
+                }
             }
 
             db.Dispose();
@@ -144,7 +149,7 @@ namespace BugTracker.DAL
                 if (ticketPriorityId != 0) ticket.TicketPriorityId = ticketPriorityId;
                 if (ticketStatusId != 0) ticket.TicketStatusId = ticketStatusId;
                 ticket.Updated = DateTime.Now;
-                if(assignedUserId != null) ticket.AssignedToUserId = assignedUserId;
+                if (assignedUserId != null) ticket.AssignedToUserId = assignedUserId;
 
                 var entityEntry = db.Entry(ticket);
                 foreach (var property in entityEntry.OriginalValues.PropertyNames)
@@ -152,7 +157,7 @@ namespace BugTracker.DAL
                     string oldVAlue = "";
                     string newValue = "";
 
-                    if(entityEntry.OriginalValues.GetValue<object>(property) != null)
+                    if (entityEntry.OriginalValues.GetValue<object>(property) != null)
                     {
                         oldVAlue = entityEntry.OriginalValues.GetValue<object>(property).ToString();
                     }

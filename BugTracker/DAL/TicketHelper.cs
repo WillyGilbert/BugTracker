@@ -114,6 +114,7 @@ namespace BugTracker.DAL
                 TicketPriorityId = ticketPriorityId,
                 TicketStatusId = ticketStatusId,
                 OwnerUserId = userId
+
             };
             db.Tickets.Add(ticket);
             db.SaveChanges();
@@ -123,8 +124,12 @@ namespace BugTracker.DAL
             var dbEntityEntry = db.Entry(newTicket);
             foreach (var property in dbEntityEntry.OriginalValues.PropertyNames)
             {
-                string newValue = dbEntityEntry.CurrentValues.GetValue<object>(property).ToString(); ;
-                TicketHistoryHelper.SetTicketHistory(ticket.Id, property, "New Record", newValue, HttpContext.Current.User.Identity.GetUserId());
+                string newValue = "";
+                if (dbEntityEntry.CurrentValues.GetValue<object>(property) != null)
+                {
+                    dbEntityEntry.CurrentValues.GetValue<object>(property).ToString();
+                    TicketHistoryHelper.SetTicketHistory(ticket.Id, property, "New Record", newValue, HttpContext.Current.User.Identity.GetUserId());
+                }
             }
 
             db.Dispose();
@@ -134,24 +139,34 @@ namespace BugTracker.DAL
         {
             ApplicationDbContext db = new ApplicationDbContext();
             Ticket ticket = db.Tickets.Find(id);
-            //var user = db.Users.Find(userId);
             if (ticket != null)
             {
-                ticket.Title = title;
-                ticket.Description = description;
+                if (title != null) ticket.Title = title;
+                if (description != null) ticket.Description = description;
                 //ticket.OwnerUserId = userId;
                 //ticket.ProjectId = ticket.ProjectId;
-                ticket.TicketTypeId = ticketTypeId;
-                ticket.TicketPriorityId = ticketPriorityId;
-                ticket.TicketStatusId = ticketStatusId;
+                if (ticketTypeId != 0) ticket.TicketTypeId = ticketTypeId;
+                if (ticketPriorityId != 0) ticket.TicketPriorityId = ticketPriorityId;
+                if (ticketStatusId != 0) ticket.TicketStatusId = ticketStatusId;
                 ticket.Updated = DateTime.Now;
-                ticket.AssignedToUserId = assignedUserId;
+                if (assignedUserId != null) ticket.AssignedToUserId = assignedUserId;
 
                 var entityEntry = db.Entry(ticket);
                 foreach (var property in entityEntry.OriginalValues.PropertyNames)
                 {
-                    string oldVAlue = entityEntry.OriginalValues.GetValue<object>(property).ToString();
-                    string newValue = entityEntry.CurrentValues.GetValue<object>(property).ToString();
+                    string oldVAlue = "";
+                    string newValue = "";
+
+                    if (entityEntry.OriginalValues.GetValue<object>(property) != null)
+                    {
+                        oldVAlue = entityEntry.OriginalValues.GetValue<object>(property).ToString();
+                    }
+
+                    if (entityEntry.CurrentValues.GetValue<object>(property) != null)
+                    {
+                        newValue = entityEntry.CurrentValues.GetValue<object>(property).ToString();
+                    }
+
                     if (newValue != null && !oldVAlue.Equals(newValue))
                     {
                         entityEntry.Property(property).IsModified = true;

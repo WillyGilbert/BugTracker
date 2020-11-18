@@ -16,6 +16,13 @@ namespace BugTracker.DAL
             return TicketComment.ToList();
         }
 
+        public static List<TicketComment> GetTicketCommentsByTicket(int ticketId)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            var TicketComment = db.TicketComments.Include(t => t.Ticket).Include(t => t.User).Where(t => t.TicketId == ticketId);
+            return TicketComment.ToList();
+        }
+
         public static TicketComment GetTicketComment(int? Id)
         {
             ApplicationDbContext db = new ApplicationDbContext();

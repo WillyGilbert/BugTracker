@@ -6,17 +6,19 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
-using BugTracker.DAL;
 using BugTracker.Models;
 
 namespace BugTracker.Controllers
 {
     public class TicketNotificationsController : Controller
     {
+        private ApplicationDbContext db = new ApplicationDbContext();
+
         // GET: TicketNotifications
-        public ActionResult Index()
+        public ActionResult Index(string userId)
         {
-            return View(TicketNotificationHelper.GetTicketNotifications());
+            var ticketNotifications = db.TicketNotifications.Include(t => t.Ticket).Include(t => t.User).Where(t=> t.UserId == userId);
+            return View(ticketNotifications.ToList());
         }
 
         // GET: TicketNotifications/Details/5
@@ -26,7 +28,7 @@ namespace BugTracker.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            TicketNotification ticketNotification = TicketNotificationHelper.GetTicketNotification(id);
+            TicketNotification ticketNotification = db.TicketNotifications.Find(id);
             if (ticketNotification == null)
             {
                 return HttpNotFound();
@@ -37,8 +39,8 @@ namespace BugTracker.Controllers
         // GET: TicketNotifications/Create
         public ActionResult Create()
         {
-            ViewBag.TicketId = new SelectList(TicketHelper.GetTickets(), "Id", "Title");
-            ViewBag.UserId = new SelectList(UserHelper.GetAllUsers(), "Id", "Email");
+            ViewBag.TicketId = new SelectList(db.Tickets, "Id", "Title");
+            ViewBag.UserId = new SelectList(db.Users, "Id", "Email");
             return View();
         }
 
@@ -47,16 +49,17 @@ namespace BugTracker.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,TicketId,UserId")] TicketNotification ticketNotification)
+        public ActionResult Create([Bind(Include = "Id,TicketId,UserId,Type,ModifiedUser")] TicketNotification ticketNotification)
         {
             if (ModelState.IsValid)
             {
-                TicketNotificationHelper.Create(ticketNotification.TicketId, ticketNotification.UserId);
+                db.TicketNotifications.Add(ticketNotification);
+                db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.TicketId = new SelectList(TicketHelper.GetTickets(), "Id", "Title", ticketNotification.TicketId);
-            ViewBag.UserId = new SelectList(UserHelper.GetAllUsers(), "Id", "Email", ticketNotification.UserId);
+            ViewBag.TicketId = new SelectList(db.Tickets, "Id", "Title", ticketNotification.TicketId);
+            ViewBag.UserId = new SelectList(db.Users, "Id", "Email", ticketNotification.UserId);
             return View(ticketNotification);
         }
 
@@ -67,13 +70,13 @@ namespace BugTracker.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            TicketNotification ticketNotification = TicketNotificationHelper.GetTicketNotification(id);
+            TicketNotification ticketNotification = db.TicketNotifications.Find(id);
             if (ticketNotification == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.TicketId = new SelectList(TicketHelper.GetTickets(), "Id", "Title", ticketNotification.TicketId);
-            ViewBag.UserId = new SelectList(UserHelper.GetAllUsers(), "Id", "Email", ticketNotification.UserId);
+            ViewBag.TicketId = new SelectList(db.Tickets, "Id", "Title", ticketNotification.TicketId);
+            ViewBag.UserId = new SelectList(db.Users, "Id", "Email", ticketNotification.UserId);
             return View(ticketNotification);
         }
 
@@ -82,15 +85,16 @@ namespace BugTracker.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,TicketId,UserId")] TicketNotification ticketNotification)
+        public ActionResult Edit([Bind(Include = "Id,TicketId,UserId,Type,ModifiedUser")] TicketNotification ticketNotification)
         {
             if (ModelState.IsValid)
             {
-                TicketNotificationHelper.Edit(ticketNotification.Id, ticketNotification.TicketId, ticketNotification.UserId);
+                db.Entry(ticketNotification).State = EntityState.Modified;
+                db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.TicketId = new SelectList(TicketHelper.GetTickets(), "Id", "Title", ticketNotification.TicketId);
-            ViewBag.UserId = new SelectList(UserHelper.GetAllUsers(), "Id", "Email", ticketNotification.UserId);
+            ViewBag.TicketId = new SelectList(db.Tickets, "Id", "Title", ticketNotification.TicketId);
+            ViewBag.UserId = new SelectList(db.Users, "Id", "Email", ticketNotification.UserId);
             return View(ticketNotification);
         }
 
@@ -101,7 +105,7 @@ namespace BugTracker.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            TicketNotification ticketNotification = TicketNotificationHelper.GetTicketNotification(id);
+            TicketNotification ticketNotification = db.TicketNotifications.Find(id);
             if (ticketNotification == null)
             {
                 return HttpNotFound();
@@ -114,21 +118,19 @@ namespace BugTracker.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            TicketNotificationHelper.Delete(id);
+            TicketNotification ticketNotification = db.TicketNotifications.Find(id);
+            db.TicketNotifications.Remove(ticketNotification);
+            db.SaveChanges();
             return RedirectToAction("Index");
         }
-        // Notification****************
-        [HttpPost]
-        public ActionResult Notify (string userId, int? ticketId)
+
+        protected override void Dispose(bool disposing)
         {
-            ApplicationDbContext db = new ApplicationDbContext();
-            if(!string.IsNullOrEmpty(userId) && ticketId.HasValue)
+            if (disposing)
             {
-                Ticket ticket = db.Tickets.FirstOrDefault(n => n.Id == ticketId);
-                var user = db.Users.FirstOrDefault(u => u.Id == userId);
-              
+                db.Dispose();
             }
-            return View();
+            base.Dispose(disposing);
         }
     }
 }

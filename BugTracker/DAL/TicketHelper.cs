@@ -210,5 +210,15 @@ namespace BugTracker.DAL
             db.SaveChanges();
             db.Dispose();
         }
+
+        // Assign ticket to user
+        public static void Assign(int Id, string assignedToUserId)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            var ticket = db.Tickets.Find(Id);
+            ticket.AssignedToUserId = assignedToUserId;
+            db.SaveChanges();
+            db.Dispose();
+        }
     }
 }

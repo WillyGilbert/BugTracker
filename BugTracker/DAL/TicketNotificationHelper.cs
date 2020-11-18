@@ -7,6 +7,7 @@ using System.Web;
 
 namespace BugTracker.DAL
 {
+
     public class TicketNotificationHelper
     {
         public static List<TicketNotification> GetTicketNotifications()
@@ -14,6 +15,14 @@ namespace BugTracker.DAL
             ApplicationDbContext db = new ApplicationDbContext();
             var TicketNotification = db.TicketNotifications.Include(t => t.Ticket).Include(t => t.User);
             return TicketNotification.ToList();
+        }
+
+        public static void  AddNotification(int id,string userId, NotificationType type, string userName )
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            var tickNotification = new TicketNotification { TicketId = id, UserId = userId,  Type = type, ModifiedUser = userName };
+            db.TicketNotifications.Add(tickNotification);
+            db.SaveChanges();
         }
 
         public static TicketNotification GetTicketNotification(int? Id)
@@ -62,17 +71,19 @@ namespace BugTracker.DAL
         }
         //Developers must be notified each time they are assigned to a ticket
 
-        public List<TicketNotification> GetAllNotificationForDeveloper(string userId)
+        public static List<TicketNotification> GetAllNotificationForDeveloper(string userId)
         {
             ApplicationDbContext db = new ApplicationDbContext();
-            var result = new List<TicketNotification>();
-            var user = db.Users.Find(userId);
+            var ticketNotifications = db.TicketNotifications.ToList();
+            var result = ticketNotifications.Where(n => n.UserId == userId).ToList();
+            //var result = new List<TicketNotification>();
+            //var user = db.Users.Find(userId);
 
-            if (user == null)
-            {
-                return result;
-            }
-            result.AddRange(db.TicketNotifications.Where(x => x.UserId == userId).ToList());
+            //if (user == null)
+            //{
+            //    return result;
+            //}
+            //result.AddRange(db.TicketNotifications.Where(x => x.UserId == userId).ToList());
             return result;
 
         }
@@ -115,11 +126,25 @@ namespace BugTracker.DAL
                 }
 
             }
-
-
             db.SaveChanges();
             db.Dispose();
+        }
 
+
+        // Notification
+        //public static List<TicketNotification> GetNotificationOfUser(string userId)
+        //{
+        //    ApplicationDbContext db = new ApplicationDbContext();
+        //    var notes = db.TicketNotifications.Include(n => n.Ticket).Include(u => u.User).ToList();
+
+        //    return notes.Where(n =>
+        //        n.NotificationType == NotificationType.Normal ||
+        //        n.NotificationType == NotificationType.NextToExpire
+        //    ).ToList();
+        //}
+        public static string CountUserNotifications(string userId)
+        {
+            return GetAllNotificationForDeveloper(userId).Count().ToString();
         }
     }
 }

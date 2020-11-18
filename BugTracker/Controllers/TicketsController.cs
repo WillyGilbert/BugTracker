@@ -205,7 +205,14 @@ namespace BugTracker.Controllers
             {
                 //db.Entry(ticket).State = EntityState.Modified;
                 //db.SaveChanges();
+                
                 TicketHelper.Edit(ticket.Id, ticket.OwnerUserId, ticket.Title, ticket.Description, ticket.TicketTypeId, ticket.TicketPriorityId, ticket.TicketStatusId, ticket.AssignedToUserId);
+                var modifiedTicket = db.Tickets.Find(ticket.Id);
+                TicketNotificationHelper.AddNotification(modifiedTicket.Id, modifiedTicket.AssignedToUserId, NotificationType.ModifiedBy, User.Identity.GetUserName());
+
+                db.SaveChanges();
+                db.Dispose();
+
                 return RedirectToAction("Index", new { userId = User.Identity.GetUserId() });
             }
             ViewBag.AssignedToUserId = new SelectList(db.Users, "Id", "Email", ticket.AssignedToUserId);   
@@ -214,7 +221,39 @@ namespace BugTracker.Controllers
             ViewBag.TicketStatusId = new SelectList(db.TicketStatuses, "Id", "Name", ticket.TicketStatusId);
             ViewBag.TicketTypeId = new SelectList(db.TicketTypes, "Id", "Name", ticket.TicketTypeId);
             return View(ticket);
-        }        
+        }
+        public ActionResult Assign(int? Id)
+        {
+            if (Id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Ticket ticket = TicketHelper.GetTicket(Id);
+            if (ticket == null)
+            {
+                return HttpNotFound();
+            }
+
+            //var users = db.Users.Where(u => UserHelper.UserInRole(u.Id, "Developer") == true);
+            ViewBag.AssignedToUserId = new SelectList(db.Users, "Id", "Email");
+            ViewBag.Id = Id;
+            return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Assign(int Id, string AssignedToUserId)
+        {
+            TicketHelper.Assign(Id, AssignedToUserId);
+            //var users = db.Users.Where(u => UserHelper.UserInRole(u.Id, "Developer") ==true);
+            ViewBag.AssignedToUserId = new SelectList(db.Users, "Id", "Email");
+            ViewBag.Id = Id;
+
+            TicketNotificationHelper.AddNotification(Id, AssignedToUserId, NotificationType.AssignedBy, User.Identity.GetUserName());
+
+            db.SaveChanges();
+            db.Dispose();
+            return RedirectToAction("Index", new { userId = User.Identity.GetUserId() });
+        }
 
         protected override void Dispose(bool disposing)
         {

@@ -222,6 +222,10 @@
     <Compile Include="Migrations\202011150718137_SeededUser.designer.cs">
       <DependentUpon>202011150718137_SeededUser.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202011180833416_AddPropertiesOnTicketNotifications.cs" />
+    <Compile Include="Migrations\202011180833416_AddPropertiesOnTicketNotifications.designer.cs">
+      <DependentUpon>202011180833416_AddPropertiesOnTicketNotifications.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="DAL\FileUploaderHelper.cs" />
@@ -443,11 +447,6 @@
     <Content Include="Views\TicketHistories\Details.cshtml" />
     <Content Include="Views\TicketHistories\Edit.cshtml" />
     <Content Include="Views\TicketHistories\Index.cshtml" />
-    <Content Include="Views\TicketNotifications\Create.cshtml" />
-    <Content Include="Views\TicketNotifications\Delete.cshtml" />
-    <Content Include="Views\TicketNotifications\Details.cshtml" />
-    <Content Include="Views\TicketNotifications\Edit.cshtml" />
-    <Content Include="Views\TicketNotifications\Index.cshtml" />
     <Content Include="Views\TicketPriorities\Create.cshtml" />
     <Content Include="Views\TicketPriorities\Delete.cshtml" />
     <Content Include="Views\TicketPriorities\Details.cshtml" />
@@ -466,6 +465,12 @@
     <Content Include="Views\Projects\ShowAllUsers.cshtml" />
     <Content Include="Views\Projects\AssignUserToProject.cshtml" />
     <Content Include="Views\Projects\ShowMyProjects.cshtml" />
+    <Content Include="Views\TicketNotifications\Create.cshtml" />
+    <Content Include="Views\TicketNotifications\Delete.cshtml" />
+    <Content Include="Views\TicketNotifications\Details.cshtml" />
+    <Content Include="Views\TicketNotifications\Edit.cshtml" />
+    <Content Include="Views\TicketNotifications\Index.cshtml" />
+    <Content Include="Views\Tickets\Assign.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -493,6 +498,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202011150718137_SeededUser.resx">
       <DependentUpon>202011150718137_SeededUser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202011180833416_AddPropertiesOnTicketNotifications.resx">
+      <DependentUpon>202011180833416_AddPropertiesOnTicketNotifications.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

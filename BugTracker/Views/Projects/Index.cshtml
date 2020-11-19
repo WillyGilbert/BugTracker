@@ -16,7 +16,7 @@
         @Html.ActionLink("Create New", "Create")
     </p>
     <div style="text-align:end">
-        <button style="background-color:cadetblue">@Html.ActionLink("My Projects", "ShowMyProjects")</button>
+        <button style="background-color:cadetblue">@Html.ActionLink("My Projects", "Index", new { myproject = true })</button>
         <button style="background-color:burlywood">@Html.ActionLink("All Projects", "Index") </button>
     </div>
 }
@@ -130,7 +130,7 @@
                 </td>
                 <td>
                 <td>
-                    @Html.ActionLink("Assign", "Assign", new { id = ticket.Id })
+                    @Html.ActionLink("Assign", "Assign","Tickets", new { id = ticket.Id },null)
                 </td>
                 </td>
                 <td>

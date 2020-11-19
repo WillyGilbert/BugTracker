@@ -24,7 +24,7 @@ namespace BugTracker.Controllers
         {
             //SortViewModel sortModel = new SortViewModel();
             ViewBag.SelectFilter = new SelectList(sortModel.Options);
-            
+            ViewBag.Myproject = myproject;
             if (myproject == true)            
                 return View(PaginateList(ProjectHelper.GetMyProjects(User.Identity.GetUserId()), page));       
             else            
@@ -32,11 +32,19 @@ namespace BugTracker.Controllers
         }
 
         [HttpPost]
-        public ActionResult Index(string SelectFilter, int? page, string searchString)
+        public ActionResult Index(bool? myproject, string SelectFilter, int? page, string searchString)
         {
             //SortViewModel sortModel = new SortViewModel();
-            ViewBag.SelectFilter = new SelectList(sortModel.Options);            
+            ViewBag.SelectFilter = new SelectList(sortModel.Options);
+            ViewBag.Myproject = myproject;
+
             var projects = ProjectHelper.GetProjects();
+
+            if (myproject == true)
+            {
+                projects = ProjectHelper.GetMyProjects(User.Identity.GetUserId());
+            }
+               
 
             if (SelectFilter == "Creation Date")           
                 projects = ProjectHelper.SortTicketsByTitle(projects);            
@@ -61,10 +69,10 @@ namespace BugTracker.Controllers
             return (projects.ToPagedList(pageNumber, pageSize));
         }
 
-        public ActionResult ShowMyProjects()
-        {
-            return View(ProjectHelper.GetMyProjects(User.Identity.GetUserId()));
-        }
+        //public ActionResult ShowMyProjects()
+        //{
+        //    return View(ProjectHelper.GetMyProjects(User.Identity.GetUserId()));
+        //}
 
         public ActionResult ShowAllUsers(int projectId)
         {

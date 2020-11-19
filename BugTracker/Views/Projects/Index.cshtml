@@ -23,10 +23,11 @@
 
 @using (Html.BeginForm())
 {
-    <p>
-        @Html.Raw("Sort Tickets By: ")
-        @Html.DropDownList("SelectFilter", (SelectList)ViewBag.Values, new { onchange = "this.form.submit();" })
-    </p>
+<p>
+    @Html.Hidden("myproject", (object)ViewBag.Myproject)
+    @Html.Raw("Sort Tickets By: ")
+    @Html.DropDownList("SelectFilter", (SelectList)ViewBag.Values, new { onchange = "this.form.submit();" })
+</p>
 }
 
 <table class="table">

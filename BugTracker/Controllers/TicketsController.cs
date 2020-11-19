@@ -18,31 +18,13 @@ namespace BugTracker.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        // GET: Tickets
-        //public ActionResult Index(string userId)
-        //{
-        //    //var tickets = db.Tickets.Include(t => t.Project).Include(t => t.TicketPriority).Include(t => t.TicketStatus).Include(t => t.TicketType);
-        //    var tickets = new List<Ticket>();
-        //    if (User.IsInRole("Admin"))
-        //        tickets = TicketHelper.GetTickets().ToList();
-        //    else if (User.IsInRole("ProjectManager"))
-        //        tickets = TicketHelper.GetTicketsByManager(userId).ToList();
-        //    else if (User.IsInRole("Developer"))
-        //        tickets = TicketHelper.GetTicketsByDeveloper(userId).ToList();
-        //    else if (User.IsInRole("Submitter"))
-        //        tickets = TicketHelper.GetTicketsBySubmitter(userId).ToList();
-
-        //    return View(tickets);
-        //}
-
-
         [Authorize]
-        public ActionResult Index(string userId, int? page)
+        public ActionResult Index(string userId, string rol,int? page)
         {
             SortViewModel sortModel = new SortViewModel();
             ViewBag.SelectFilter = new SelectList(sortModel.Options);
             ViewBag.UserId = userId;
-            var tickets = TicketHelper.GetTickets(userId).ToList();
+            var tickets = TicketHelper.GetTickets(userId, rol).ToList();
 
             int pageSize = 10;
             int pageNumber = (page ?? 1);

@@ -24,6 +24,30 @@ namespace BugTracker.DAL
             return Project.ToList();
         }
 
+        //sort tickets by title
+        public static List<Project> SortTicketsByTitle(List<Project> projects)
+        {
+            projects.ForEach(p =>
+            {
+                p.Tickets = p.Tickets.OrderBy(t => t.Title).ToList();
+            });
+
+            db.Dispose();
+            return projects;            
+        }
+
+        //sort tickets by creation date
+        public static List<Project> SortTicketsByDate(List<Project> projects)
+        {
+            projects.ForEach(p =>
+            {
+                p.Tickets = p.Tickets.OrderByDescending(t => t.Created).ToList();
+            });
+
+            db.Dispose();
+            return projects;
+        }
+
         public static List<ApplicationUser> UsersOfTheProject(int projectId)
         {
             ApplicationDbContext db = new ApplicationDbContext();

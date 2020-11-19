@@ -39,8 +39,8 @@ namespace BugTracker.Controllers
         [Authorize]
         public ActionResult Index(string userId, int? page)
         {
-            FilterViewModel filterModel = new FilterViewModel();
-            ViewBag.SelectFilter = new SelectList(filterModel.FilterOptions);
+            SortViewModel sortModel = new SortViewModel();
+            ViewBag.SelectFilter = new SelectList(sortModel.Options);
             ViewBag.UserId = userId;
             var tickets = TicketHelper.GetTickets(userId).ToList();
 
@@ -53,8 +53,8 @@ namespace BugTracker.Controllers
         [HttpPost]
         public ActionResult Index(string SelectFilter, string UserId, int? page, string searchString)
         {
-            FilterViewModel filterModel = new FilterViewModel();
-            ViewBag.SelectFilter = new SelectList(filterModel.FilterOptions);
+            SortViewModel sortModel = new SortViewModel();
+            ViewBag.SelectFilter = new SelectList(sortModel.Options);
             var tickets = TicketHelper.GetTickets(UserId).ToList();
 
             if (SelectFilter == "Creation Date")
@@ -259,7 +259,7 @@ namespace BugTracker.Controllers
 
             db.SaveChanges();
             db.Dispose();
-            return RedirectToAction("Index", new { userId = User.Identity.GetUserId() });
+            return RedirectToAction("Index", "Projects", new { userId = User.Identity.GetUserId() });
         }
 
         protected override void Dispose(bool disposing)

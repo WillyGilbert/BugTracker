@@ -49,11 +49,7 @@ namespace BugTracker.DAL
             {
 
                 Ticket = ticket,
-                TicketId = ticket.Id,
-
-
-
-
+        
             };
             SendNotification(ticket.AssignedToUser, notification);
 

@@ -28,7 +28,14 @@
                 @item
             </td>
             <td>
-                @if (item != "Admin")
+                @if (ViewBag.UserName == "admin@mysite.com")
+                {
+                    if (item != "Admin")
+                    {
+                        @Html.ActionLink("Remove role", "RemoveRole", new { userId = @ViewBag.UserId, roleName = item })
+                    }
+                }
+                else
                 {
                     @Html.ActionLink("Remove role", "RemoveRole", new { userId = @ViewBag.UserId, roleName = item })
                 }

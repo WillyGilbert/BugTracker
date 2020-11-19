@@ -12,12 +12,13 @@ namespace BugTracker.Controllers
     {
         public ActionResult Index()
         {
-           // ViewBag.Notification = TicketNotificationHelper.CountUserNotifications(User.Identity.GetUserId());
+            // ViewBag.Notification = TicketNotificationHelper.CountUserNotifications(User.Identity.GetUserId());
             ////ViewBag.NotificationToManager = TicketNotificationHelper.CountManagerNotifications(User.Identity.GetUserId());
             //@ViewBag.Unread = TicketNotificationHelper.CountUnopenedUserNotifications(User.Identity.GetUserId());
             ////@ViewBag.UnreadManager = TicketNotificationHelper.CountUnopenedManagerNotifications(User.Identity.GetUserId());
             //TicketNotificationHelper.SetNotificationsByType();
             //ProjectHelper.SetProjectCompleted();
+
             return View();
         }
 

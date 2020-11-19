@@ -31,7 +31,7 @@ namespace BugTracker.Controllers
             ViewBag.TicketsPage = pageNumber;
             return View(tickets.ToPagedList(pageNumber, pageSize));           
         }
-
+        /*
         [HttpPost]
         public ActionResult Index(string SelectFilter, string UserId, int? page, string searchString)
         {
@@ -58,7 +58,7 @@ namespace BugTracker.Controllers
             int pageNumber = (page ?? 1);
             ViewBag.TicketsPage = pageNumber;
             return View(tickets.ToPagedList(pageNumber, pageSize));            
-        }
+        } */
 
 
         //public ActionResult Index(string userId, int? page)

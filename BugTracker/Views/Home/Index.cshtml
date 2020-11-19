@@ -24,39 +24,54 @@
             </div>
 
             <div class="row">
-                <div class="col-md-4">
-                    <h2>TICKETS</h2>
-                    <p>
-                        Check the tickets
-                    </p>
-                    <p><a class="btn btn-success" href="@Url.Action("Index", "Tickets", new { userId = User.Identity.GetUserId() })">Go to tickets &raquo;</a></p>
-                    <p><a class="btn btn-success" href="@Url.Action(ViewBag.Page, "Tickets", new { userId = User.Identity.GetUserId() })">Go to tickets &raquo;</a></p>
-                    @*@if (User.IsInRole("Admin"))
-                        {
-                            <p><a class="btn btn-success" href="@Url.Action("Index", "Tickets", new { userId = User.Identity.GetUserId() })">Go to tickets &raquo;</a></p>
-                        }
-                        else if (User.IsInRole("ProjectManager"))
-                        {
-                            <p><a class="btn btn-success" href="@Url.Action("Index", "Tickets", new { userId = User.Identity.GetUserId() })">Go to tickets &raquo;</a></p>
-                        }
-                        else if (User.IsInRole("Developer"))
-                        {
-                            <p><a class="btn btn-success" href="@Url.Action("Index", "Tickets", new { userId = User.Identity.GetUserId() })">Go to tickets &raquo;</a></p>
-                        }
-                        else if (User.IsInRole("Submitter"))
-                        {
-                            <p><a class="btn btn-success" href="@Url.Action("Index", "Tickets", new { userId = User.Identity.GetUserId() })">Go to tickets &raquo;</a></p>
-                        }*@
-                </div>
+                @if (User.IsInRole("Admin"))
+                {
+                    <div class="col-md-4">
+                        <h2>TICKETS</h2>
+                        <p>
+                            Check all tickets
+                        </p>
+                        <p><a class="btn btn-success" href="@Url.Action("Index", "Tickets", new { userId = User.Identity.GetUserId(), role = "Admin" })">Go to tickets &raquo;</a></p>
+                    </div>
+                }
+                @if (User.IsInRole("ProjectManager"))
+                {
+                    <div class="col-md-4">
+                        <h2>TICKETS</h2>
+                        <p>
+                            Check the tickets on my projects
+                        </p>
+                        <p><a class="btn btn-success" href="@Url.Action("Index", "Tickets", new { userId = User.Identity.GetUserId(), role = "ProjectManager" })">Go to tickets &raquo;</a></p>
+                    </div>
+                }
+                @if (User.IsInRole("Developer"))
+                {
+                    <div class="col-md-4">
+                        <h2>TICKETS</h2>
+                        <p>
+                            Check my assigned tickets
+                        </p>
+                        <p><a class="btn btn-success" href="@Url.Action("Index", "Tickets", new { userId = User.Identity.GetUserId(), role = "Developer" })">Go to tickets &raquo;</a></p>
+                    </div>
+                }
+                @if (User.IsInRole("Submmiter"))
+                {
+                    <div class="col-md-4">
+                        <h2>TICKETS</h2>
+                        <p>
+                            Check the tickets
+                        </p>
+                        <p><a class="btn btn-success" href="@Url.Action("Index", "Tickets", new { userId = User.Identity.GetUserId(), role = "Submmiter" })">Go to tickets &raquo;</a></p>
+                    </div>
+                }
                 @if (User.IsInRole("Developer"))
                 {
                     <div class="col-md-4">
                         <h2>NOTIFICATIONS</h2>
                         <p>Check the notifications</p>
-                        <p><a class="btn btn-success" href="@Url.Action("Index", "TicketNotifications", new { userId = User.Identity.GetUserId() })"> @ViewBag.NotificationToManager Notifications &raquo; <br /> @ViewBag.UnreadManager Unread</a></p>
+                        <p><a class="btn btn-success" href="@Url.Action("Index", "TicketNotifications", new { userId = User.Identity.GetUserId() })">Notifications</a></p>
                     </div>
                 }
-
             </div>
         </div>
     }

@@ -19,12 +19,12 @@ namespace BugTracker.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         [Authorize]
-        public ActionResult Index(string userId, string rol,int? page)
+        public ActionResult Index(string userId, string role,int? page)
         {
             SortViewModel sortModel = new SortViewModel();
             ViewBag.SelectFilter = new SelectList(sortModel.Options);
             ViewBag.UserId = userId;
-            var tickets = TicketHelper.GetTickets(userId, rol).ToList();
+            var tickets = TicketHelper.GetTickets(userId, role).ToList();
 
             int pageSize = 10;
             int pageNumber = (page ?? 1);

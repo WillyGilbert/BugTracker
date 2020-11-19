@@ -6,7 +6,9 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using BugTracker.DAL;
 using BugTracker.Models;
+using Microsoft.AspNet.Identity;
 
 namespace BugTracker.Controllers
 {
@@ -18,6 +20,18 @@ namespace BugTracker.Controllers
         public ActionResult Index()
         {
             return View(db.Projects.Include(p => p.Tickets).ToList());
+        }
+
+        public ActionResult ShowMyProjects()
+        {
+            return View(ProjectHelper.GetMyProjects(User.Identity.GetUserId()));
+        }
+
+        public ActionResult ShowAllUsers(int projectId)
+        {
+            ViewBag.ProjectId = projectId;
+            var users = ProjectHelper.UsersOfTheProject(projectId);
+            return View(users);
         }
 
         // GET: Projects/Details/5
@@ -113,6 +127,52 @@ namespace BugTracker.Controllers
             db.Projects.Remove(project);
             db.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+        public ActionResult RemoveUserFromProject(string userId, int projectId)
+        {
+            if (ProjectHelper.RemoveUserFromProject(userId, projectId))
+            {
+                return RedirectToAction("ShowAllUsers", new { projectId });
+            }
+            return RedirectToAction("ShowAllUsers", new { projectId });
+        }
+        public ActionResult AssignUserToProject(int projectId)
+        {
+            var project = ProjectHelper.GetProject(projectId);
+            if (project == null)
+            {
+                return HttpNotFound();
+            }
+            var users = ProjectHelper.UsersOutOfTheProject(projectId);
+            ViewBag.ProjectId = projectId;
+            ViewBag.ProjectName = project.Name;
+            ViewBag.UserId = new SelectList(users, "Id", "UserName");
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AssignUserToProject(string Id, int projectId)
+        {
+
+            var project = ProjectHelper.GetProject(projectId);
+            if (project == null)
+            {
+                return HttpNotFound();
+            }
+
+            if (ProjectHelper.AssignUserToProject(Id, projectId))
+            {
+                return RedirectToAction("ShowAllUsers", new { projectId });
+            }
+
+            var users = ProjectHelper.UsersOutOfTheProject(projectId);
+            ViewBag.ProjectId = projectId;
+            ViewBag.ProjectName = project.Name;
+            ViewBag.UserId = new SelectList(users, "Id", "UserName");
+
+            return RedirectToAction("ShowAllUsers", new { projectId });
         }
 
         protected override void Dispose(bool disposing)

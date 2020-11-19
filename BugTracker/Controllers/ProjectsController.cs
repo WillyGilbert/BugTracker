@@ -8,25 +8,57 @@ using System.Web;
 using System.Web.Mvc;
 using BugTracker.DAL;
 using BugTracker.Models;
+using BugTracker.ViewModels;
 using Microsoft.AspNet.Identity;
+using PagedList;
 
 namespace BugTracker.Controllers
 {
     public class ProjectsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
+        SortViewModel sortModel = new SortViewModel();
 
         // GET: Projects
-        public ActionResult Index(bool? myproject)
+        public ActionResult Index(bool? myproject, int? page)
         {
-            if (myproject == true)
-            {
-                return View(ProjectHelper.GetMyProjects(User.Identity.GetUserId()));
-            }
-            else
-            {
-                return View(db.Projects.Include(p => p.Tickets).ToList());
-            }
+            //SortViewModel sortModel = new SortViewModel();
+            ViewBag.SelectFilter = new SelectList(sortModel.Options);
+            
+            if (myproject == true)            
+                return View(PaginateList(ProjectHelper.GetMyProjects(User.Identity.GetUserId()), page));       
+            else            
+                return View(PaginateList(ProjectHelper.GetProjects(), page));           
+        }
+
+        [HttpPost]
+        public ActionResult Index(string SelectFilter, int? page, string searchString)
+        {
+            //SortViewModel sortModel = new SortViewModel();
+            ViewBag.SelectFilter = new SelectList(sortModel.Options);            
+            var projects = ProjectHelper.GetProjects();
+
+            if (SelectFilter == "Creation Date")           
+                projects = ProjectHelper.SortTicketsByTitle(projects);            
+            else if (SelectFilter == "Title")            
+                projects = ProjectHelper.SortTicketsByTitle(projects);
+
+
+            //if (!String.IsNullOrEmpty(searchString))
+            //{
+            //    tickets = TicketHelper.GetTickets(UserId).Where(t => t.Title.Contains(searchString)
+            //                           || t.Description.Contains(searchString)).ToList();
+            //}
+                        
+            return View(PaginateList(projects, page));
+        }
+
+        public IPagedList<Project> PaginateList(List<Project> projects, int? page)
+        {
+            int pageSize = 3;
+            int pageNumber = (page ?? 1);
+            ViewBag.TicketsPage = pageNumber;
+            return (projects.ToPagedList(pageNumber, pageSize));
         }
 
         public ActionResult ShowMyProjects()

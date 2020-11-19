@@ -480,6 +480,9 @@
     <Content Include="Views\Projects\Edit.cshtml" />
     <Content Include="Views\Projects\Index.cshtml" />
     <Content Include="Views\Tickets\Assign.cshtml" />
+    <Content Include="Views\Projects\AssignUserToProject.cshtml" />
+    <Content Include="Views\Projects\ShowAllUsers.cshtml" />
+    <Content Include="Views\Projects\ShowMyProjects.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

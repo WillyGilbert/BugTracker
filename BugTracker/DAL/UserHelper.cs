@@ -163,6 +163,7 @@ namespace BugTracker.DAL
 
         public static bool UserInRole(string userId, string roleName)
         {
+            var a = userManager;
             return userManager.IsInRole(userId, roleName);
         }
 

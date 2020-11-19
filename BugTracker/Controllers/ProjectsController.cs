@@ -17,9 +17,16 @@ namespace BugTracker.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Projects
-        public ActionResult Index()
+        public ActionResult Index(bool? myproject)
         {
-            return View(db.Projects.Include(p => p.Tickets).ToList());
+            if (myproject == true)
+            {
+                return View(ProjectHelper.GetMyProjects(User.Identity.GetUserId()));
+            }
+            else
+            {
+                return View(db.Projects.Include(p => p.Tickets).ToList());
+            }
         }
 
         public ActionResult ShowMyProjects()

@@ -19,28 +19,43 @@ namespace BugTracker.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
         SortViewModel sortModel = new SortViewModel();
 
+        public bool CheckIfToShowMyProject()
+        {
+            //admin and projectmanager is same
+            // developer and submitter is same
+
+            if (User.IsInRole("Admin") || User.IsInRole("ProjectManager"))
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
         // GET: Projects
-        public ActionResult Index(bool? myproject, int? page)
+        public ActionResult Index(int? page)
         {
             //SortViewModel sortModel = new SortViewModel();
             ViewBag.SelectFilter = new SelectList(sortModel.Options);
-            ViewBag.Myproject = myproject;
-            if (myproject == true)            
+
+            if (CheckIfToShowMyProject() == true)            
                 return View(PaginateList(ProjectHelper.GetMyProjects(User.Identity.GetUserId()), page));       
             else            
                 return View(PaginateList(ProjectHelper.GetProjects(), page));           
         }
 
         [HttpPost]
-        public ActionResult Index(bool? myproject, string SelectFilter, int? page, string searchString)
+        public ActionResult Index(string SelectFilter, int? page, string searchString)
         {
             //SortViewModel sortModel = new SortViewModel();
             ViewBag.SelectFilter = new SelectList(sortModel.Options);
-            ViewBag.Myproject = myproject;
+
 
             var projects = ProjectHelper.GetProjects();
 
-            if (myproject == true)
+            if (CheckIfToShowMyProject() == true)
             {
                 projects = ProjectHelper.GetMyProjects(User.Identity.GetUserId());
             }

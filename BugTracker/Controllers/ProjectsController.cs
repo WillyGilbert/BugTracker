@@ -105,6 +105,8 @@ namespace BugTracker.Controllers
             {
                 db.Projects.Add(project);
                 db.SaveChanges();
+                var projectId = db.Projects.Where(p=>p.Name == project.Name).OrderByDescending(p=>p.Id).First().Id;
+                ProjectHelper.AssignUserToProject(User.Identity.GetUserId(), projectId);
                 return RedirectToAction("Index");
             }
 

@@ -9,21 +9,21 @@
 
 <h2>Index</h2>
 
-@*@if (User.IsInRole("Submitter"))
+@if (User.IsInRole("Submitter"))
 {
     <p>
         @Html.ActionLink("Create New", "Create")
     </p>
-}*@
+}
 
-@*@using (Html.BeginForm())
-{*@
+@using (Html.BeginForm())
+{
     <p>
         @Html.Raw("Sort Tickets By: ")
         @Html.DropDownList("SelectFilter", (SelectList)ViewBag.Values, new { onchange = "this.form.submit();" })
         @Html.Hidden("UserId", (object)ViewBag.UserId)
     </p>
-@*}*@
+}
 
 
 @using (Html.BeginForm())

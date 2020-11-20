@@ -10,7 +10,7 @@ namespace BugTracker.ViewModels
         public List<string> Options { get; set; }
         public SortViewModel()
         {
-            Options = new List<string>() { "Creation Date", "Title" };
+            Options = new List<string>() { "Creation Date", "Title", "Submitter", "Developer", "Type", "Priority", "Status", "Project"  };
         }
     }
 }

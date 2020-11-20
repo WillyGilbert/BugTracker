@@ -11,6 +11,8 @@ namespace BugTracker.DAL
 {
     public static class TicketHelper
     {
+        static ApplicationDbContext db = new ApplicationDbContext();
+
         //all tickets
         public static List<Ticket> GetTickets()
         {
@@ -19,7 +21,7 @@ namespace BugTracker.DAL
             return tickets.ToList();
         }
 
-        public static List<Ticket> GetTickets(string userId, string rol)
+        public static List<Ticket> GetTickets(string userId, string role)
         {
             ApplicationDbContext db = new ApplicationDbContext();
             List<Ticket> tickets = new List<Ticket>();
@@ -29,14 +31,14 @@ namespace BugTracker.DAL
                 .Include("TicketType")
                 .ToList();
 
-            if (rol == "Admin") tickets = allTickets;
-            if (rol == "ProjectManager")
+            if (role == "Admin") tickets = allTickets;
+            if (role == "ProjectManager")
             {
                 var projectsByManager = db.ProjectUsers.Where(pu => pu.UserId == userId);
                 return allTickets.Where(t => projectsByManager.Any(up => up.ProjectId == t.ProjectId)).ToList();
             }
-            if (rol == "Developer") return allTickets.Where(t => t.AssignedToUserId == userId).ToList();
-            if (rol == "Submitter") return tickets = allTickets.Where(t => t.OwnerUserId == userId).ToList();
+            if (role == "Developer") return allTickets.Where(t => t.AssignedToUserId == userId).ToList();
+            if (role == "Submitter") return tickets = allTickets.Where(t => t.OwnerUserId == userId).ToList();
             return allTickets;
         }
 
@@ -55,13 +57,28 @@ namespace BugTracker.DAL
             return allTickets;
         }
 
-        //Sort tickets by title
-        public static List<Ticket> SortTicketsByTitle(List<Ticket> tickets)
+        public static List<Ticket> SortTickets(List<Ticket> tickets, string selectFilter)
         {
-            //ApplicationDbContext db = new ApplicationDbContext();
-            //var tickets = db.Tickets.Include("Project").Include("TicketPriority").Include("TicketStatus").Include("TicketType").OrderBy(t => t.Title);
-            var sortedTickets = tickets.OrderBy(t => t.Title);
-            return sortedTickets.ToList();
+            List<Ticket> sortedTickets = new List<Ticket>();
+            if (selectFilter == "Creation Date")
+                sortedTickets = tickets.OrderBy(t => t.Created).ToList();
+            else if (selectFilter == "Title")
+                sortedTickets = tickets.OrderBy(t => t.Title).ToList();
+            else if (selectFilter == "Submitter")
+                sortedTickets = tickets.OrderBy(t => t.OwnerUser.UserName).ToList();
+            else if (selectFilter == "Developer")
+                sortedTickets = tickets.Where(t => t.AssignedToUser != null).OrderBy(t => t.AssignedToUser.UserName).ToList();
+            else if (selectFilter == "Type")
+                sortedTickets = tickets.OrderBy(t => t.TicketType.Name).ToList();
+            else if (selectFilter == "Priority")
+                sortedTickets = tickets.OrderBy(t => t.TicketPriority.Name).ToList();
+            else if (selectFilter == "Status")
+                sortedTickets = tickets.OrderBy(t => t.TicketStatus.Name).ToList();
+            else if (selectFilter == "Project")
+                sortedTickets = tickets.OrderBy(t => t.Project.Name).ToList();                  
+
+            db.Dispose();
+            return sortedTickets;
         }
 
         public static Ticket GetTicket(int? Id)

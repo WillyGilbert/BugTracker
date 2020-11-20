@@ -20,8 +20,13 @@ namespace BugTracker.DAL
         public static List<Project> GetMyProjects(string userId)
         {
             ApplicationDbContext db = new ApplicationDbContext();
-            var Project = db.Projects.Where(p => p.ProjectUsers.Any(pu => pu.UserId == userId));
-            return Project.ToList();
+            var project = db.Projects.Where(p => p.ProjectUsers.Any(pu => pu.UserId == userId));
+            //if (UserHelper.UserInRole(userId, "Submitter"))
+            //{
+            //    project = db.Projects.Include(p=>p.Tickets.Any(t=>t.OwnerUserId== userId)).Where(p => p.ProjectUsers.Any(pu => pu.UserId == userId));
+            //}
+
+            return project.ToList();
         }
 
         //sort tickets by title

@@ -152,7 +152,7 @@ namespace BugTracker.Controllers
                 return RedirectToAction("Index", "Projects", new { userId = User.Identity.GetUserId() });
             }
 
-            return View();            
+            return RedirectToAction("Index", "Projects", new { userId = User.Identity.GetUserId() });
             //return View(ticket);
         }
 

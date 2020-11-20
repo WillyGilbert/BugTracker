@@ -42,13 +42,12 @@ namespace BugTracker.Controllers
             else if (SelectFilter == "Title")            
                 projects = ProjectHelper.SortTicketsByTitle(projects);
 
-
             //if (!String.IsNullOrEmpty(searchString))
             //{
             //    tickets = TicketHelper.GetTickets(UserId).Where(t => t.Title.Contains(searchString)
             //                           || t.Description.Contains(searchString)).ToList();
             //}
-                        
+
             return View(PaginateList(projects, page));
         }
 

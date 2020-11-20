@@ -40,6 +40,21 @@ namespace BugTracker.DAL
             return allTickets;
         }
 
+        public static List<Ticket> GetTicketsByProjectId(string userId, string role, int projectId)
+        {
+            ApplicationDbContext db = new ApplicationDbContext();
+            List<Ticket> tickets = new List<Ticket>();
+            List<Ticket> allTickets = db.Tickets.Include("Project")
+                .Include("TicketPriority")
+                .Include("TicketStatus")
+                .Include("TicketType")
+                .ToList();
+
+            if (role == "Developer") return allTickets.Where(t => t.AssignedToUserId == userId).Where(t=>t.ProjectId == projectId).ToList();
+            if (role == "Submitter") return tickets = allTickets.Where(t => t.OwnerUserId == userId).Where(t => t.ProjectId == projectId).ToList();
+            return allTickets;
+        }
+
         //Sort tickets by title
         public static List<Ticket> SortTicketsByTitle(List<Ticket> tickets)
         {

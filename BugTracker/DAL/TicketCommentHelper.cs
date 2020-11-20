@@ -7,18 +7,21 @@ using System.Web;
 
 namespace BugTracker.DAL
 {
-    public class TicketCommentHelper
+    public static class TicketCommentHelper
     {
+        static ApplicationDbContext db = new ApplicationDbContext();
+
+
         public static List<TicketComment> GetTicketComments()
         {
-            ApplicationDbContext db = new ApplicationDbContext();
+            //ApplicationDbContext db = new ApplicationDbContext();
             var TicketComment = db.TicketComments.Include(t => t.Ticket).Include(t => t.User);
             return TicketComment.ToList();
         }
 
         public static List<TicketComment> GetTicketCommentsByTicket(int ticketId)
         {
-            ApplicationDbContext db = new ApplicationDbContext();
+            //ApplicationDbContext db = new ApplicationDbContext();
             var TicketComment = db.TicketComments.Include(t => t.Ticket).Include(t => t.User).Where(t => t.TicketId == ticketId);
             return TicketComment.ToList();
         }
@@ -38,7 +41,7 @@ namespace BugTracker.DAL
 
         public static void Create(string comment, int ticketId, string userId)
         {
-            ApplicationDbContext db = new ApplicationDbContext();
+            //ApplicationDbContext db = new ApplicationDbContext();
             TicketComment ticketComment = new TicketComment
             {
                 Comment = comment,
@@ -51,14 +54,14 @@ namespace BugTracker.DAL
             db.Dispose();
         }
 
-        public static void Edit(int id, string comment, DateTime created, int ticketId, string userId)
+        public static void Edit(int id, string comment, int ticketId)
         {
-            ApplicationDbContext db = new ApplicationDbContext();
+            //ApplicationDbContext db = new ApplicationDbContext();
             TicketComment ticketComment = GetTicketComment(id);
             ticketComment.Comment = comment;
-            ticketComment.Created = created;
+            ticketComment.Created = DateTime.Now;
             ticketComment.TicketId = ticketId;
-            ticketComment.UserId = userId;
+            //ticketComment.UserId = userId;
             db.Entry(ticketComment).State = EntityState.Modified;
             db.SaveChanges();
             db.Dispose();
@@ -66,7 +69,7 @@ namespace BugTracker.DAL
 
         public static void Delete(int id)
         {
-            ApplicationDbContext db = new ApplicationDbContext();
+            //ApplicationDbContext db = new ApplicationDbContext();
             TicketComment ticketComment = GetTicketComment(id);
             db.TicketComments.Remove(ticketComment);
             db.SaveChanges();

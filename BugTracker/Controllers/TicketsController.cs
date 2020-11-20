@@ -162,7 +162,8 @@ namespace BugTracker.Controllers
                 var modifiedTicket = db.Tickets.Find(ticket.Id);
                 TicketNotificationHelper.AddNotification(modifiedTicket.Id, modifiedTicket.AssignedToUserId, NotificationType.ModifiedBy, User.Identity.GetUserName());
                 db.SaveChanges();
-                return RedirectToAction("Index", "Projects", new { userId = User.Identity.GetUserId() });
+                return RedirectToAction("Index", new { userId = User.Identity.GetUserId() });
+                //return RedirectToAction("Index", "Projects", new { userId = User.Identity.GetUserId() });
             }
                         
             string roleId = db.Roles.FirstOrDefault(r => r.Name == "Developer").Id;

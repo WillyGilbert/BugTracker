@@ -90,11 +90,11 @@ namespace BugTracker.Controllers
         {
             if (ModelState.IsValid)
             {
-                TicketCommentHelper.Edit(ticketComment.Id, ticketComment.Comment, ticketComment.Created, ticketComment.TicketId, ticketComment.UserId);
+                TicketCommentHelper.Edit(ticketComment.Id, ticketComment.Comment, ticketComment.TicketId);
                 return RedirectToAction("Index");
             }
-            //ViewBag.TicketId = new SelectList(TicketHelper.GetTickets(), "Id", "Title", ticketComment.TicketId);
-            ViewBag.UserId = new SelectList(UserHelper.GetAllUsers(), "Id", "Email", ticketComment.UserId);
+            ViewBag.TicketId = new SelectList(TicketHelper.GetTickets(), "Id", "Title", ticketComment.TicketId);
+            //ViewBag.UserId = new SelectList(UserHelper.GetAllUsers(), "Id", "Email", ticketComment.UserId);
             return View(ticketComment);
         }
 

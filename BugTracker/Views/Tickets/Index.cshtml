@@ -2,6 +2,7 @@
 @using Microsoft.AspNet.Identity;
 @using PagedList.Mvc;
 @using PagedList;
+@using C1.Web.Mvc.Grid;
 
 @{
     ViewBag.Title = "Index";
@@ -19,10 +20,21 @@
 @using (Html.BeginForm())
 {
     <p>
-        @Html.Raw("Sort Tickets By: ")
-        @Html.DropDownList("SelectFilter", (SelectList)ViewBag.Values, new { onchange = "this.form.submit();" })
+        @Html.Raw("Sort By: ")
+        @Html.DropDownList("SelectSort", (SelectList)ViewBag.Values, new { onchange = "this.form.submit();" })
         @Html.Hidden("UserId", (object)ViewBag.UserId)
     </p>
+}
+
+@using (Html.BeginForm())
+{
+<p>
+    @Html.Raw("Filter By: ")
+    @Html.DropDownList("SelectFilter", (SelectList)ViewBag.Values)
+    @Html.TextBox("FilterString")
+    @Html.Hidden("UserId", (object)ViewBag.UserId)
+    <input type="submit" value="Filter" />
+</p>
 }
 
 
@@ -33,6 +45,21 @@
         <input type="submit" value="Search" />
     </p>
 }
+
+@*@(Html
+    .Grid(Model)
+    .Build(columns =>
+    {
+        columns.Add(model => model.Name).Titled("Name").Filterable(true).FilteredAs("custom");
+        columns.Add(model => model.Surname).Titled("Surname").Filterable(GridFilterType.Double).FilteredAs("custom");
+        columns.Add(model => model.MaritalStatus).Titled("Marital status");
+
+        columns.Add(model => model.Age).Titled("Age");
+        columns.Add(model => model.Birthday).Titled("Birthday").Formatted("{0:d}");
+        columns.Add(model => model.IsWorking).Titled("Employed");
+    })
+)*@
+
 
 <table class="table">
     <tr>

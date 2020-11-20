@@ -11,6 +11,8 @@ using BugTracker.Models;
 using BugTracker.ViewModels;
 using Microsoft.AspNet.Identity;
 using PagedList;
+using C1.Web.Mvc;
+
 
 namespace BugTracker.Controllers
 {
@@ -18,24 +20,30 @@ namespace BugTracker.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
         SortViewModel sortModel = new SortViewModel();
+        FilterViewModel filterModel = new FilterViewModel();
 
         [Authorize]
         public ActionResult Index(string userId, string role,int? page)
         {            
-            ViewBag.SelectFilter = new SelectList(sortModel.Options);            
+            ViewBag.SelectSort = new SelectList(sortModel.Options);
+            ViewBag.SelectFilter = new SelectList(filterModel.Options);
             var tickets = TicketHelper.GetTickets(userId, role).ToList();
             
             return View(PaginateList(tickets, page));           
         }
 
         [HttpPost]
-        public ActionResult Index(string SelectFilter, string UserId, string role, int? page, string searchString)
+        public ActionResult Index(string selectSort, string UserId, string role, int? page, string searchString, string selectFilter, string filterString)
         {            
-            ViewBag.SelectFilter = new SelectList(sortModel.Options);
+            ViewBag.SelectSort = new SelectList(sortModel.Options);
+            ViewBag.SelectFilter = new SelectList(filterModel.Options);
             var tickets = TicketHelper.GetTickets(UserId, role);
 
-            if (SelectFilter != null)
-                tickets = TicketHelper.SortTickets(tickets, SelectFilter);         
+            if (selectSort != null)
+                tickets = TicketHelper.SortTickets(tickets, selectSort);
+            
+            if (!String.IsNullOrEmpty(filterString))
+                tickets = TicketHelper.FilterTickets(tickets, selectFilter, filterString);
 
             if (!String.IsNullOrEmpty(searchString))            
                 tickets = TicketHelper.GetTickets(UserId, role).Where(t => t.Title.Contains(searchString)

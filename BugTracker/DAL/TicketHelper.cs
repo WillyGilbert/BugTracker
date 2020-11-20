@@ -6,6 +6,7 @@ using System.Linq;
 using System.Web;
 using Microsoft.AspNet.Identity;
 using System.Net;
+using System.Globalization;
 
 namespace BugTracker.DAL
 {
@@ -57,28 +58,71 @@ namespace BugTracker.DAL
             return allTickets;
         }
 
-        public static List<Ticket> SortTickets(List<Ticket> tickets, string selectFilter)
+        public static List<Ticket> SortTickets(List<Ticket> tickets, string sortOption)
         {
             List<Ticket> sortedTickets = new List<Ticket>();
-            if (selectFilter == "Creation Date")
-                sortedTickets = tickets.OrderBy(t => t.Created).ToList();
-            else if (selectFilter == "Title")
-                sortedTickets = tickets.OrderBy(t => t.Title).ToList();
-            else if (selectFilter == "Submitter")
-                sortedTickets = tickets.OrderBy(t => t.OwnerUser.UserName).ToList();
-            else if (selectFilter == "Developer")
-                sortedTickets = tickets.Where(t => t.AssignedToUser != null).OrderBy(t => t.AssignedToUser.UserName).ToList();
-            else if (selectFilter == "Type")
-                sortedTickets = tickets.OrderBy(t => t.TicketType.Name).ToList();
-            else if (selectFilter == "Priority")
-                sortedTickets = tickets.OrderBy(t => t.TicketPriority.Name).ToList();
-            else if (selectFilter == "Status")
-                sortedTickets = tickets.OrderBy(t => t.TicketStatus.Name).ToList();
-            else if (selectFilter == "Project")
-                sortedTickets = tickets.OrderBy(t => t.Project.Name).ToList();                  
+
+            switch (sortOption)
+            {
+                case "Creation Date":
+                    sortedTickets = tickets.OrderBy(t => t.Created).ToList();
+                    break;
+                case "Title":
+                    sortedTickets = tickets.OrderBy(t => t.Title).ToList();
+                    break;
+                case "Submitter":
+                    sortedTickets = tickets.OrderBy(t => t.OwnerUser.UserName).ToList();
+                    break;
+                case "Developer":
+                    sortedTickets = tickets.Where(t => t.AssignedToUser != null).OrderBy(t => t.AssignedToUser.UserName).ToList();
+                    break;
+                case "Type":
+                    sortedTickets = tickets.OrderBy(t => t.TicketType.Name).ToList();
+                    break;
+                case "Priority":
+                    sortedTickets = tickets.OrderBy(t => t.TicketPriority.Name).ToList();
+                    break;
+                case "Status":
+                    sortedTickets = tickets.OrderBy(t => t.TicketStatus.Name).ToList();
+                    break;
+                case "Project":
+                    sortedTickets = tickets.OrderBy(t => t.Project.Name).ToList();
+                    break;
+                default:
+                    sortedTickets = tickets.OrderBy(t => t.Created).ToList();
+                    break;
+            }
 
             db.Dispose();
             return sortedTickets;
+        }
+
+        public static List<Ticket> FilterTickets(List<Ticket> tickets, string filterOption, string filterString)
+        {
+            List<Ticket> filteredTickets = new List<Ticket>();
+            var capFilterString = char.ToUpper(filterString[0]) + filterString.Substring(1);
+
+            switch (filterOption)
+            {
+                case "Creation Date":                    
+                    filteredTickets = tickets.Where(t => t.Created >= Convert.ToDateTime(filterString)).ToList();
+                    break;                
+                case "Type":
+                    filteredTickets = tickets.Where(t => t.TicketType.Name == capFilterString).ToList();
+                    break;
+                case "Priority":
+                    filteredTickets = tickets.Where(t => t.TicketPriority.Name == capFilterString).ToList();
+                    break;
+                case "Status":
+                    filteredTickets = tickets.Where(t => t.TicketStatus.Name == capFilterString).ToList();
+                    break;               
+                default:
+                    filteredTickets = tickets;
+                    break;
+            }
+
+            db.Dispose();
+            return filteredTickets;
         }
 
         public static Ticket GetTicket(int? Id)

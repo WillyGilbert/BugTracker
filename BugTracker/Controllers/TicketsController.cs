@@ -149,10 +149,10 @@ namespace BugTracker.Controllers
             if (ModelState.IsValid)
             {               
                 TicketHelper.Create(User.Identity.GetUserId(), title, description, projectId, TicketTypeId, TicketPriorityId, TicketStatusId);
-                return RedirectToAction("Index", "Projects", new { userId = User.Identity.GetUserId() });
+                return RedirectToAction("ShowMyProjects", "Projects");
             }
 
-            return View();            
+            return RedirectToAction("ShowMyProjects", "Projects");
             //return View(ticket);
         }
 

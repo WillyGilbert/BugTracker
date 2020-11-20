@@ -20,31 +20,22 @@ namespace BugTracker.Controllers
         SortViewModel sortModel = new SortViewModel();
 
         // GET: Projects
-        public ActionResult Index(bool? myproject, int? page)
+        public ActionResult Index(int? page )
         {
             //SortViewModel sortModel = new SortViewModel();
             ViewBag.SelectFilter = new SelectList(sortModel.Options);
-            ViewBag.Myproject = myproject;
-            if (myproject == true)            
-                return View(PaginateList(ProjectHelper.GetMyProjects(User.Identity.GetUserId()), page));       
-            else            
-                return View(PaginateList(ProjectHelper.GetProjects(), page));           
+
+            return View(PaginateList(ProjectHelper.GetProjects(), page));
         }
 
         [HttpPost]
-        public ActionResult Index(bool? myproject, string SelectFilter, int? page, string searchString)
+        public ActionResult Index(string SelectFilter, int? page, string searchString)
         {
             //SortViewModel sortModel = new SortViewModel();
             ViewBag.SelectFilter = new SelectList(sortModel.Options);
-            ViewBag.Myproject = myproject;
+            
 
             var projects = ProjectHelper.GetProjects();
-
-            if (myproject == true)
-            {
-                projects = ProjectHelper.GetMyProjects(User.Identity.GetUserId());
-            }
-               
 
             if (SelectFilter == "Creation Date")           
                 projects = ProjectHelper.SortTicketsByTitle(projects);            
@@ -69,10 +60,34 @@ namespace BugTracker.Controllers
             return (projects.ToPagedList(pageNumber, pageSize));
         }
 
-        //public ActionResult ShowMyProjects()
-        //{
-        //    return View(ProjectHelper.GetMyProjects(User.Identity.GetUserId()));
-        //}
+        public ActionResult ShowMyProjects(int? page)
+        {
+            //return View(ProjectHelper.GetMyProjects(User.Identity.GetUserId()));
+            ViewBag.SelectFilter = new SelectList(sortModel.Options);
+            return View(PaginateList(ProjectHelper.GetMyProjects(User.Identity.GetUserId()), page));
+        }
+        [HttpPost]
+        public ActionResult ShowMyProjects(string SelectFilter, int? page, string searchString)
+        {
+            //SortViewModel sortModel = new SortViewModel();
+            ViewBag.SelectFilter = new SelectList(sortModel.Options);
+
+            var projects = ProjectHelper.GetMyProjects(User.Identity.GetUserId());
+
+            if (SelectFilter == "Creation Date")
+                projects = ProjectHelper.SortTicketsByTitle(projects);
+            else if (SelectFilter == "Title")
+                projects = ProjectHelper.SortTicketsByTitle(projects);
+
+
+            //if (!String.IsNullOrEmpty(searchString))
+            //{
+            //    tickets = TicketHelper.GetTickets(UserId).Where(t => t.Title.Contains(searchString)
+            //                           || t.Description.Contains(searchString)).ToList();
+            //}
+
+            return View(PaginateList(projects, page));
+        }
 
         public ActionResult ShowAllUsers(int projectId)
         {

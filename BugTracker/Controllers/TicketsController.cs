@@ -11,8 +11,6 @@ using BugTracker.Models;
 using BugTracker.ViewModels;
 using Microsoft.AspNet.Identity;
 using PagedList;
-using C1.Web.Mvc;
-
 
 namespace BugTracker.Controllers
 {
@@ -23,14 +21,24 @@ namespace BugTracker.Controllers
         FilterViewModel filterModel = new FilterViewModel();
 
         [Authorize]
-        public ActionResult Index(string userId, string role,int? page)
-        {            
+        public ActionResult Index(string userId, string role)
+        {
             ViewBag.SelectSort = new SelectList(sortModel.Options);
             ViewBag.SelectFilter = new SelectList(filterModel.Options);
             var tickets = TicketHelper.GetTickets(userId, role).ToList();
-            
-            return View(PaginateList(tickets, page));           
+
+            return View(tickets);
         }
+
+        //[Authorize]
+        //public ActionResult Index(string userId, string role,int? page)
+        //{            
+        //    ViewBag.SelectSort = new SelectList(sortModel.Options);
+        //    ViewBag.SelectFilter = new SelectList(filterModel.Options);
+        //    var tickets = TicketHelper.GetTickets(userId, role).ToList();
+            
+        //    return View(PaginateList(tickets, page));           
+        //}
 
         [HttpPost]
         public ActionResult Index(string selectSort, string UserId, string role, int? page, string searchString, string selectFilter, string filterString)

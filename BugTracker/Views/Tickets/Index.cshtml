@@ -38,19 +38,7 @@
         .Encoded(false)
         .RenderValueAs(t => Html.ActionLink(t.Title, "Details", new { id = t.Id }));
     columns.Add(t => t.OwnerUser.UserName).Titled("Submitter").Sortable(true);
-
-    //columns.Add().WithHeaderText("Developer")
-    //        .WithVisibility(visible: true, allowChangeVisibility: true)
-    //        .WithValueExpression(t => t.AssignedToUser.HasValue ? t.AssignedToUser.Value : "");
-    //columns.Add(t => t.AssignedToUser.UserName).Titled("Developer").Sortable(true);
-    //columns.Add(t => String.IsNullOrEmpty(t.AssignedToUser.UserName) ? "Your Message" : t.AssignedToUser.UserName).Titled("Developer").Encoded(false).Sortable(true);
-    //columns.Add().Titled("Developer").Sortable(true).RenderValueAs(t => Html.TextBox("Developer", t.AssignedToUser.UserName, new { @id = "Id", @readonly = "readonly", @class = "form-control input-sm" }));
-    //columns.Add(t => (t.AssignedToUser != null ? t.AssignedToUser.UserName : "No value")).Titled("Developer").Sortable(true);
-    //columns.Add(t => ("#:t.AssignedToUser != null ? t.AssignedToUser.UserName : 'placeholder'#"));    
-
-    //columns.Add(model => model.Type).Formatted("<span class=\"glyphicon glyphicon-{0}-open\"></span>").Encoded(false);
-    //columns.Bound(t => t.AssignedToUser.UserName).Titled("Developer").Sortable(true);
-
+    columns.Add(t => t.AssignedToUser.UserName).Titled("Developer").Sortable(true);
     columns.Add(t => t.TicketType.Name).Titled("Type").Sortable(true).Filterable(true);
     columns.Add(t => t.TicketPriority.Name).Titled("Priority").Sortable(true).Filterable(true);
     columns.Add(t => t.TicketStatus.Name).Titled("Status").Sortable(true).Filterable(true);

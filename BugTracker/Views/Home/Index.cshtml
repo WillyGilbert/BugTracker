@@ -30,8 +30,11 @@
                     <div class="col-md-6 text-right">
                         @if (User.IsInRole("Developer"))
                         {
-                            <h5>NOTIFICATIONS</h5>
                             <p><a class="btn btn-danger" href="@Url.Action("Index", "TicketNotifications", new { userId = User.Identity.GetUserId() })">Notifications</a></p>
+                        }
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <p><a class="btn btn-danger" href="@Url.Action("Index", "TicketHistories", new { userId = User.Identity.GetUserId() })">Ticket History</a></p>
                         }
                     </div>
 

@@ -1,5 +1,4 @@
-﻿@*@model IEnumerable<BugTracker.Models.Project>*@
-@model IPagedList<BugTracker.Models.Project>
+﻿@model IPagedList<BugTracker.Models.Project>
 @using Microsoft.AspNet.Identity;
 @using PagedList.Mvc;
 @using PagedList;
@@ -9,7 +8,7 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Projects:</h2>
+<h2>Projects: Willy Version</h2>
 
 @if (User.IsInRole("Admin") || User.IsInRole("ProjectManager"))
 {
@@ -106,198 +105,49 @@
                     <th></th>
                     <th></th>
                 </tr>
-                @if (User.IsInRole("Submitter"))
-                {
-                    foreach (var ticket in project.Tickets.Where(t => t.OwnerUserId == User.Identity.GetUserId()))
-                    {
-                        <tr style="color:yellowgreen">
-                            <td>
-                            </td>
-                            <td>
-                                @Html.ActionLink(ticket.Title, "Details", "Tickets", new { id = ticket.Id }, null)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => ticket.AssignedToUser.Email)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => ticket.OwnerUser.Email)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => ticket.TicketType.Name)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => ticket.TicketPriority.Name)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => ticket.TicketStatus.Name)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => ticket.Created)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => ticket.Updated)
-                            </td>
-                            <td>
-                                @Html.ActionLink(ticket.TicketComments.Count.ToString(), "Index", "TicketComments", new { ticketId = ticket.Id }, null)
-                            </td>
-                            
-                            <td>
-                                @Html.ActionLink("Assign", "Assign", "Tickets", new { id = ticket.Id }, null)
-                            </td>
-                            
-                            <td>
-                                @Html.ActionLink("Edit", "Edit", "Tickets", new { id = ticket.Id }, null) |
-                                @Html.ActionLink("AddComment", "Create", "TicketComments", new { id = ticket.Id }, null) |
-                                @Html.ActionLink("AddAttachment", "Index", "TicketAttachments", new { ticketId = ticket.Id }, null)
-                            </td>
-                        </tr>
-                    }
-                }
-                else if (User.IsInRole("Developer"))
-                {
 
-                    foreach (var ticket in project.Tickets.Where(t => t.AssignedToUserId == User.Identity.GetUserId()))
-                    {
-                        <tr style="color:yellowgreen">
-                            <td>
-                            </td>
-                            <td>
-                                @Html.ActionLink(ticket.Title, "Details", "Tickets", new { id = ticket.Id }, null)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => ticket.AssignedToUser.Email)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => ticket.OwnerUser.Email)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => ticket.TicketType.Name)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => ticket.TicketPriority.Name)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => ticket.TicketStatus.Name)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => ticket.Created)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => ticket.Updated)
-                            </td>
-                            <td>
-                                @Html.ActionLink(ticket.TicketComments.Count.ToString(), "Index", "TicketComments", new { ticketId = ticket.Id }, null)
-                            </td>
-                            
-                            <td>
-                                @Html.ActionLink("Assign", "Assign", "Tickets", new { id = ticket.Id }, null)
-                            </td>
-                           
-                            <td>
-                                @Html.ActionLink("Edit", "Edit", "Tickets", new { id = ticket.Id }, null) |
-                                @Html.ActionLink("AddComment", "Create", "TicketComments", new { id = ticket.Id }, null) |
-                                @Html.ActionLink("AddAttachment", "Index", "TicketAttachments", new { ticketId = ticket.Id }, null)
-                            </td>
-                        </tr>
-                    }
-                }
-                else if (User.IsInRole("Submitter") && User.IsInRole("Developer"))
+                @foreach (var ticket in project.Tickets)
                 {
-
-                    foreach (var ticket in project.Tickets.Where(t => t.AssignedToUserId == User.Identity.GetUserId() || t.OwnerUserId == User.Identity.GetUserId()))
-                    {
-                        <tr style="color:yellowgreen">
-                            <td>
-                            </td>
-                            <td>
-                                @Html.ActionLink(ticket.Title, "Details", "Tickets", new { id = ticket.Id }, null)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => ticket.AssignedToUser.Email)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => ticket.OwnerUser.Email)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => ticket.TicketType.Name)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => ticket.TicketPriority.Name)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => ticket.TicketStatus.Name)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => ticket.Created)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => ticket.Updated)
-                            </td>
-                            <td>
-                                @Html.ActionLink(ticket.TicketComments.Count.ToString(), "Index", "TicketComments", new { ticketId = ticket.Id }, null)
-                            </td>
-                            
-                            <td>
-                                @Html.ActionLink("Assign", "Assign", "Tickets", new { id = ticket.Id }, null)
-                            </td>
-                            
-                            <td>
-                                @Html.ActionLink("Edit", "Edit", "Tickets", new { id = ticket.Id }, null) |
-                                @Html.ActionLink("AddComment", "Create", "TicketComments", new { id = ticket.Id }, null) |
-                                @Html.ActionLink("AddAttachment", "Index", "TicketAttachments", new { ticketId = ticket.Id }, null)
-                            </td>
-                        </tr>
-                    }
+                    <tr style="color:yellowgreen">
+                        <td>
+                        </td>
+                        <td>
+                            @Html.ActionLink(ticket.Title, "Details", "Tickets", new { id = ticket.Id }, null)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => ticket.AssignedToUser.Email)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => ticket.OwnerUser.Email)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => ticket.TicketType.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => ticket.TicketPriority.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => ticket.TicketStatus.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => ticket.Created)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => ticket.Updated)
+                        </td>
+                        <td>
+                            @Html.ActionLink(ticket.TicketComments.Count.ToString(), "Index", "TicketComments", new { ticketId = ticket.Id }, null)
+                        </td>
+                        <td>
+                            @Html.ActionLink("Assign", "Assign", "Tickets", new { id = ticket.Id }, null)
+                        </td>
+                        <td>
+                            @Html.ActionLink("Edit", "Edit", "Tickets", new { id = ticket.Id }, null) |
+                            @Html.ActionLink("AddComment", "Create", "TicketComments", new { id = ticket.Id }, null) |
+                            @Html.ActionLink("AddAttachment", "Index", "TicketAttachments", new { ticketId = ticket.Id }, null)
+                        </td>
+                    </tr>
                 }
-                else
-                {
-
-                    foreach (var ticket in project.Tickets)
-                    {
-                        <tr style="color:yellowgreen">
-                            <td>
-                            </td>
-                            <td>
-                                @Html.ActionLink(ticket.Title, "Details", "Tickets", new { id = ticket.Id }, null)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => ticket.AssignedToUser.Email)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => ticket.OwnerUser.Email)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => ticket.TicketType.Name)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => ticket.TicketPriority.Name)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => ticket.TicketStatus.Name)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => ticket.Created)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => ticket.Updated)
-                            </td>
-                            <td>
-                                @Html.ActionLink(ticket.TicketComments.Count.ToString(), "Index", "TicketComments", new { ticketId = ticket.Id }, null)
-                            </td>
-                            
-                            <td>
-                                @Html.ActionLink("Assign", "Assign", "Tickets", new { id = ticket.Id }, null)
-                            </td>
-                            
-                            <td>
-                                @Html.ActionLink("Edit", "Edit", "Tickets", new { id = ticket.Id }, null) |
-                                @Html.ActionLink("AddComment", "Create", "TicketComments", new { id = ticket.Id }, null) |
-                                @Html.ActionLink("AddAttachment", "Index", "TicketAttachments", new { ticketId = ticket.Id }, null)
-                            </td>
-                        </tr>
-                    }
-                }
-
             </tbody>
         }
     }

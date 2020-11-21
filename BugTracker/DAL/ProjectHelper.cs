@@ -38,7 +38,7 @@ namespace BugTracker.DAL
             });
 
             db.Dispose();
-            return projects;            
+            return projects;
         }
 
         //sort tickets by creation date
@@ -51,6 +51,80 @@ namespace BugTracker.DAL
 
             db.Dispose();
             return projects;
+        }
+        public static List<Project> GetProjectWithTicketByUserByRoles(string userId)
+        {
+            List<string> roles = UserHelper.ShowAllRolesForAUser(userId);
+            ApplicationDbContext db = new ApplicationDbContext();
+            List<Project> newProjects = new List<Project>();
+            List<Project> AllProject = db.Projects.Include("Tickets").ToList();
+            var projectByUsers = db.ProjectUsers.Where(pu => pu.UserId == userId).Select(p => p.ProjectId).ToList();
+            foreach (var project in AllProject)
+            {
+                bool hasUserTicket = false;
+                List<Ticket> tickets = new List<Ticket>();
+                foreach (var ticket in project.Tickets)
+                {
+                    if (roles.Contains("ProjectManager"))
+                    {
+                        if (projectByUsers.Contains(ticket.ProjectId)) tickets.Add(ticket);
+                        hasUserTicket = true;
+                    }
+                    if (roles.Contains("Developer"))
+                    {
+                        if (ticket.AssignedToUserId == userId) tickets.Add(ticket);
+                        hasUserTicket = true;
+                    }
+                    if (roles.Contains("Submitter"))
+                    {
+                        if (ticket.OwnerUserId == userId) tickets.Add(ticket);
+                        hasUserTicket = true;
+                    }
+                }
+                if (hasUserTicket)
+                {
+                    project.Tickets = tickets;
+                    newProjects.Add(project);
+                }
+                else
+                {
+                    project.Tickets = new List<Ticket>();
+                    newProjects.Add(project);
+                }
+                if (roles.Contains("Admin")) newProjects.Add(project);
+            }
+            return newProjects.ToList();
+        }
+        public static List<Project> GetProjectWithTicketByUserByProjectManager(string userId)
+        {
+            List<string> roles = UserHelper.ShowAllRolesForAUser(userId);
+            ApplicationDbContext db = new ApplicationDbContext();
+            List<Project> newProjects = new List<Project>();
+            List<Project> AllProject = db.Projects.Include("Tickets").ToList();
+            var projectByUsers = db.ProjectUsers.Where(pu => pu.UserId == userId).Select(p => p.ProjectId).ToList();
+            foreach (var project in AllProject)
+            {
+                bool hasUserTicket = false;
+                List<Ticket> tickets = new List<Ticket>();
+                foreach (var ticket in project.Tickets)
+                {
+                    if (roles.Contains("ProjectManager"))
+                    {
+                        if (projectByUsers.Contains(ticket.ProjectId)) tickets.Add(ticket);
+                        hasUserTicket = true;
+                    }
+                }
+                if (hasUserTicket)
+                {
+                    project.Tickets = tickets;
+                    newProjects.Add(project);
+                }
+                else
+                {
+                    if (projectByUsers.Contains(project.Id)) newProjects.Add(project);
+                }
+            }
+            return newProjects.ToList();
         }
 
         public static List<ApplicationUser> UsersOfTheProject(int projectId)
@@ -83,8 +157,8 @@ namespace BugTracker.DAL
         public static ProjectUser GetProjectUser(int? Id)
         {
             ApplicationDbContext db = new ApplicationDbContext();
-            ProjectUser projectUser = db.ProjectUsers.FirstOrDefault(pu=> pu.ProjectId == Id);
-            
+            ProjectUser projectUser = db.ProjectUsers.FirstOrDefault(pu => pu.ProjectId == Id);
+
             if (projectUser == null)
             {
                 return null;
@@ -133,7 +207,7 @@ namespace BugTracker.DAL
                 return false;
             }
             ProjectUser projectUser = db.ProjectUsers.FirstOrDefault(p => p.UserId == userId && p.ProjectId == projectId);
-            if(projectUser == null)
+            if (projectUser == null)
             {
                 return false;
             }
@@ -142,9 +216,6 @@ namespace BugTracker.DAL
             db.Dispose();
             return true;
         }
-
-
-
 
         public static void Create(string name)
         {
@@ -167,12 +238,11 @@ namespace BugTracker.DAL
             db.SaveChanges();
             db.Dispose();
         }
-
         public static void Delete(int id)
         {
             ApplicationDbContext db = new ApplicationDbContext();
             var projectToDelete = db.Projects.Find(id);
-            if(projectToDelete != null)
+            if (projectToDelete != null)
             {
                 db.Projects.Remove(projectToDelete);
                 db.SaveChanges();

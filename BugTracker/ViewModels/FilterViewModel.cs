@@ -5,12 +5,12 @@ using System.Web;
 
 namespace BugTracker.ViewModels
 {
-    public class SortViewModel
+    public class FilterViewModel
     {
         public List<string> Options { get; set; }
-        public SortViewModel()
+        public FilterViewModel()
         {
-            Options = new List<string>() { "Creation Date", "Title", "Submitter", "Developer", "Type", "Priority", "Status", "Project"  };
+            Options = new List<string>() { "Creation Date", "Type", "Priority", "Status" };
         }
     }
 }

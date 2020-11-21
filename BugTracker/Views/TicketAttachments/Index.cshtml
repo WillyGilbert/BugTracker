@@ -5,15 +5,15 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<h2>Attachments</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create", new { ticketId = ViewBag.TicketId })
+<p class="btn btn-warning">
+    @Html.ActionLink("Attach a new file", "Create", new { ticketId = ViewBag.TicketId })
 </p>
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Ticket.Title)
+            @Html.Label("TicketTitle")
         </th>
         <th>
             @Html.DisplayNameFor(model => model.FilePath)
@@ -50,6 +50,9 @@
     }
 
 </table>
-<div>
+
+<a href="javascript:void(0);" onclick="history.go(-1);">&lArr; Back</a>
+
+@*<div>
     @Html.ActionLink("Back to List", "Index", "Projects", new { userId = User.Identity.GetUserId() }, null)
-</div>
+</div>*@

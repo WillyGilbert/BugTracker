@@ -6,9 +6,8 @@
 
 <h2>Delete</h2>
 
-<h3>Are you sure you want to delete this?</h3>
-<div>
-    <h4>TicketAttachment</h4>
+<h3>Are you sure you want to delete this Ticket Attachment?</h3>
+<div>    
     <hr />
     <dl class="dl-horizontal">
         <dt>
@@ -43,13 +42,15 @@
             @Html.DisplayFor(model => model.Created)
         </dd>
     </dl>
+       
 
-    @using (Html.BeginForm()) {
+    @using (Html.BeginForm())
+    {
         @Html.AntiForgeryToken()
 
-        <div class="form-actions no-color">
-            <input type="submit" value="Delete" class="btn btn-default" /> |
-            @Html.ActionLink("Back to List", "Index")
-        </div>
+<div class="form-actions no-color">
+    <a href="javascript:void(0);" onclick="history.go(-1);">&lArr; Back</a> |
+    <input type="submit" value="Delete" class="btn btn-default" />    
+</div>
     }
 </div>

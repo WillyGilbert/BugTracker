@@ -15,9 +15,9 @@ namespace BugTracker.Controllers
     {
 
         // GET: TicketHistories
-        public ActionResult Index()
+        public ActionResult Index(int ticketId)
         {
-            return View(TicketHistoryHelper.GetTicketHistorys());
+            return View(TicketHistoryHelper.GetTicketHistorys(ticketId));
         }
 
         // GET: TicketHistories/Details/5

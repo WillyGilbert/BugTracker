@@ -1,62 +1,27 @@
 ﻿@model IEnumerable<BugTracker.Models.TicketHistory>
+@using GridMvc.Html
 
-@{
-    ViewBag.Title = "Index";
-}
+<script src="@Url.Content("~/Scripts/jquery-3.4.1.min.js")"></script>
+<link href="@Url.Content("~/Content/Gridmvc.css")" rel="stylesheet" type="text/css" />
+<script src="@Url.Content("~/Scripts/gridmvc.min.js")" type="text/javascript"></script>
+<script src="~/Scripts/bootstrap.min.js"></script>
+<link href="@Url.Content("~/Content/Css/bootstrap.min.css")" rel="stylesheet" type="text/css" />
 
-<h2>Index</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Ticket.Title)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.User.Email)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Property)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.OldValue)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.NewValue)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Changed)
-        </th>
-        <th></th>
-    </tr>
+<h2>Ticket History</h2>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Ticket.Title)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.User.Email)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Property)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.OldValue)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.NewValue)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Changed)
-        </td>
-        <td>
-            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
-        </td>
-    </tr>
-}
+@Html.Grid(Model).Columns(columns =>
+{
+    columns.Add(t => t.Ticket.Title).Titled("Ticket Title");
+    columns.Add(t => t.User.Email).Titled("UserName")
+        .Sortable(true).Filterable(true);
+    columns.Add(t => t.Property).Sortable(true).Filterable(true);
+    columns.Add(t => t.OldValue);
+    columns.Add(t => t.NewValue);
+    columns.Add(t => t.Changed);
+}).WithPaging(10)
 
-</table>
+
+<div>
+    @Html.ActionLink("Back to List", "Index", "Tickets")
+</div>

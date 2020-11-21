@@ -62,6 +62,11 @@
     .Sanitized(false)
     .SetWidth(30)
     .RenderValueAs(t => Html.ActionLink("AddComment", "Create", "TicketComments", new { id = t.Id }, null));
+    columns.Add()
+    .Encoded(false)
+    .Sanitized(false)
+    .SetWidth(30)
+    .RenderValueAs(t => Html.ActionLink("History", "Index", "TicketHistories", new { ticketId = t.Id }, null));
 }).WithPaging(10)
 
 <div>

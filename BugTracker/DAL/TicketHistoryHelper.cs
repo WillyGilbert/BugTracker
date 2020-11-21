@@ -9,10 +9,10 @@ namespace BugTracker.DAL
 {
     public class TicketHistoryHelper
     {
-        public static List<TicketHistory> GetTicketHistorys()
+        public static List<TicketHistory> GetTicketHistorys(int ticketId)
         {
             ApplicationDbContext db = new ApplicationDbContext();
-            var TicketHistory = db.TicketHistories.Include(t => t.Ticket).Include(t => t.User);
+            var TicketHistory = db.TicketHistories.Include(t => t.Ticket).Include(t => t.User).Where(th=>th.TicketId == ticketId);
             return TicketHistory.ToList();
         }
 

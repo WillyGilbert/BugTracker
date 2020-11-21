@@ -152,8 +152,14 @@ namespace BugTracker.DAL
         }
         public static List<string> ShowAllRolesForAUser(string userId)
         {
-            var roles = userManager.GetRoles(userId).ToList();
-            return roles;
+            if (userId != null)
+            {
+                ApplicationDbContext db = new ApplicationDbContext();
+                userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
+                var roles = userManager.GetRoles(userId).ToList();
+                return roles;
+            }
+            return null;
         }
 
         public static bool IsRoleExist(string roleName)

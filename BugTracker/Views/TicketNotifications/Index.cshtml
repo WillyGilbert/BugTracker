@@ -1,6 +1,7 @@
 ﻿@model IPagedList<BugTracker.Models.TicketNotification>
 @using PagedList.Mvc;
 @using PagedList;
+@using GridMvc.Html
 @{
     ViewBag.Title = "Index";
 }
@@ -54,3 +55,9 @@
 Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
 
 @Html.PagedListPager(Model, page => Url.Action("Index", "TicketNotifications", new { page }))
+
+@Html.Grid(Model).WithPaging(10)
+
+<div>
+    @Html.ActionLink("Back to Home", "Index", "Home")
+</div>

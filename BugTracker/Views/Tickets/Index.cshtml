@@ -1,6 +1,7 @@
 ﻿@model IEnumerable<BugTracker.Models.Ticket>
 @using Microsoft.AspNet.Identity;
 @using GridMvc.Html
+@using System;
 
 @*@{
         ViewBag.Title = "Index";
@@ -16,7 +17,7 @@
 @if (User.IsInRole("Submitter"))
 {
     <p class=" btn btn-warning" style="margin-top: 20px">
-        @Html.ActionLink("Create New", "Create")
+        @Html.ActionLink("Create New", "CreateTicket")
     </p>
 }
 
@@ -37,8 +38,19 @@
         .Encoded(false)
         .RenderValueAs(t => Html.ActionLink(t.Title, "Details", new { id = t.Id }));
     columns.Add(t => t.OwnerUser.UserName).Titled("Submitter").Sortable(true);
-    //columns.Add(PaymentGrid.Column(columnName: "BirthDate", header: "DOB", format:@<text>@(string.IsNullOrEmpty(@item.BirthDate.ToString()) ? string.Empty : item.BirthDate.ToString("MM/dd/yyyy"))</text>));
-    //columns.Add(t => ift.AssignedToUser.UserName).Titled("Developer").Sortable(true);
+
+    //columns.Add().WithHeaderText("Developer")
+    //        .WithVisibility(visible: true, allowChangeVisibility: true)
+    //        .WithValueExpression(t => t.AssignedToUser.HasValue ? t.AssignedToUser.Value : "");
+    //columns.Add(t => t.AssignedToUser.UserName).Titled("Developer").Sortable(true);
+    //columns.Add(t => String.IsNullOrEmpty(t.AssignedToUser.UserName) ? "Your Message" : t.AssignedToUser.UserName).Titled("Developer").Encoded(false).Sortable(true);
+    //columns.Add().Titled("Developer").Sortable(true).RenderValueAs(t => Html.TextBox("Developer", t.AssignedToUser.UserName, new { @id = "Id", @readonly = "readonly", @class = "form-control input-sm" }));
+    //columns.Add(t => (t.AssignedToUser != null ? t.AssignedToUser.UserName : "No value")).Titled("Developer").Sortable(true);
+    //columns.Add(t => ("#:t.AssignedToUser != null ? t.AssignedToUser.UserName : 'placeholder'#"));    
+
+    //columns.Add(model => model.Type).Formatted("<span class=\"glyphicon glyphicon-{0}-open\"></span>").Encoded(false);
+    //columns.Bound(t => t.AssignedToUser.UserName).Titled("Developer").Sortable(true);
+
     columns.Add(t => t.TicketType.Name).Titled("Type").Sortable(true).Filterable(true);
     columns.Add(t => t.TicketPriority.Name).Titled("Priority").Sortable(true).Filterable(true);
     columns.Add(t => t.TicketStatus.Name).Titled("Status").Sortable(true).Filterable(true);
@@ -67,7 +79,7 @@
     .SetWidth(30)
     .RenderValueAs(t => Html.ActionLink("AddComment", "Create", "TicketComments", new { id = t.Id }, null));
 }).WithPaging(10)
-    
-    <div>
-        @Html.ActionLink("Back to Home", "Index", "Home")
-    </div>
+
+<div>
+    @Html.ActionLink("Back to Home", "Index", "Home")
+</div>

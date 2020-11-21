@@ -9,19 +9,19 @@ namespace BugTracker.DAL
 {
     public static class TicketCommentHelper
     {
-        static ApplicationDbContext db = new ApplicationDbContext();
+        //static ApplicationDbContext db = new ApplicationDbContext();
 
 
         public static List<TicketComment> GetTicketComments()
         {
-            //ApplicationDbContext db = new ApplicationDbContext();
+            ApplicationDbContext db = new ApplicationDbContext();
             var TicketComment = db.TicketComments.Include(t => t.Ticket).Include(t => t.User);
             return TicketComment.ToList();
         }
 
-        public static List<TicketComment> GetTicketCommentsByTicket(int ticketId)
+        public static List<TicketComment> GetTicketCommentsByTicket(int? ticketId)
         {
-            //ApplicationDbContext db = new ApplicationDbContext();
+            ApplicationDbContext db = new ApplicationDbContext();
             var TicketComment = db.TicketComments.Include(t => t.Ticket).Include(t => t.User).Where(t => t.TicketId == ticketId);
             return TicketComment.ToList();
         }
@@ -29,19 +29,19 @@ namespace BugTracker.DAL
         public static TicketComment GetTicketComment(int? Id)
         {
             ApplicationDbContext db = new ApplicationDbContext();
-            TicketComment TicketComment = db.TicketComments.Find(Id);
-            db.Dispose();
-            if (TicketComment == null)
+            TicketComment ticketComment = db.TicketComments.Find(Id);
+            //db.Dispose();
+            if (ticketComment == null)
             {
                 return null;
             }
-            db.Dispose();
-            return TicketComment;
+            //db.Dispose();
+            return ticketComment;
         }
 
         public static void Create(string comment, int ticketId, string userId)
         {
-            //ApplicationDbContext db = new ApplicationDbContext();
+            ApplicationDbContext db = new ApplicationDbContext();
             TicketComment ticketComment = new TicketComment
             {
                 Comment = comment,
@@ -54,13 +54,27 @@ namespace BugTracker.DAL
             db.Dispose();
         }
 
-        public static void Edit(int id, string comment, int ticketId)
+        //public static void Edit(int id, string comment, int ticketId)
+        //{
+        //    //ApplicationDbContext db = new ApplicationDbContext();
+        //    TicketComment ticketComment = GetTicketComment(id);
+        //    ticketComment.Comment = comment;
+        //    ticketComment.Created = DateTime.Now;
+        //    ticketComment.TicketId = ticketId;
+        //    //ticketComment.UserId = userId;
+        //    db.Entry(ticketComment).State = EntityState.Modified;
+        //    db.SaveChanges();
+        //    db.Dispose();
+        //}
+
+        public static void Edit(int id, string comment)
         {
-            //ApplicationDbContext db = new ApplicationDbContext();
+            ApplicationDbContext db = new ApplicationDbContext();
             TicketComment ticketComment = GetTicketComment(id);
+            //TicketComment ticketComment = db.TicketComments.Find(id);
             ticketComment.Comment = comment;
             ticketComment.Created = DateTime.Now;
-            ticketComment.TicketId = ticketId;
+            //ticketComment.TicketId = ticketId;
             //ticketComment.UserId = userId;
             db.Entry(ticketComment).State = EntityState.Modified;
             db.SaveChanges();
@@ -69,8 +83,9 @@ namespace BugTracker.DAL
 
         public static void Delete(int id)
         {
-            //ApplicationDbContext db = new ApplicationDbContext();
-            TicketComment ticketComment = GetTicketComment(id);
+            ApplicationDbContext db = new ApplicationDbContext();
+            //TicketComment ticketComment = GetTicketComment(id);
+            TicketComment ticketComment = db.TicketComments.Find(id);
             db.TicketComments.Remove(ticketComment);
             db.SaveChanges();
             db.Dispose();

@@ -94,7 +94,7 @@ namespace BugTracker.Controllers
             ViewBag.TicketStatusId = new SelectList(db.TicketStatuses, "Id", "Name");
             ViewBag.TicketTypeId = new SelectList(db.TicketTypes, "Id", "Name");
             return View();
-        }
+        }        
 
         // POST: Tickets/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
@@ -106,19 +106,46 @@ namespace BugTracker.Controllers
         {
             //ViewBag.AssignedToUserId = new SelectList(db.Users, "Id", "Email", ticket.AssignedToUserId);
             //ViewBag.OwnerUserId = new SelectList(db.Users, "Id", "Email", ticket.OwnerUserId);
-            ViewBag.ProjectId = new SelectList(db.Projects, "Id", "Name");
+            //ViewBag.ProjectId = new SelectList(db.Projects, "Id", "Name");
             ViewBag.TicketPriorityId = new SelectList(db.TicketPriorities, "Id", "Name");
             ViewBag.TicketStatusId = new SelectList(db.TicketStatuses, "Id", "Name");
             ViewBag.TicketTypeId = new SelectList(db.TicketTypes, "Id", "Name");
 
             if (ModelState.IsValid)
             {               
-                TicketHelper.Create(User.Identity.GetUserId(), title, description, projectId, TicketTypeId, TicketPriorityId, TicketStatusId);
+                TicketHelper.Create(User.Identity.GetUserId(), title, description, projectId, TicketTypeId, TicketPriorityId, TicketStatusId);                
                 return RedirectToAction("ShowMyProjects", "Projects");
             }
 
             return RedirectToAction("ShowMyProjects", "Projects");
             //return View(ticket);
+        }
+
+        public ActionResult CreateTicket()
+        {
+            ViewBag.ProjectId = new SelectList(db.Projects, "Id", "Name");
+            ViewBag.TicketPriorityId = new SelectList(db.TicketPriorities, "Id", "Name");
+            ViewBag.TicketStatusId = new SelectList(db.TicketStatuses, "Id", "Name");
+            ViewBag.TicketTypeId = new SelectList(db.TicketTypes, "Id", "Name");           
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]        
+        public ActionResult CreateTicket(string title, string description, int projectId, int TicketTypeId, int TicketPriorityId, int TicketStatusId)
+        {            
+            ViewBag.ProjectId = new SelectList(db.Projects, "Id", "Name");
+            ViewBag.TicketPriorityId = new SelectList(db.TicketPriorities, "Id", "Name");
+            ViewBag.TicketStatusId = new SelectList(db.TicketStatuses, "Id", "Name");
+            ViewBag.TicketTypeId = new SelectList(db.TicketTypes, "Id", "Name");
+
+            if (ModelState.IsValid)
+            {
+                TicketHelper.Create(User.Identity.GetUserId(), title, description, projectId, TicketTypeId, TicketPriorityId, TicketStatusId);
+                return RedirectToAction("Index");
+            }
+
+            return RedirectToAction("Index");            
         }
 
         // GET: Tickets/Edit/5

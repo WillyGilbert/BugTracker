@@ -1,6 +1,7 @@
 ﻿@model IEnumerable<BugTracker.Models.Ticket>
 @using Microsoft.AspNet.Identity;
 @using GridMvc.Html
+@using System;
 
 @*@{
         ViewBag.Title = "Index";
@@ -16,7 +17,7 @@
 @if (User.IsInRole("Submitter"))
 {
     <p class=" btn btn-warning" style="margin-top: 20px">
-        @Html.ActionLink("Create New", "Create")
+        @Html.ActionLink("Create New", "CreateTicket")
     </p>
 }
 
@@ -37,8 +38,7 @@
         .Encoded(false)
         .RenderValueAs(t => Html.ActionLink(t.Title, "Details", new { id = t.Id }));
     columns.Add(t => t.OwnerUser.UserName).Titled("Submitter").Sortable(true);
-    //columns.Add(PaymentGrid.Column(columnName: "BirthDate", header: "DOB", format:@<text>@(string.IsNullOrEmpty(@item.BirthDate.ToString()) ? string.Empty : item.BirthDate.ToString("MM/dd/yyyy"))</text>));
-    //columns.Add(t => ift.AssignedToUser.UserName).Titled("Developer").Sortable(true);
+    columns.Add(t => t.AssignedToUser.UserName).Titled("Developer").Sortable(true);
     columns.Add(t => t.TicketType.Name).Titled("Type").Sortable(true).Filterable(true);
     columns.Add(t => t.TicketPriority.Name).Titled("Priority").Sortable(true).Filterable(true);
     columns.Add(t => t.TicketStatus.Name).Titled("Status").Sortable(true).Filterable(true);
@@ -67,7 +67,7 @@
     .SetWidth(30)
     .RenderValueAs(t => Html.ActionLink("AddComment", "Create", "TicketComments", new { id = t.Id }, null));
 }).WithPaging(10)
-    
-    <div>
-        @Html.ActionLink("Back to Home", "Index", "Home")
-    </div>
+
+<div>
+    @Html.ActionLink("Back to Home", "Index", "Home")
+</div>

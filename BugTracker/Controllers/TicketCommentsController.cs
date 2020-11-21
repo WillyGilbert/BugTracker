@@ -14,9 +14,10 @@ namespace BugTracker.Controllers
 {
     public class TicketCommentsController : Controller
     {
+        private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: TicketComments
-        public ActionResult Index(int ticketId)
+        public ActionResult Index(int? ticketId)
         {
             var ticketComments = TicketCommentHelper.GetTicketCommentsByTicket(ticketId);
             return View(ticketComments.ToList());
@@ -40,9 +41,7 @@ namespace BugTracker.Controllers
         // GET: TicketComments/Create
         public ActionResult Create(Ticket ticket)
         {
-            ViewBag.TicketId = ticket.Id;
-            //ViewBag.TicketId = new SelectList(TicketHelper.GetTickets(), "Id", "Title");
-            //ViewBag.UserId = new SelectList(UserHelper.GetAllUsers(), "Id", "Email");
+            ViewBag.TicketId = ticket.Id;            
             return View();
         }
 
@@ -59,8 +58,7 @@ namespace BugTracker.Controllers
                 return RedirectToAction("Index", "Tickets", new { userId = User.Identity.GetUserId() });
             }
 
-            ViewBag.TicketId = new SelectList(TicketHelper.GetTickets(), "Id", "Title", ticketComment.TicketId);
-            //ViewBag.UserId = new SelectList(UserHelper.GetAllUsers(), "Id", "Email", ticketComment.UserId);
+            ViewBag.TicketId = new SelectList(TicketHelper.GetTickets(), "Id", "Title", ticketComment.TicketId); 
             return View(ticketComment);
         }
 
@@ -76,8 +74,7 @@ namespace BugTracker.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.TicketId = new SelectList(TicketHelper.GetTickets(), "Id", "Title", ticketComment.TicketId);
-            ViewBag.UserId = new SelectList(UserHelper.GetAllUsers(), "Id", "Email", ticketComment.UserId);
+            ViewBag.TicketId = ticketComment.TicketId;            
             return View(ticketComment);
         }
 
@@ -90,11 +87,11 @@ namespace BugTracker.Controllers
         {
             if (ModelState.IsValid)
             {
-                TicketCommentHelper.Edit(ticketComment.Id, ticketComment.Comment, ticketComment.TicketId);
-                return RedirectToAction("Index");
+                TicketCommentHelper.Edit(ticketComment.Id, ticketComment.Comment);
+                db.SaveChanges();
+                return RedirectToAction("Index", new { ticketId = ticketComment.TicketId });
             }
-            ViewBag.TicketId = new SelectList(TicketHelper.GetTickets(), "Id", "Title", ticketComment.TicketId);
-            //ViewBag.UserId = new SelectList(UserHelper.GetAllUsers(), "Id", "Email", ticketComment.UserId);
+            
             return View(ticketComment);
         }
 
@@ -110,16 +107,18 @@ namespace BugTracker.Controllers
             {
                 return HttpNotFound();
             }
+
+            ViewBag.TicketId = ticketComment.TicketId;
             return View(ticketComment);
         }
 
         // POST: TicketComments/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult DeleteConfirmed(int id, int? ticketId)
         {
             TicketCommentHelper.Delete(id);
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", new { ticketId});
         }
     }
 }

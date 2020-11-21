@@ -123,7 +123,8 @@ namespace BugTracker.Controllers
 
         public ActionResult CreateTicket()
         {
-            ViewBag.ProjectId = new SelectList(db.Projects, "Id", "Name");
+            var projects = db.Projects.Where(p => p.ProjectUsers.Any(pu => pu.UserId == User.Identity.GetUserId()));
+            ViewBag.ProjectId = new SelectList(projects, "Id", "Name");
             ViewBag.TicketPriorityId = new SelectList(db.TicketPriorities, "Id", "Name");
             ViewBag.TicketStatusId = new SelectList(db.TicketStatuses, "Id", "Name");
             ViewBag.TicketTypeId = new SelectList(db.TicketTypes, "Id", "Name");           
@@ -133,8 +134,9 @@ namespace BugTracker.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]        
         public ActionResult CreateTicket(string title, string description, int projectId, int TicketTypeId, int TicketPriorityId, int TicketStatusId)
-        {            
-            ViewBag.ProjectId = new SelectList(db.Projects, "Id", "Name");
+        {
+            var projects = db.Projects.Where(p => p.ProjectUsers.Any(pu => pu.UserId == User.Identity.GetUserId())).ToList();
+            ViewBag.ProjectId = new SelectList(projects, "Id", "Name");
             ViewBag.TicketPriorityId = new SelectList(db.TicketPriorities, "Id", "Name");
             ViewBag.TicketStatusId = new SelectList(db.TicketStatuses, "Id", "Name");
             ViewBag.TicketTypeId = new SelectList(db.TicketTypes, "Id", "Name");
@@ -216,8 +218,10 @@ namespace BugTracker.Controllers
                 return HttpNotFound();
             }
 
-            //var users = db.Users.Where(u => UserHelper.UserInRole(u.Id, "Developer") == true);
-            ViewBag.AssignedToUserId = new SelectList(db.Users, "Id", "Email");
+            var developers = UserHelper.GetUsersFromRole("Developer");
+            var projectId = db.Tickets.Find(Id).ProjectId;
+            var developersOfProject = developers.Where(u => u.ProjectUsers.Any(pu => pu.ProjectId == projectId)).ToList();
+            ViewBag.AssignedToUserId = new SelectList(developersOfProject, "Id", "Email");
             ViewBag.Id = Id;
             return View();
         }
@@ -226,8 +230,11 @@ namespace BugTracker.Controllers
         public ActionResult Assign(int Id, string AssignedToUserId)
         {
             TicketHelper.Assign(Id, AssignedToUserId);
-            //var users = db.Users.Where(u => UserHelper.UserInRole(u.Id, "Developer") ==true);
-            ViewBag.AssignedToUserId = new SelectList(db.Users, "Id", "Email");
+            var developers = UserHelper.GetUsersFromRole("Developer");
+            var projectId = db.Tickets.Find(Id).ProjectId;
+            var developersOfProject = developers.Where(u => u.ProjectUsers.Any(pu => pu.ProjectId == projectId)).ToList();
+
+            ViewBag.AssignedToUserId = new SelectList(developersOfProject, "Id", "Email");
             ViewBag.Id = Id;
 
             TicketNotificationHelper.AddNotification(Id, AssignedToUserId, NotificationType.AssignedBy, User.Identity.GetUserName());

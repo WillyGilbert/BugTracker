@@ -14,26 +14,12 @@ namespace BugTracker.DAL
         static ApplicationDbContext db = new ApplicationDbContext();
         static RoleManager<IdentityRole> roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(db));
         static UserManager<ApplicationUser> userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
-      
+
         //Create a new role in the database
         public static void DefineNewRole(string roleName)
         {
             roleManager.Create(new IdentityRole(roleName));
         }
-
-        // Get a role name from a role Id.
-        //public static string GetRole(string roleId)
-        //{
-        //    return roleManager.FindById(roleId).Name;
-        //}
-
-        // Get a list of allrole
-        //public static List<string> GetAllRoles()
-        //{
-        //    var allRoles = roleManager.Roles.Select(r => r.Name).ToList();
-        //    return allRoles;
-        //}
-        // Get all the user 
         public static List<ApplicationUser> GetAllUsers()
         {
             var getAllUsers = db.Users.ToList();
@@ -45,19 +31,6 @@ namespace BugTracker.DAL
         {
             return roleManager.RoleExists(roleName);
         }
-
-        //Assign user to the specified role
-        //public static void AssignRole(string userId, string roleName)
-        //{
-        //    if (!string.IsNullOrEmpty(userId) && !string.IsNullOrEmpty(roleName))
-        //    {
-        //        userManager.AddToRole(userId, roleName);
-        //    }
-        //    else
-        //    {
-        //        throw new NullReferenceException("userId and roleName can not be null");
-        //    }
-        //}
 
         //Gives a list of user from the array of string containing userId.
         // returns list of users
@@ -85,13 +58,6 @@ namespace BugTracker.DAL
             return user;
         }
 
-        //Get a user role from userManager for a specific user
-        //public static string GetUserRole(string userId)
-        //{
-        //    string userRole = userManager.GetRoles(userId).ToList().First();
-        //    return userRole;
-        //}
-
         //Gives a list of user who have specified role.
         //To get all user in particular role
         public static List<ApplicationUser> GetUsersFromRole(string roleName)
@@ -108,44 +74,6 @@ namespace BugTracker.DAL
             return listOfUser;
 
         }
-
-        //Administrator and Project Manager must be able to Assign user to project
-        //public static bool AssignUserInRole(string userId, string role)
-        //{
-        //    var user = userManager.FindById(userId);
-        //    if (user == null)
-        //    {
-        //        return false;
-        //    }
-        //    if (userManager.IsInRole(userId, role))
-        //    {
-        //        return true;
-        //    }
-        //    var result = userManager.AddToRole(userId, role).Succeeded;
-        //    return result;
-        //}
-
-        //Administrator and projectManager must be able to unAssign user to project
-        //public static bool unAssignUserToRole(string userId, string role)
-        //{
-        //    var user = userManager.FindById(userId);
-        //    if (user == null)
-        //    {
-        //        return false;
-        //    }
-        //    if (!userManager.IsInRole(userId, role))
-        //    {
-        //        return true;
-        //    }
-        //    var result = userManager.RemoveFromRole(userId, role).Succeeded;
-        //    return result;
-        //}
-
-        //taskM
-        //public static List<ApplicationUser> ShowAllUsers()
-        //{
-        //    return db.Users.ToList();
-        //}
         public static List<string> ShowAllRoles()
         {
             return db.Roles.Select(r => r.Name).ToList();

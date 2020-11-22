@@ -1,11 +1,8 @@
 ﻿using BugTracker.Models;
 using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
 using System.Net;
 using System.Net.Mail;
-using System.Web;
 
 namespace BugTracker.DAL
 {
@@ -38,9 +35,6 @@ namespace BugTracker.DAL
 
     }
 
-
-
-
     public static class NotificationService
     {
         public static void Create(Ticket ticket)
@@ -49,7 +43,7 @@ namespace BugTracker.DAL
             {
 
                 Ticket = ticket,
-        
+
             };
             SendNotification(ticket.AssignedToUser, notification);
 
@@ -60,19 +54,5 @@ namespace BugTracker.DAL
             EmailNotification emailservice = new EmailNotification();
             emailservice.Send(user.Email, "BugTracker Notification" + notification.Ticket.Title + "in Project" + notification.Ticket.Project.Name, notification.Ticket.Description);
         }
-
-
-        //public static void SendEmail(Ticket ticket, ApplicationUser user, string message)
-        //{
-
-        //    var emailService = new EmailNotification();
-        //    var subject = $"Change in your Ticket -{ticket.Id}";
-        //    var body = $"Ticket:{ticket.Title},{message}";
-
-        //    emailService.Send(user.Email, subject, body);
-        //}
-
-
-
     }
 }

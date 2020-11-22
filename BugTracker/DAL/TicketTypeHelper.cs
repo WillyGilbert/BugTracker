@@ -8,7 +8,7 @@ using System.Web;
 namespace BugTracker.DAL
 {
     public class TicketTypeHelper
-    { 
+    {
         public static List<TicketType> GetTicketTypes()
         {
             ApplicationDbContext db = new ApplicationDbContext();
@@ -58,6 +58,6 @@ namespace BugTracker.DAL
             db.TicketTypes.Remove(ticketType);
             db.SaveChanges();
             db.Dispose();
-        } 
+        }
     }
 }

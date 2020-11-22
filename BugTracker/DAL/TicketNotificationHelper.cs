@@ -7,7 +7,6 @@ using System.Web;
 
 namespace BugTracker.DAL
 {
-
     public class TicketNotificationHelper
     {
         public static List<TicketNotification> GetTicketNotifications()
@@ -17,10 +16,10 @@ namespace BugTracker.DAL
             return TicketNotification.ToList();
         }
 
-        public static void  AddNotification(int id,string userId, NotificationType type, string userName )
+        public static void AddNotification(int id, string userId, NotificationType type, string userName)
         {
             ApplicationDbContext db = new ApplicationDbContext();
-            var tickNotification = new TicketNotification { TicketId = id, UserId = userId,  Type = type, ModifiedUser = userName };
+            var tickNotification = new TicketNotification { TicketId = id, UserId = userId, Type = type, ModifiedUser = userName };
             db.TicketNotifications.Add(tickNotification);
             db.SaveChanges();
         }
@@ -37,7 +36,6 @@ namespace BugTracker.DAL
             db.Dispose();
             return TicketNotification;
         }
-
         public static void Create(int ticketId, string userId)
         {
             ApplicationDbContext db = new ApplicationDbContext();
@@ -70,29 +68,14 @@ namespace BugTracker.DAL
             db.Dispose();
         }
         //Developers must be notified each time they are assigned to a ticket
-
         public static List<TicketNotification> GetAllNotificationForDeveloper(string userId)
         {
             ApplicationDbContext db = new ApplicationDbContext();
             var ticketNotifications = db.TicketNotifications.ToList();
             var result = ticketNotifications.Where(n => n.UserId == userId).ToList();
-            //var result = new List<TicketNotification>();
-            //var user = db.Users.Find(userId);
-
-            //if (user == null)
-            //{
-            //    return result;
-            //}
-            //result.AddRange(db.TicketNotifications.Where(x => x.UserId == userId).ToList());
             return result;
 
         }
-        //Developers must be notified each time a ticket to which they are assigned is modified by another user
-        //(including the addition of comments and attachments)
-
-
-
-
         // Add or delete notification
         private void AddDeleteNotification(bool addOrDel, int ticketId, string userId)
         {
@@ -113,7 +96,6 @@ namespace BugTracker.DAL
                     db.TicketNotifications.Add(addNote);
 
                 }
-
             }
             else
             {
@@ -129,19 +111,6 @@ namespace BugTracker.DAL
             db.SaveChanges();
             db.Dispose();
         }
-
-
-        // Notification
-        //public static List<TicketNotification> GetNotificationOfUser(string userId)
-        //{
-        //    ApplicationDbContext db = new ApplicationDbContext();
-        //    var notes = db.TicketNotifications.Include(n => n.Ticket).Include(u => u.User).ToList();
-
-        //    return notes.Where(n =>
-        //        n.NotificationType == NotificationType.Normal ||
-        //        n.NotificationType == NotificationType.NextToExpire
-        //    ).ToList();
-        //}
         public static string CountUserNotifications(string userId)
         {
             return GetAllNotificationForDeveloper(userId).Count().ToString();

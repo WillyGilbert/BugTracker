@@ -13,7 +13,6 @@ namespace BugTracker.Controllers
 {
     public class TicketAttachmentsController : Controller
     {
-
         // GET: TicketAttachments
         public ActionResult Index(int ticketId)
         {
@@ -37,11 +36,11 @@ namespace BugTracker.Controllers
         public ActionResult Create(int ticketId, HttpPostedFileBase file, string description)
         {
             Message message = TicketAttachmentHelper.Create(ticketId, file, description, User.Identity.GetUserId());
-            if(message.Code == MessageType.Successful && description.Length > 0)
+            if (message.Code == MessageType.Successful && description.Length > 0)
             {
                 return RedirectToAction("Index", new { ticketId });
             }
-            if(description.Length > 0)
+            if (description.Length > 0)
             {
                 ViewBag.MessageDescription = "";
             }
@@ -79,7 +78,6 @@ namespace BugTracker.Controllers
         }
 
         //Attachament Management
-
         public FileResult Download(string file)
         {
             var path = FileUploaderHelper.Download(file);

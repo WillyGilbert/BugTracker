@@ -13,7 +13,6 @@ namespace BugTracker.DAL
             var ProjectUser = db.ProjectUsers.Include(p => p.Project).Include(p => p.User);
             return ProjectUser.ToList();
         }
-
         public static ProjectUser GetProjectUser(int? Id)
         {
             ApplicationDbContext db = new ApplicationDbContext();
@@ -26,7 +25,6 @@ namespace BugTracker.DAL
             db.Dispose();
             return ProjectUser;
         }
-
         public static void Create(int projectId, string userId)
         {
             ApplicationDbContext db = new ApplicationDbContext();
@@ -39,7 +37,6 @@ namespace BugTracker.DAL
             db.SaveChanges();
             db.Dispose();
         }
-
         public static void Edit(int id, int projectId, string userId)
         {
             ApplicationDbContext db = new ApplicationDbContext();
@@ -50,7 +47,6 @@ namespace BugTracker.DAL
             db.SaveChanges();
             db.Dispose();
         }
-
         public static void Delete(int id)
         {
             ApplicationDbContext db = new ApplicationDbContext();

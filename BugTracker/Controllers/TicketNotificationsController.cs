@@ -18,7 +18,7 @@ namespace BugTracker.Controllers
         // GET: TicketNotifications
         public ActionResult Index(string userId, int? page)
         {
-            var ticketNotifications = db.TicketNotifications.Include(t => t.Ticket).Include(t => t.User).Where(t=> t.UserId == userId).OrderByDescending(t => t.Id).ToList();
+            var ticketNotifications = db.TicketNotifications.Include(t => t.Ticket).Include(t => t.User).Where(t => t.UserId == userId).OrderByDescending(t => t.Id).ToList();
             return View(PaginateList(ticketNotifications, page));
         }
 

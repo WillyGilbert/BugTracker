@@ -51,7 +51,6 @@ namespace BugTracker.Controllers
             }
         }
 
-        //
         // GET: /Manage/Index
         public async Task<ActionResult> Index(ManageMessageId? message)
         {
@@ -161,7 +160,6 @@ namespace BugTracker.Controllers
             return RedirectToAction("Index", "Manage");
         }
 
-        //
         // GET: /Manage/VerifyPhoneNumber
         public async Task<ActionResult> VerifyPhoneNumber(string phoneNumber)
         {
@@ -170,7 +168,6 @@ namespace BugTracker.Controllers
             return phoneNumber == null ? View("Error") : View(new VerifyPhoneNumberViewModel { PhoneNumber = phoneNumber });
         }
 
-        //
         // POST: /Manage/VerifyPhoneNumber
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -195,7 +192,6 @@ namespace BugTracker.Controllers
             return View(model);
         }
 
-        //
         // POST: /Manage/RemovePhoneNumber
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -232,7 +228,7 @@ namespace BugTracker.Controllers
             var updateResult = await UserManager.UpdateAsync(user);
             if (updateResult.Succeeded)
             {
-               // var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+                // var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
                 if (user != null)
                 {
                     await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
@@ -241,42 +237,14 @@ namespace BugTracker.Controllers
             }
             AddErrors(updateResult);
             return View(model);
-
-            //if (user != null)
-            //{
-            //    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-            //} else
-
-            //    return RedirectToAction("Index", new { Message = ManageMessageId.ChangeUserNameSuccess });
-
-
-            //if (updateResult.Succeeded)
-            //{ return RedirectToAction("Index", new { Message = ManageMessageId.ChangeUserNameSuccess }); }
-            //else
-
-
-
-            //if (UserManager.Users.Where(x => x.UserName == value).FirstOrDefault() == null) //chk for dupes
-            //{
-            //    var user = UserManager.FindById(User.Identity.GetUserId());
-            //    user.UserName = value;
-            //    var updateResult = await UserManager.UpdateAsync(user);
-            //    db.SaveChanges();
-
-            //    await SignInAsync(user, true);//user is cached until logout so do this to clear cache                
-            //    return Content("true");
-            //}
-            //throw new HttpException(500, "Please select a different username");
         }
 
-        //
         // GET: /Manage/ChangePassword
         public ActionResult ChangePassword()
         {
             return View();
         }
 
-        //
         // POST: /Manage/ChangePassword
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -300,14 +268,12 @@ namespace BugTracker.Controllers
             return View(model);
         }
 
-        //
         // GET: /Manage/SetPassword
         public ActionResult SetPassword()
         {
             return View();
         }
 
-        //
         // POST: /Manage/SetPassword
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -327,12 +293,8 @@ namespace BugTracker.Controllers
                 }
                 AddErrors(result);
             }
-
-            // If we got this far, something failed, redisplay form
             return View(model);
         }
-
-        //
         // GET: /Manage/ManageLogins
         public async Task<ActionResult> ManageLogins(ManageMessageId? message)
         {
@@ -355,7 +317,6 @@ namespace BugTracker.Controllers
             });
         }
 
-        //
         // POST: /Manage/LinkLogin
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -365,7 +326,6 @@ namespace BugTracker.Controllers
             return new AccountController.ChallengeResult(provider, Url.Action("LinkLoginCallback", "Manage"), User.Identity.GetUserId());
         }
 
-        //
         // GET: /Manage/LinkLoginCallback
         public async Task<ActionResult> LinkLoginCallback()
         {

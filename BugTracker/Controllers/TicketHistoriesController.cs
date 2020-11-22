@@ -13,7 +13,6 @@ namespace BugTracker.Controllers
 {
     public class TicketHistoriesController : Controller
     {
-
         // GET: TicketHistories
         public ActionResult Index(int ticketId)
         {
@@ -53,11 +52,11 @@ namespace BugTracker.Controllers
             if (ModelState.IsValid)
             {
                 TicketHistoryHelper
-                    .Create(ticketHistory.TicketId, 
-                    ticketHistory.Property, 
-                    ticketHistory.OldValue, 
-                    ticketHistory.NewValue, 
-                    ticketHistory.Changed, 
+                    .Create(ticketHistory.TicketId,
+                    ticketHistory.Property,
+                    ticketHistory.OldValue,
+                    ticketHistory.NewValue,
+                    ticketHistory.Changed,
                     ticketHistory.UserId);
                 return RedirectToAction("Index");
             }

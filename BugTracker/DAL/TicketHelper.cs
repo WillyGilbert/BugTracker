@@ -21,7 +21,6 @@ namespace BugTracker.DAL
             var tickets = db.Tickets.Include("Project").Include("TicketPriority").Include("TicketStatus").Include("TicketType");
             return tickets.ToList();
         }
-
         public static List<Ticket> GetTickets(string userId, string role)
         {
             ApplicationDbContext db = new ApplicationDbContext();
@@ -32,6 +31,12 @@ namespace BugTracker.DAL
                 .Include("TicketType")
                 .ToList();
 
+            foreach (var ticket in allTickets)
+            {
+                if (ticket.AssignedToUser == null) ticket.AssignedToUser = new ApplicationUser();
+                if (ticket.AssignedToUserId == null) ticket.AssignedToUserId = "";
+            }
+
             if (role == "Admin") tickets = allTickets;
             if (role == "ProjectManager")
             {
@@ -39,7 +44,9 @@ namespace BugTracker.DAL
                 return allTickets.Where(t => projectsByManager.Any(up => up.ProjectId == t.ProjectId)).ToList();
             }
             if (role == "Developer") return allTickets.Where(t => t.AssignedToUserId == userId).ToList();
+            var a = allTickets.Where(t => t.OwnerUserId == userId).ToList();
             if (role == "Submitter") return tickets = allTickets.Where(t => t.OwnerUserId == userId).ToList();
+
             return allTickets;
         }
 

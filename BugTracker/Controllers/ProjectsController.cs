@@ -42,13 +42,6 @@ namespace BugTracker.Controllers
             else if (SelectFilter == "Title")
                 projects = ProjectHelper.SortTicketsByTitle(projects);
 
-
-            //if (!String.IsNullOrEmpty(searchString))
-            //{
-            //    tickets = TicketHelper.GetTickets(UserId).Where(t => t.Title.Contains(searchString)
-            //                           || t.Description.Contains(searchString)).ToList();
-            //}
-
             return View(PaginateList(projects, page));
         }
 
@@ -70,23 +63,14 @@ namespace BugTracker.Controllers
         [HttpPost]
         public ActionResult ShowMyProjects(string SelectFilter, int? page)
         {
-            //SortViewModel sortModel = new SortViewModel();
             ViewBag.SelectFilter = new SelectList(sortModel.Options);
 
-            //var projects = ProjectHelper.GetMyProjects(User.Identity.GetUserId());
             var projects = ProjectHelper.GetProjectWithTicketByUserByProjectManager(User.Identity.GetUserId());
 
             if (SelectFilter == "Creation Date")
                 projects = ProjectHelper.SortTicketsByTitle(projects);
             else if (SelectFilter == "Title")
                 projects = ProjectHelper.SortTicketsByTitle(projects);
-
-
-            //if (!String.IsNullOrEmpty(searchString))
-            //{
-            //    tickets = TicketHelper.GetTickets(UserId).Where(t => t.Title.Contains(searchString)
-            //                           || t.Description.Contains(searchString)).ToList();
-            //}
 
             return View(PaginateList(projects, page));
         }

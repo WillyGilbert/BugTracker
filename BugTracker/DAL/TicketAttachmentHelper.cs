@@ -56,7 +56,6 @@ namespace BugTracker.DAL
             }
             return TicketAttachment;
         }
-
         public static void Delete(int id)
         {
             ApplicationDbContext db = new ApplicationDbContext();

@@ -16,13 +16,13 @@ namespace BugTracker.DAL
                 try
                 {
                     int accumulator = 0;
-                    string path = Path.Combine(HttpContext.Current.Server.MapPath("~/root"), 
+                    string path = Path.Combine(HttpContext.Current.Server.MapPath("~/root"),
                         Path.GetFileName(ticketId + "_" + file.FileName));
                     while (File.Exists(path))
                     {
                         var NameOfFile = ticketId + "_" + file.FileName.Substring(0, file.FileName.LastIndexOf("."));
                         string NewFileName = NameOfFile + "_" + accumulator++ + file.FileName.Substring(file.FileName.LastIndexOf("."));
-                        path = Path.Combine(HttpContext.Current.Server.MapPath("~/root"), 
+                        path = Path.Combine(HttpContext.Current.Server.MapPath("~/root"),
                             Path.GetFileName(NewFileName));
                     }
 
@@ -42,7 +42,7 @@ namespace BugTracker.DAL
                 }
             else
             {
-                if(!(file.ContentLength > 0))
+                if (!(file.ContentLength > 0))
                 {
                     message.Description = "The file you have selected is empty";
                     message.Code = MessageType.EmptyFile;

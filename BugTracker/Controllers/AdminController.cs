@@ -8,14 +8,12 @@ using System.Web.Mvc;
 
 namespace BugTracker.Controllers
 {
-
     [Authorize]
     [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
         ApplicationDbContext db = new ApplicationDbContext();
-        //UserManager<IdentityUser> userManager = new UserManager<IdentityUser>(new UserStore<IdentityUser>(new ApplicationDbContext()));
-        //RoleManager<IdentityRole> roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(new ApplicationDbContext()));
+
         // GET: Admin
         public ActionResult Index()
         {
@@ -96,7 +94,7 @@ namespace BugTracker.Controllers
 
             return RedirectToAction("ShowAllRolesOfTheUser", new { userId });
         }
- 
+
         public ActionResult DeleteRole(string roleName)
         {
             if (!UserHelper.IsRoleExist(roleName))

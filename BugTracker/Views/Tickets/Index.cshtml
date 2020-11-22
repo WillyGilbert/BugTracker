@@ -34,8 +34,8 @@
         .Sanitized(false)
         .Encoded(false)
         .RenderValueAs(t => Html.ActionLink(t.Title, "Details", new { id = t.Id }));
-    columns.Add(t => t.OwnerUser.UserName).Titled("Submitter").Sortable(true);
-    columns.Add(t => t.AssignedToUser.UserName).Titled("Developer").RenderValueAs(t => (t.AssignedToUser != null ? t.AssignedToUser.UserName : ""));
+    columns.Add(t => t.OwnerUser.UserName).Titled("Submitter").Filterable(true).Sortable(true);
+    columns.Add(t => t.AssignedToUser.UserName).Titled("Developer").Filterable(true).Sortable(true);
     columns.Add(t => t.TicketType.Name).Titled("Type").Sortable(true).Filterable(true);
     columns.Add(t => t.TicketPriority.Name).Titled("Priority").Sortable(true).Filterable(true);
     columns.Add(t => t.TicketStatus.Name).Titled("Status").Sortable(true).Filterable(true);

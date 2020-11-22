@@ -58,40 +58,45 @@ namespace BugTracker.DAL
             ApplicationDbContext db = new ApplicationDbContext();
             List<Project> newProjects = new List<Project>();
             List<Project> AllProject = db.Projects.Include("Tickets").ToList();
-            var projectByUsers = db.ProjectUsers.Where(pu => pu.UserId == userId).Select(p => p.ProjectId).ToList();
-            foreach (var project in AllProject)
+
+            if (roles != null)
             {
-                bool hasUserTicket = false;
-                List<Ticket> tickets = new List<Ticket>();
-                foreach (var ticket in project.Tickets)
+                if (roles.Contains("Admin")) return AllProject;
+
+                var projectByUsers = db.ProjectUsers.Where(pu => pu.UserId == userId).Select(p => p.ProjectId).ToList();
+                foreach (var project in AllProject)
                 {
-                    if (roles.Contains("ProjectManager"))
+                    bool hasUserTicket = false;
+                    List<Ticket> tickets = new List<Ticket>();
+                    foreach (var ticket in project.Tickets)
                     {
-                        if (projectByUsers.Contains(ticket.ProjectId)) tickets.Add(ticket);
-                        hasUserTicket = true;
+                        if (roles.Contains("ProjectManager"))
+                        {
+                            if (projectByUsers.Contains(ticket.ProjectId)) tickets.Add(ticket);
+                            hasUserTicket = true;
+                        }
+                        if (roles.Contains("Developer"))
+                        {
+                            if (ticket.AssignedToUserId == userId) tickets.Add(ticket);
+                            hasUserTicket = true;
+                        }
+                        if (roles.Contains("Submitter"))
+                        {
+                            if (ticket.OwnerUserId == userId) tickets.Add(ticket);
+                            hasUserTicket = true;
+                        }
                     }
-                    if (roles.Contains("Developer"))
+                    if (hasUserTicket)
                     {
-                        if (ticket.AssignedToUserId == userId) tickets.Add(ticket);
-                        hasUserTicket = true;
+                        project.Tickets = tickets;
+                        newProjects.Add(project);
                     }
-                    if (roles.Contains("Submitter"))
+                    else
                     {
-                        if (ticket.OwnerUserId == userId) tickets.Add(ticket);
-                        hasUserTicket = true;
+                        project.Tickets = new List<Ticket>();
+                        newProjects.Add(project);
                     }
                 }
-                if (hasUserTicket)
-                {
-                    project.Tickets = tickets;
-                    newProjects.Add(project);
-                }
-                else
-                {
-                    project.Tickets = new List<Ticket>();
-                    newProjects.Add(project);
-                }
-                if (roles.Contains("Admin")) newProjects.Add(project);
             }
             return newProjects.ToList();
         }

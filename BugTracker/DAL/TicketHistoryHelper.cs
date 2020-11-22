@@ -9,13 +9,12 @@ namespace BugTracker.DAL
 {
     public class TicketHistoryHelper
     {
-        public static List<TicketHistory> GetTicketHistorys()
+        public static List<TicketHistory> GetTicketHistorys(int ticketId)
         {
             ApplicationDbContext db = new ApplicationDbContext();
-            var TicketHistory = db.TicketHistories.Include(t => t.Ticket).Include(t => t.User);
+            var TicketHistory = db.TicketHistories.Include(t => t.Ticket).Include(t => t.User).Where(th => th.TicketId == ticketId);
             return TicketHistory.ToList();
         }
-
         public static TicketHistory GetTicketHistory(int? Id)
         {
             ApplicationDbContext db = new ApplicationDbContext();
@@ -28,7 +27,6 @@ namespace BugTracker.DAL
             db.Dispose();
             return TicketHistory;
         }
-
         public static void Create(int ticketId, string property, string oldValue, string newValue, DateTime changed, string userId)
         {
             ApplicationDbContext db = new ApplicationDbContext();
@@ -45,7 +43,6 @@ namespace BugTracker.DAL
             db.SaveChanges();
             db.Dispose();
         }
-
         public static void Edit(int id, int ticketId, string property, string oldValue, string newValue, DateTime changed, string userId)
         {
             ApplicationDbContext db = new ApplicationDbContext();
@@ -60,7 +57,6 @@ namespace BugTracker.DAL
             db.SaveChanges();
             db.Dispose();
         }
-
         public static void Delete(int id)
         {
             ApplicationDbContext db = new ApplicationDbContext();
@@ -69,7 +65,6 @@ namespace BugTracker.DAL
             db.SaveChanges();
             db.Dispose();
         }
-
         public static void SetTicketHistory(int ticketId, string property, string oldValue, string newValue, string userId)
         {
             var today = DateTime.Now;

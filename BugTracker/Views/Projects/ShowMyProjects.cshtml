@@ -8,16 +8,13 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Projects: Willy Version</h2>
+<h2>Projects</h2>
 
 @if (User.IsInRole("Admin") || User.IsInRole("ProjectManager"))
 {
-    <p class="btn btn-warning">
-        @Html.ActionLink("Create New", "Create")
-    </p>
+    <a class="btn btn-primary" href="@Url.Action("Create")">New Project</a>
     <div style="text-align:end">
-        <button style="background-color:cadetblue">@Html.ActionLink("My Projects", "ShowMyProjects")</button>
-        <button style="background-color:burlywood">@Html.ActionLink("All Projects", "Index") </button>
+        <a class="btn btn-info" href="@Url.Action("Index")">All Projects</a>
     </div>
 }
 
@@ -33,11 +30,9 @@
     <tr>
         <th>
         </th>
-        <th>
-            @Html.Label("ProjectName")
+        <th align="left" colspan="12">
+            @Html.Label("Project Name")
         </th>
-        <th></th>
-        <th></th>
     </tr>
 
     @foreach (var project in Model)
@@ -51,11 +46,9 @@
             </td>
             @if (User.IsInRole("Submitter"))
             {
-                <td>
-                    <button style="background-color:darkgray">
-                        @Html.ActionLink("Create Ticket", "Create", "Tickets", new { projectId = project.Id }, null)
-                    </button>
-                </td>
+        <td>
+            <a class="btn btn-info" href="@Url.Action("Create", "Tickets", new { projectId = project.Id })">New Project</a>
+        </td>
             }
             @if (User.IsInRole("Admin") || User.IsInRole("ProjectManager"))
             {
@@ -75,8 +68,8 @@
                 <tr>
                     <th>
                     </th>
-                    <th>
-                        @Html.Label("Title")
+                    <th width="15%">
+                        @Html.Label("Ticket Name")
                     </th>
                     <th>
                         @Html.Label("AssignedUser")
@@ -108,7 +101,7 @@
 
                 @foreach (var ticket in project.Tickets)
                 {
-                    <tr style="color:yellowgreen">
+                    <tr style="font-size:90%">
                         <td>
                         </td>
                         <td>
@@ -138,9 +131,12 @@
                         <td>
                             @Html.ActionLink(ticket.TicketComments.Count.ToString(), "Index", "TicketComments", new { ticketId = ticket.Id }, null)
                         </td>
-                        <td>
-                            @Html.ActionLink("Assign", "Assign", "Tickets", new { id = ticket.Id }, null)
-                        </td>
+                        @if (User.IsInRole("Admin") || User.IsInRole("ProjectManager"))
+                        {
+                            <td>
+                                @Html.ActionLink("Assign", "Assign", "Tickets", new { id = ticket.Id }, null)
+                            </td>
+                        }
                         <td>
                             @Html.ActionLink("Edit", "Edit", "Tickets", new { id = ticket.Id }, null) |
                             @Html.ActionLink("AddComment", "Create", "TicketComments", new { id = ticket.Id }, null) |

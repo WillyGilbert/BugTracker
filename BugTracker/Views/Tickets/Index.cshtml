@@ -3,9 +3,6 @@
 @using GridMvc.Html
 @using System;
 
-@*@{
-        ViewBag.Title = "Index";
-    }*@
 <script src="@Url.Content("~/Scripts/jquery-3.4.1.min.js")"></script>
 <link href="@Url.Content("~/Content/Gridmvc.css")" rel="stylesheet" type="text/css" />
 <script src="@Url.Content("~/Scripts/gridmvc.min.js")" type="text/javascript"></script>
@@ -37,8 +34,8 @@
         .Sanitized(false)
         .Encoded(false)
         .RenderValueAs(t => Html.ActionLink(t.Title, "Details", new { id = t.Id }));
-    columns.Add(t => t.OwnerUser.UserName).Titled("Submitter").Sortable(true);
-    columns.Add(t => t.AssignedToUser.UserName).Titled("Developer").Sortable(true);
+    columns.Add(t => t.OwnerUser.UserName).Titled("Submitter").Filterable(true).Sortable(true);
+    columns.Add(t => t.AssignedToUser.UserName).Titled("Developer").Filterable(true).Sortable(true);
     columns.Add(t => t.TicketType.Name).Titled("Type").Sortable(true).Filterable(true);
     columns.Add(t => t.TicketPriority.Name).Titled("Priority").Sortable(true).Filterable(true);
     columns.Add(t => t.TicketStatus.Name).Titled("Status").Sortable(true).Filterable(true);
@@ -46,7 +43,6 @@
     columns.Add(t => t.Updated).Format("{0:dd/MM/yyyy}").Sortable(true).Filterable(true);
     columns.Add(t => t.TicketComments)
     .Titled("Comments")
-    .Sortable(true)
     .Sanitized(false)
     .Encoded(false)
     .RenderValueAs(t => Html.ActionLink(t.TicketComments.Count.ToString(), "Index", "TicketComments", new { ticketId = t.Id }, null))
@@ -66,6 +62,11 @@
     .Sanitized(false)
     .SetWidth(30)
     .RenderValueAs(t => Html.ActionLink("AddComment", "Create", "TicketComments", new { id = t.Id }, null));
+    columns.Add()
+    .Encoded(false)
+    .Sanitized(false)
+    .SetWidth(30)
+    .RenderValueAs(t => Html.ActionLink("History", "Index", "TicketHistories", new { ticketId = t.Id }, null));
 }).WithPaging(10)
 
 <div>

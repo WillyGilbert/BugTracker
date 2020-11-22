@@ -13,11 +13,10 @@ namespace BugTracker.Controllers
 {
     public class TicketHistoriesController : Controller
     {
-
         // GET: TicketHistories
-        public ActionResult Index()
+        public ActionResult Index(int ticketId)
         {
-            return View(TicketHistoryHelper.GetTicketHistorys());
+            return View(TicketHistoryHelper.GetTicketHistorys(ticketId));
         }
 
         // GET: TicketHistories/Details/5
@@ -53,11 +52,11 @@ namespace BugTracker.Controllers
             if (ModelState.IsValid)
             {
                 TicketHistoryHelper
-                    .Create(ticketHistory.TicketId, 
-                    ticketHistory.Property, 
-                    ticketHistory.OldValue, 
-                    ticketHistory.NewValue, 
-                    ticketHistory.Changed, 
+                    .Create(ticketHistory.TicketId,
+                    ticketHistory.Property,
+                    ticketHistory.OldValue,
+                    ticketHistory.NewValue,
+                    ticketHistory.Changed,
                     ticketHistory.UserId);
                 return RedirectToAction("Index");
             }

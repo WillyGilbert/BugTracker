@@ -49,14 +49,14 @@
             <td>
                 @Html.ActionLink(project.Name, "Details", new { id = project.Id }, null)
             </td>
-            @if (User.IsInRole("Submitter"))
+            @*@if (User.IsInRole("Submitter"))
             {
                 <td>
                     <button style="background-color:darkgray">
                         @Html.ActionLink("Create Ticket", "Create", "Tickets", new { projectId = project.Id }, null)
                     </button>
                 </td>
-            }
+            }*@
             @if (User.IsInRole("Admin") || User.IsInRole("ProjectManager"))
             {
                 <td>

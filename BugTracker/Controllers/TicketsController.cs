@@ -123,7 +123,9 @@ namespace BugTracker.Controllers
 
         public ActionResult CreateTicket()
         {
-            var projects = db.Projects.Where(p => p.ProjectUsers.Any(pu => pu.UserId == User.Identity.GetUserId()));
+            var user = db.Users.Find(User.Identity.GetUserId());
+
+            var projects = db.Projects.Where(p => p.ProjectUsers.Any(pu => pu.UserId == user.Id)).ToList();
             ViewBag.ProjectId = new SelectList(projects, "Id", "Name");
             ViewBag.TicketPriorityId = new SelectList(db.TicketPriorities, "Id", "Name");
             ViewBag.TicketStatusId = new SelectList(db.TicketStatuses, "Id", "Name");
@@ -135,7 +137,9 @@ namespace BugTracker.Controllers
         [ValidateAntiForgeryToken]        
         public ActionResult CreateTicket(string title, string description, int projectId, int TicketTypeId, int TicketPriorityId, int TicketStatusId)
         {
-            var projects = db.Projects.Where(p => p.ProjectUsers.Any(pu => pu.UserId == User.Identity.GetUserId())).ToList();
+            var user = db.Users.Find(User.Identity.GetUserId());
+            var projects = db.Projects.Where(p => p.ProjectUsers.Any(pu => pu.UserId == user.Id)).ToList();
+
             ViewBag.ProjectId = new SelectList(projects, "Id", "Name");
             ViewBag.TicketPriorityId = new SelectList(db.TicketPriorities, "Id", "Name");
             ViewBag.TicketStatusId = new SelectList(db.TicketStatuses, "Id", "Name");
